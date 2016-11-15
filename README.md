@@ -2,7 +2,7 @@
 A new generation online judge for NJUPT ACM TEAM
 
 * **Tip:** This repository will be used to contain some commonly used libraries/tools shared by different modules.
-* The structure of the whole project
+* The structure of all modules of the backend.
 ```
 $GOPATH
   |- bin/
@@ -13,7 +13,7 @@ $GOPATH
      |- Daemon/
      |- JudgingNodeLocal/
      |- JudgingNodeVirtual/
-     |
+     |- ...
      |- github.com/
      |  └- ...
      └- ...
