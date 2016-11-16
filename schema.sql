@@ -10,8 +10,8 @@ CREATE TABLE Users (
     password VARCHAR(64) NOT NULL,
 
     email VARCHAR(64) NOT NULL,
-    phone VARCHAR(32) DEFAULT NULL,
-    school VARCHAR(64) DEFAULT NULL,
+    phone VARCHAR(32) NOT NULL DEFAULT '',
+    school VARCHAR(64) NOT NULL DEFAULT '',
 
     motto VARCHAR(1024),
 
@@ -22,8 +22,8 @@ CREATE TABLE Users (
 
     register_time DATETIME NOT NULL,
     last_login_time DATETIME NOT NULL,
-    ip_addr VARCHAR(255) DEFAULT NULL,
-    permission ENUM("root") DEFAULT NULL,
+    ip_addr VARCHAR(255) NOT NULL,
+    permission VARCHAR(64) NOT NULL DEFAULT '' COMMENT 'ENUM(root)',
     lock_status BOOLEAN NOT NULL DEFAULT 0,
 
     PRIMARY KEY (user_id),
@@ -37,7 +37,7 @@ CREATE TABLE OJInfo (
     version VARCHAR(64) NOT NULL,
     int64io VARCHAR(255) NOT NULL,
     javaclass VARCHAR(255) NOT NULL,
-    status ENUM('ok', 'down', 'unstable') NOT NULL,
+    status VARCHAR(16) NOT NULL COMMENT '(ok, down, unstable) NOT NULL',
     status_info VARCHAR(1024) NOT NULL DEFAULT '',
     lastcheck DATETIME NOT NULL,
 
@@ -97,7 +97,7 @@ CREATE TABLE Contests (
     contest_type ENUM('icpc', 'oi', 'cf') NOT NULL,
     start_time DATETIME NOT NULL,
     end_time DATETIME NOT NULL,
-    lock_board_time DATETIME DEFAULT NULL,
+    lock_board_time DATETIME NOT NULL,
     hide_others_status BOOLEAN NOT NULL,
 
     PRIMARY KEY (contest_id)
@@ -107,7 +107,7 @@ CREATE TABLE ContestsUsers (
     cu_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     user_id_fk INTEGER UNSIGNED NOT NULL,
     contest_id_fk INTEGER UNSIGNED NOT NULL,
-    motto VARCHAR(1024) DEFAULT NULL,
+    motto VARCHAR(1024) NOT NULL DEFAULT '',
 
     PRIMARY KEY (cu_id),
     FOREIGN KEY (user_id_fk) REFERENCES Users(user_id),
@@ -132,25 +132,25 @@ CREATE TABLE ContestsProblems (
     FOREIGN KEY (contest_id_fk) REFERENCES Contests(contest_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
 
-CREATE TABLE Status (
+CREATE TABLE Submissions (
     run_id INTEGER NOT NULL AUTO_INCREMENT,
     status VARCHAR(64) NOT NULL,
-    status_code ENUM ('se', 'wt', 'ce', 'tle', 'mle', 'ole', 're', 'wa', 'pe', 'ac'),
+    status_code VARCHAR(8) COMMENT 'ENUM(se, wt, ce, tle, mle, ole, re, wa, pe, ac)',
     testcases_passed INTEGER NOT NULL DEFAULT 0,
     submit_time DATETIME NOT NULL,
-    time_used INTEGER DEFAULT NULL,
-    memory_used INTEGER DEFAULT NULL,
+    time_used INTEGER NOT NULL,
+    memory_used INTEGER NOT NULL,
     code TEXT NOT NULL,
-    lang_id_fk INTEGER UNSIGNED NULL NOT NULL,
-    ce_info TEXT DEFAULT NULL,
-    ip_addr VARCHAR(255) DEFAULT NULL,
+    lang_id_fk INTEGER UNSIGNED NOT NULL DEFAULT 0,
+    ce_info TEXT NOT NULL,
+    ip_addr VARCHAR(255) NOT NULL DEFAULT '',
     is_shared BOOLEAN NOT NULL,
 
     is_contest BOOLEAN NOT NULL,
-    cp_id_fk INTEGER UNSIGNED DEFAULT NULL,
-    cu_id_fk INTEGER UNSIGNED DEFAULT NULL,
-    meta_pid_fk INTEGER UNSIGNED DEFAULT NULL,
-    user_id_fk INTEGER UNSIGNED DEFAULT NULL, 
+    cp_id_fk INTEGER UNSIGNED NOT NULL DEFAULT 0,
+    cu_id_fk INTEGER UNSIGNED NOT NULL DEFAULT 0,
+    meta_pid_fk INTEGER UNSIGNED NOT NULL DEFAULT 0,
+    user_id_fk INTEGER UNSIGNED NOT NULL DEFAULT 0,
 
     PRIMARY KEY (run_id),
     FOREIGN KEY (lang_id_fk) REFERENCES Languages(lang_id),
