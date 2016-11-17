@@ -1,7 +1,6 @@
 # OnlineJudge
 A new generation online judge for NJUPT ACM TEAM
 
-* **Tip:** This repository will be used to contain some commonly used libraries/tools shared by different modules.
 * The structure of all modules of the backend.
 ```
 $GOPATH
@@ -9,10 +8,13 @@ $GOPATH
   |- pkg/
   └- src/
      |- OnlineJudge/
-     |- WebBackend/
-     |- Daemon/
-     |- JudgingNodeLocal/
-     |- JudgingNodeVirtual/
+     |  |- <some common libraries>
+     |  |- <config files etc.>
+     |  |- WebBackend/
+     |  |- Daemon/
+     |  └- <other parts>
+     |- LocalJudger/
+     |- VirtualJudger/
      |- ...
      |- github.com/
      |  └- ...
