@@ -9,7 +9,7 @@ func TestLanguageInsert(t *testing.T) {
 		Language:    "c++",
 		OptionValue: "1",
 		Compiler:    "g++4.9",
-		OJIdFK:      9,
+		OJIdFK:      1,
 	}
 	id, err := lm.Insert(&lang)
 	if err != nil {
@@ -21,5 +21,10 @@ func TestLanguageInsert(t *testing.T) {
 */
 
 func TestLanuageQuery(t *testing.T) {
-
+	lm := NewLanguageModel()
+	lang, err := lm.QueryById(2)
+	if err != nil {
+		t.Errorf("Failed to query, %s", err)
+	}
+	t.Log(lang)
 }

@@ -1,5 +1,9 @@
 package models
 
+import (
+	"fmt"
+)
+
 type Language struct {
 	LangId      int `db:"lang_id"`
 	Language    string
@@ -26,4 +30,21 @@ func (this *LanguageModel) Insert(lang *Language) (int, error) {
 		return 0, err
 	}
 	return last_insert_id, nil
+}
+
+func (this *LanguageModel) QueryById(id int) (*Language, error) {
+	if err := this.OpenDB(); err != nil {
+		return nil, err
+	}
+	defer this.CloseDB()
+	lang := Language{}
+	str_fields, err := this.GenerateSelectSQL(lang, nil, []string{"oj_id_fk"})
+	fmt.Println(str_fields)
+	if err != nil {
+		return nil, err
+	}
+	if err := this.DB.Get(&lang, fmt.Sprintf("SELECT %s FROM %s WHERE lang_id=?", str_fields, this.Table), id); err != nil {
+		return nil, err
+	}
+	return &lang, nil
 }

@@ -6,14 +6,15 @@ import (
 )
 
 type OJInfo struct {
-	OJId       int `db:"oj_id"`
-	Name       string
-	Version    string
-	Int64IO    string
-	JavaClass  string
-	Status     string
-	StatusInfo string `db:"status_info"`
-	LastCheck  time.Time
+	OJId         int `db:"oj_id"`
+	Name         string
+	Version      string
+	Int64IO      string
+	JavaClass    string
+	Status       string
+	StatusInfo   string `db:"status_info"`
+	LastCheck    time.Time
+	CurrentIndex int `db:"current_index"`
 }
 
 type OJInfoModel struct {
@@ -42,7 +43,13 @@ func (this *OJInfoModel) QueryByName(name string) (*OJInfo, error) {
 	}
 	defer this.CloseDB()
 	ojinfo := OJInfo{}
-	if err := this.DB.Get(&ojinfo, fmt.Sprintf("SELECT * FROM %s WHERE name=?", this.Table), name); err != nil {
+	str_fields, err := this.GenerateSelectSQL(ojinfo, nil, nil)
+	fmt.Println("X")
+	fmt.Println(str_fields)
+	if err != nil {
+		return nil, err
+	}
+	if err := this.DB.Get(&ojinfo, fmt.Sprintf("SELECT %s FROM %s WHERE name=?", str_fields, this.Table), name); err != nil {
 		return nil, err
 	}
 	return &ojinfo, nil
@@ -54,7 +61,11 @@ func (this *OJInfoModel) QueryAll() ([]OJInfo, error) {
 	}
 	defer this.CloseDB()
 	ojs := []OJInfo{}
-	if err := this.DB.Select(&ojs, fmt.Sprintf("SELECT * FROM %s", this.Table)); err != nil {
+	str_fields, err := this.GenerateSelectSQL(OJInfo{}, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	if err := this.DB.Select(&ojs, fmt.Sprintf("SELECT %s FROM %s", str_fields, this.Table)); err != nil {
 		return nil, err
 	}
 	return ojs, nil

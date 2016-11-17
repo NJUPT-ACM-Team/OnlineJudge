@@ -40,6 +40,7 @@ CREATE TABLE OJInfo (
     status VARCHAR(16) NOT NULL COMMENT '(ok, down, unstable) NOT NULL',
     status_info VARCHAR(1024) NOT NULL DEFAULT '',
     lastcheck DATETIME NOT NULL,
+    current_index INTEGER NOT NULL DEFAULT 1,
 
     PRIMARY KEY (oj_id),
     UNIQUE KEY (name)
@@ -51,10 +52,10 @@ CREATE TABLE Languages (
     language VARCHAR(64) NOT NULL COMMENT 'like c, c++, java, python etc.',
     option_value VARCHAR(64) COMMENT 'for submit options str',
     compiler VARCHAR(255) NOT NULL,
-    oj_id_fk INTEGER UNSIGNED NOT NULL,
+    oj_id_fk INTEGER UNSIGNED DEFAULT NULL,
 
     PRIMARY KEY (lang_id),
-    FOREIGN KEY (oj_id_fk) REFERENCES OJInfo(oj_id)
+    FOREIGN KEY (oj_id_fk) REFERENCES OJInfo(oj_id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
 
 CREATE TABLE MetaProblems (
@@ -72,20 +73,20 @@ CREATE TABLE MetaProblems (
     source VARCHAR(1024) NOT NULL,
     hint TEXT NOT NULL,
     hide BOOLEAN NOT NULL DEFAULT 1 COMMENT 'Hide the problem or not, for contest purpose',
-    oj_id_fk INTEGER UNSIGNED NOT NULL,
+    oj_id_fk INTEGER UNSIGNED DEFAULT NULL,
     oj_pid INTEGER UNSIGNED NOT NULL,
     
     PRIMARY KEY (meta_pid),
-    FOREIGN KEY (oj_id_fk) REFERENCES OJInfo(oj_id),
+    FOREIGN KEY (oj_id_fk) REFERENCES OJInfo(oj_id) ON DELETE SET NULL,
     UNIQUE KEY (oj_id_fk, oj_pid)
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
 
 CREATE TABLE LocalProblems (
     local_pid INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    meta_pid_fk INTEGER UNSIGNED NOT NULL,
+    meta_pid_fk INTEGER UNSIGNED DEFAULT NULL,
 
     PRIMARY KEY (local_pid),
-    FOREIGN KEY (meta_pid_fk) REFERENCES MetaProblems(meta_pid)
+    FOREIGN KEY (meta_pid_fk) REFERENCES MetaProblems(meta_pid) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
 
 CREATE TABLE Contests (
@@ -104,19 +105,19 @@ CREATE TABLE Contests (
 
 CREATE TABLE ContestsUsers (
     cu_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    user_id_fk INTEGER UNSIGNED NOT NULL,
-    contest_id_fk INTEGER UNSIGNED NOT NULL,
+    user_id_fk INTEGER UNSIGNED DEFAULT NULL,
+    contest_id_fk INTEGER UNSIGNED DEFAULT NULL,
     motto VARCHAR(1024) NOT NULL DEFAULT '',
 
     PRIMARY KEY (cu_id),
-    FOREIGN KEY (user_id_fk) REFERENCES Users(user_id),
-    FOREIGN KEY (contest_id_fk) REFERENCES Contests(contest_id)
+    FOREIGN KEY (user_id_fk) REFERENCES Users(user_id) ON DELETE SET NULL,
+    FOREIGN KEY (contest_id_fk) REFERENCES Contests(contest_id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
 
 CREATE TABLE ContestsProblems (
     cp_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    meta_pid_fk INTEGER UNSIGNED NOT NULL, 
-    contest_id_fk INTEGER UNSIGNED NOT NULL,
+    meta_pid_fk INTEGER UNSIGNED DEFAULT NULL,
+    contest_id_fk INTEGER UNSIGNED DEFAULT NULL,
     label VARCHAR(64) NOT NULL,
     problem_type ENUM('icpc', 'oi', 'cf', 'cfd') NOT NULL,
     base INTEGER NOT NULL,
@@ -127,8 +128,8 @@ CREATE TABLE ContestsProblems (
     PRIMARY KEY (cp_id),
     UNIQUE KEY (contest_id_fk, meta_pid_fk),
     UNIQUE KEY (contest_id_fk, label),
-    FOREIGN KEY (meta_pid_fk) REFERENCES MetaProblems(meta_pid),
-    FOREIGN KEY (contest_id_fk) REFERENCES Contests(contest_id)
+    FOREIGN KEY (meta_pid_fk) REFERENCES MetaProblems(meta_pid) ON DELETE SET NULL,
+    FOREIGN KEY (contest_id_fk) REFERENCES Contests(contest_id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
 
 CREATE TABLE Submissions (
@@ -140,22 +141,22 @@ CREATE TABLE Submissions (
     time_used INTEGER NOT NULL,
     memory_used INTEGER NOT NULL,
     code TEXT NOT NULL,
-    lang_id_fk INTEGER UNSIGNED NOT NULL DEFAULT 0,
+    lang_id_fk INTEGER UNSIGNED DEFAULT NULL,
     ce_info TEXT NOT NULL,
     ip_addr VARCHAR(255) NOT NULL DEFAULT '',
     is_shared BOOLEAN NOT NULL,
 
     is_contest BOOLEAN NOT NULL,
-    cp_id_fk INTEGER UNSIGNED NOT NULL DEFAULT 0,
-    cu_id_fk INTEGER UNSIGNED NOT NULL DEFAULT 0,
-    meta_pid_fk INTEGER UNSIGNED NOT NULL DEFAULT 0,
-    user_id_fk INTEGER UNSIGNED NOT NULL DEFAULT 0,
+    cp_id_fk INTEGER UNSIGNED DEFAULT NULL,
+    cu_id_fk INTEGER UNSIGNED DEFAULT NULL,
+    meta_pid_fk INTEGER UNSIGNED DEFAULT NULL,
+    user_id_fk INTEGER UNSIGNED DEFAULT NULL,
 
     PRIMARY KEY (run_id),
-    FOREIGN KEY (lang_id_fk) REFERENCES Languages(lang_id),
-    FOREIGN KEY (cp_id_fk) REFERENCES ContestsProblems(cp_id),
-    FOREIGN KEY (cu_id_fk) REFERENCES ContestsUsers(cu_id),
-    FOREIGN KEY (meta_pid_fk) REFERENCES MetaProblems(meta_pid),
-    FOREIGN KEY (user_id_fk) REFERENCES Users(user_id)
+    FOREIGN KEY (lang_id_fk) REFERENCES Languages(lang_id) ON DELETE SET NULL,
+    FOREIGN KEY (cp_id_fk) REFERENCES ContestsProblems(cp_id) ON DELETE SET NULL,
+    FOREIGN KEY (cu_id_fk) REFERENCES ContestsUsers(cu_id) ON DELETE SET NULL,
+    FOREIGN KEY (meta_pid_fk) REFERENCES MetaProblems(meta_pid) ON DELETE SET NULL,
+    FOREIGN KEY (user_id_fk) REFERENCES Users(user_id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
 

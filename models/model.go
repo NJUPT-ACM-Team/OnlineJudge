@@ -47,7 +47,7 @@ func (this *Model) GenerateInsertSQL(st interface{}, table string, excepts []str
 	fields := []string{}
 	values := []string{}
 	for _, v := range all_fields {
-		if len(excepts) == 0 || !base.ArrayContains(excepts, v) {
+		if excepts == nil || len(excepts) == 0 || !base.ArrayContains(excepts, v) {
 			fields = append(fields, v)
 			values = append(values, ":"+v)
 		}
@@ -55,6 +55,32 @@ func (this *Model) GenerateInsertSQL(st interface{}, table string, excepts []str
 	cols := "(" + strings.Join(fields, ",") + ")"
 	vals := "(" + strings.Join(values, ",") + ")"
 	return fmt.Sprintf("INSERT INTO %s %s VALUES %s", table, cols, vals), nil
+}
+
+func (this *Model) GenerateSelectSQL(st interface{}, required []string, excepts []string) (string, error) {
+	all_fields, err := this.GetAllFields(st)
+	if err != nil {
+		return "", err
+	}
+	fields := []string{}
+	if required != nil && len(required) > 0 {
+		for _, v := range required {
+			if base.ArrayContains(all_fields, v) {
+				fields = append(fields, v)
+			}
+		}
+	} else {
+		if excepts != nil && len(excepts) > 0 {
+			for _, v := range all_fields {
+				if !base.ArrayContains(excepts, v) {
+					fields = append(fields, v)
+				}
+			}
+		} else {
+			fields = all_fields
+		}
+	}
+	return strings.Join(fields, ","), nil
 }
 
 func (this *Model) InlineInsert(st interface{}, excepts []string) (int, error) {
