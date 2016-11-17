@@ -49,8 +49,7 @@ CREATE TABLE OJInfo (
 CREATE TABLE Languages (
     lang_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     language VARCHAR(64) NOT NULL COMMENT 'like c, c++, java, python etc.',
-    option_value_int INTEGER COMMENT 'for submit options int',
-    option_value_str VARCHAR(64) COMMENT 'for submit options str',
+    option_value VARCHAR(64) COMMENT 'for submit options str',
     compiler VARCHAR(255) NOT NULL,
     oj_id_fk INTEGER UNSIGNED NOT NULL,
 
