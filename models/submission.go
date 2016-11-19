@@ -53,7 +53,7 @@ func (this *SubmissionModel) Validate(sub *Submission) error {
 	return nil
 }
 
-func (this *SubmissionModel) Insert(sub *Submission) (int, error) {
+func (this *SubmissionModel) Insert(sub *Submission) (int64, error) {
 	if err := this.OpenDB(); err != nil {
 		return 0, err
 	}
@@ -62,10 +62,23 @@ func (this *SubmissionModel) Insert(sub *Submission) (int, error) {
 	if err := this.Validate(sub); err != nil {
 		return 0, err
 	}
-	last_insert_id, err := this.InlineInsert(sub, []string{"run_id"})
+	last_insert_id, err := this.InlineInsert(sub, nil, []string{"run_id"})
 	if err != nil {
 		return 0, err
 	}
 	return last_insert_id, nil
 
+}
+
+func (this *SubmissionModel) Update(sub *Submission) error {
+	if err := this.OpenDB(); err != nil {
+		return err
+	}
+	defer this.CloseDB()
+	return nil
+}
+
+func (this *SubmissionModel) UpdateStatus(sub *Submission) error {
+
+	return nil
 }

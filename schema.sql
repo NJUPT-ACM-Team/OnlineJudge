@@ -13,7 +13,7 @@ CREATE TABLE Users (
     phone VARCHAR(32) NOT NULL DEFAULT '',
     school VARCHAR(64) NOT NULL DEFAULT '',
 
-    motto VARCHAR(1024),
+    motto VARCHAR(1024) NOT NULL DEFAULT '',
 
     total_local_submit INTEGER NOT NULL DEFAULT 0,
     total_local_ac INTEGER NOT NULL DEFAULT 0,

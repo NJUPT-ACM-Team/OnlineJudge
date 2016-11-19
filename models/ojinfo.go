@@ -25,12 +25,12 @@ func NewOJInfoModel() *OJInfoModel {
 	return &OJInfoModel{Model{Table: "OJInfo"}}
 }
 
-func (this *OJInfoModel) Insert(oj *OJInfo) (int, error) {
+func (this *OJInfoModel) Insert(oj *OJInfo) (int64, error) {
 	if err := this.OpenDB(); err != nil {
 		return 0, err
 	}
 	defer this.CloseDB()
-	last_insert_id, err := this.InlineInsert(oj, []string{"oj_id"})
+	last_insert_id, err := this.InlineInsert(oj, nil, []string{"oj_id"})
 	if err != nil {
 		return 0, err
 	}
@@ -44,8 +44,7 @@ func (this *OJInfoModel) QueryByName(name string) (*OJInfo, error) {
 	defer this.CloseDB()
 	ojinfo := OJInfo{}
 	str_fields, err := this.GenerateSelectSQL(ojinfo, nil, nil)
-	fmt.Println("X")
-	fmt.Println(str_fields)
+	// fmt.Println(str_fields)
 	if err != nil {
 		return nil, err
 	}

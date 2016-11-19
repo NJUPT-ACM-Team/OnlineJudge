@@ -20,12 +20,12 @@ func NewLanguageModel() *LanguageModel {
 	return &LanguageModel{Model{Table: "Languages"}}
 }
 
-func (this *LanguageModel) Insert(lang *Language) (int, error) {
+func (this *LanguageModel) Insert(lang *Language) (int64, error) {
 	if err := this.OpenDB(); err != nil {
 		return 0, err
 	}
 	defer this.CloseDB()
-	last_insert_id, err := this.InlineInsert(lang, []string{"lang_id"})
+	last_insert_id, err := this.InlineInsert(lang, nil, []string{"lang_id"})
 	if err != nil {
 		return 0, err
 	}
@@ -38,8 +38,8 @@ func (this *LanguageModel) QueryById(id int) (*Language, error) {
 	}
 	defer this.CloseDB()
 	lang := Language{}
-	str_fields, err := this.GenerateSelectSQL(lang, nil, []string{"oj_id_fk"})
-	fmt.Println(str_fields)
+	str_fields, err := this.GenerateSelectSQL(lang, nil, nil)
+	// fmt.Println(str_fields)
 	if err != nil {
 		return nil, err
 	}

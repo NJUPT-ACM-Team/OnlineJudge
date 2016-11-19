@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+	"time"
 
 	"OnlineJudge/base"
 	"OnlineJudge/models/db"
@@ -39,28 +40,9 @@ func (this *Model) GetAllFields(v interface{}) ([]string, error) {
 	return fields, nil
 }
 
-func (this *Model) GenerateInsertSQL(st interface{}, table string, excepts []string) (string, error) {
-	all_fields, err := this.GetAllFields(st)
-	if err != nil {
-		return "", err
-	}
-	fields := []string{}
-	values := []string{}
-	for _, v := range all_fields {
-		if excepts == nil || len(excepts) == 0 || !base.ArrayContains(excepts, v) {
-			fields = append(fields, v)
-			values = append(values, ":"+v)
-		}
-	}
-	cols := "(" + strings.Join(fields, ",") + ")"
-	vals := "(" + strings.Join(values, ",") + ")"
-	return fmt.Sprintf("INSERT INTO %s %s VALUES %s", table, cols, vals), nil
-}
-
-func (this *Model) GenerateSelectSQL(st interface{}, required []string, excepts []string) (string, error) {
-	all_fields, err := this.GetAllFields(st)
-	if err != nil {
-		return "", err
+func (this *Model) FilterFields(all_fields []string, required []string, excepts []string) ([]string, error) {
+	if (excepts != nil && len(excepts) > 0) && (required != nil && len(required) > 0) {
+		return nil, errors.New("Parameters conficted, using only required or only excepts.")
 	}
 	fields := []string{}
 	if required != nil && len(required) > 0 {
@@ -80,11 +62,58 @@ func (this *Model) GenerateSelectSQL(st interface{}, required []string, excepts 
 			fields = all_fields
 		}
 	}
+	return fields, nil
+}
+
+func (this *Model) GenerateInsertSQL(st interface{}, table string, required []string, excepts []string) (string, error) {
+	all_fields, err := this.GetAllFields(st)
+	if err != nil {
+		return "", err
+	}
+	reversed_fields, err := this.FilterFields(all_fields, required, excepts)
+	if err != nil {
+		return "", err
+	}
+	fields := []string{}
+	values := []string{}
+	for _, v := range reversed_fields {
+		fields = append(fields, v)
+		values = append(values, ":"+v)
+	}
+	cols := "(" + strings.Join(fields, ",") + ")"
+	vals := "(" + strings.Join(values, ",") + ")"
+	return fmt.Sprintf("INSERT INTO %s %s VALUES %s", table, cols, vals), nil
+}
+
+func (this *Model) GenerateSelectSQL(st interface{}, required []string, excepts []string) (string, error) {
+	all_fields, err := this.GetAllFields(st)
+	if err != nil {
+		return "", err
+	}
+	fields, err := this.FilterFields(all_fields, required, excepts)
+	if err != nil {
+		return "", err
+	}
+	for k, v := range fields {
+		var dft string
+		val := this.DB.Mapper.FieldByName(reflect.ValueOf(st), v)
+		switch val.Interface().(type) {
+		case int:
+			dft = "0"
+		case int64:
+			dft = "0"
+		case string:
+			dft = "''"
+		case time.Time:
+			dft = "CURRENT_TIMESTAMP"
+		}
+		fields[k] = fmt.Sprintf("COALESCE(%s, %s) AS %s", v, dft, v)
+	}
 	return strings.Join(fields, ","), nil
 }
 
-func (this *Model) InlineInsert(st interface{}, excepts []string) (int, error) {
-	sql_insert, err := this.GenerateInsertSQL(st, this.Table, excepts)
+func (this *Model) InlineInsert(st interface{}, required []string, excepts []string) (int64, error) {
+	sql_insert, err := this.GenerateInsertSQL(st, this.Table, required, excepts)
 	if err != nil {
 		return 0, err
 	}
@@ -93,12 +122,12 @@ func (this *Model) InlineInsert(st interface{}, excepts []string) (int, error) {
 		return 0, err
 	}
 	defer tx.Rollback()
-	_, err = tx.NamedExec(sql_insert, st)
+	res, err := tx.NamedExec(sql_insert, st)
 	if err != nil {
 		return 0, err
 	}
-	var last_insert_id int
-	if err := tx.Get(&last_insert_id, "SELECT LAST_INSERT_ID()"); err != nil {
+	last_insert_id, err := res.LastInsertId()
+	if err != nil {
 		return 0, err
 	}
 	err = tx.Commit()
@@ -106,4 +135,14 @@ func (this *Model) InlineInsert(st interface{}, excepts []string) (int, error) {
 		return 0, err
 	}
 	return last_insert_id, nil
+}
+
+func (this *Model) InlineUpdate(st interface{}, pk string, required []string, excepts []string) error {
+	all_fields, err := this.GetAllFields(st)
+	if err != nil {
+		return err
+	}
+	fmt.Println(all_fields)
+	//`UPDATE TABLE this.Table SET `
+	return nil
 }
