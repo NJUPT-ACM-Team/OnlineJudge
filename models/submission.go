@@ -70,15 +70,21 @@ func (this *SubmissionModel) Insert(sub *Submission) (int64, error) {
 
 }
 
-func (this *SubmissionModel) Update(sub *Submission) error {
+func (this *SubmissionModel) Update(sub *Submission, required []string, excepts []string) error {
 	if err := this.OpenDB(); err != nil {
 		return err
 	}
 	defer this.CloseDB()
+	if err := this.InlineUpdate(sub, "run_id", required, excepts); err != nil {
+		return err
+	}
 	return nil
 }
 
 func (this *SubmissionModel) UpdateStatus(sub *Submission) error {
-
+	required := []string{"status", "status_code", "testcases_passed"}
+	if err := this.Update(sub, required, nil); err != nil {
+		return err
+	}
 	return nil
 }

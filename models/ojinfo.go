@@ -37,13 +37,13 @@ func (this *OJInfoModel) Insert(oj *OJInfo) (int64, error) {
 	return last_insert_id, nil
 }
 
-func (this *OJInfoModel) QueryByName(name string) (*OJInfo, error) {
+func (this *OJInfoModel) QueryByName(name string, required []string, excepts []string) (*OJInfo, error) {
 	if err := this.OpenDB(); err != nil {
 		return nil, err
 	}
 	defer this.CloseDB()
 	ojinfo := OJInfo{}
-	str_fields, err := this.GenerateSelectSQL(ojinfo, nil, nil)
+	str_fields, err := this.GenerateSelectSQL(ojinfo, required, excepts)
 	// fmt.Println(str_fields)
 	if err != nil {
 		return nil, err
@@ -54,13 +54,13 @@ func (this *OJInfoModel) QueryByName(name string) (*OJInfo, error) {
 	return &ojinfo, nil
 }
 
-func (this *OJInfoModel) QueryAll() ([]OJInfo, error) {
+func (this *OJInfoModel) QueryAll(required []string, excepts []string) ([]OJInfo, error) {
 	if err := this.OpenDB(); err != nil {
 		return nil, err
 	}
 	defer this.CloseDB()
 	ojs := []OJInfo{}
-	str_fields, err := this.GenerateSelectSQL(OJInfo{}, nil, nil)
+	str_fields, err := this.GenerateSelectSQL(OJInfo{}, required, excepts)
 	if err != nil {
 		return nil, err
 	}

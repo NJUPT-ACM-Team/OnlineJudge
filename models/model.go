@@ -112,6 +112,21 @@ func (this *Model) GenerateSelectSQL(st interface{}, required []string, excepts 
 	return strings.Join(fields, ","), nil
 }
 
+func (this *Model) GenerateUpdateSQL(st interface{}, pk string, required []string, excepts []string) (string, error) {
+	all_fields, err := this.GetAllFields(st)
+	if err != nil {
+		return "", err
+	}
+	fields, err := this.FilterFields(all_fields, required, excepts)
+	values := []string{}
+	for _, v := range fields {
+		values = append(values, v+"=:"+v)
+	}
+	str_fields := strings.Join(values, ",")
+	pkv := this.DB.Mapper.FieldByName(reflect.ValueOf(st), pk).Interface().(int)
+	return fmt.Sprintf("UPDATE %s SET %s WHERE %s=%d", this.Table, str_fields, pk, pkv), nil
+}
+
 func (this *Model) InlineInsert(st interface{}, required []string, excepts []string) (int64, error) {
 	sql_insert, err := this.GenerateInsertSQL(st, this.Table, required, excepts)
 	if err != nil {
@@ -138,11 +153,12 @@ func (this *Model) InlineInsert(st interface{}, required []string, excepts []str
 }
 
 func (this *Model) InlineUpdate(st interface{}, pk string, required []string, excepts []string) error {
-	all_fields, err := this.GetAllFields(st)
+	sql_update, err := this.GenerateUpdateSQL(st, pk, required, excepts)
 	if err != nil {
 		return err
 	}
-	fmt.Println(all_fields)
-	//`UPDATE TABLE this.Table SET `
+	if _, err := this.DB.NamedExec(sql_update, st); err != nil {
+		return err
+	}
 	return nil
 }

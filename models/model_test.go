@@ -72,8 +72,38 @@ func (this *MyModel) TestGenerateSelectSQL(t *testing.T) error {
 	return nil
 }
 
+func (this *MyModel) TestGenerateUpdateSQL(t *testing.T) error {
+	if err := this.OpenDB(); err != nil {
+		t.Errorf("Failed to open database: %s", err)
+		return err
+	}
+	defer this.CloseDB()
+	type Foo struct {
+		RunId      int `db:"run_id"`
+		Status     string
+		StatusCode string `db:"status_code"`
+	}
+	f := Foo{1, "a", "b"}
+	sql, err := this.GenerateUpdateSQL(f, "run_id", []string{"status"}, nil)
+	if err != nil {
+		t.Errorf("Failed to generate update sql, %s", err)
+		return err
+	}
+	t.Log(sql)
+	return nil
+}
+
+func TestGenerateSelectSQL(t *testing.T) {
+	mymodel := MyModel{}
+	mymodel.TestGenerateSelectSQL(t)
+}
+
 func TestGetAllFields(t *testing.T) {
 	mymodel := MyModel{}
 	mymodel.TestFuncGetAllFields(t)
-	mymodel.TestGenerateSelectSQL(t)
+}
+
+func TestGenerateUpdateSQL(t *testing.T) {
+	mymodel := MyModel{Model{Table: "mytable"}}
+	mymodel.TestGenerateUpdateSQL(t)
 }

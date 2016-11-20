@@ -22,7 +22,7 @@ func TestLanguageInsert(t *testing.T) {
 
 func TestLanuageQuery(t *testing.T) {
 	lm := NewLanguageModel()
-	lang, err := lm.QueryById(2)
+	lang, err := lm.QueryById(2, nil, nil)
 	if err != nil {
 		t.Errorf("Failed to query, %s", err)
 	}

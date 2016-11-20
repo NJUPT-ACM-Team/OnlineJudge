@@ -28,7 +28,7 @@ func TestOJInfoInsert(t *testing.T) {
 
 func TestOJInfoQueryByName(t *testing.T) {
 	ojim := NewOJInfoModel()
-	oj, err := ojim.QueryByName("zoj")
+	oj, err := ojim.QueryByName("zoj", nil, nil)
 	if err != nil {
 		t.Errorf("Failed to query by 'noj', %s", err)
 	}
@@ -37,7 +37,7 @@ func TestOJInfoQueryByName(t *testing.T) {
 
 func TestOJInfoQueryALl(t *testing.T) {
 	ojim := NewOJInfoModel()
-	ojs, err := ojim.QueryAll()
+	ojs, err := ojim.QueryAll(nil, nil)
 	if err != nil {
 		t.Errorf("Failed to query all, %s", err)
 	}

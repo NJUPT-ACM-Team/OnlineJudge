@@ -32,13 +32,13 @@ func (this *LanguageModel) Insert(lang *Language) (int64, error) {
 	return last_insert_id, nil
 }
 
-func (this *LanguageModel) QueryById(id int) (*Language, error) {
+func (this *LanguageModel) QueryById(id int, required []string, excepts []string) (*Language, error) {
 	if err := this.OpenDB(); err != nil {
 		return nil, err
 	}
 	defer this.CloseDB()
 	lang := Language{}
-	str_fields, err := this.GenerateSelectSQL(lang, nil, nil)
+	str_fields, err := this.GenerateSelectSQL(lang, required, excepts)
 	// fmt.Println(str_fields)
 	if err != nil {
 		return nil, err
