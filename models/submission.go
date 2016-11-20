@@ -54,11 +54,6 @@ func (this *SubmissionModel) Validate(sub *Submission) error {
 }
 
 func (this *SubmissionModel) Insert(sub *Submission) (int64, error) {
-	if err := this.OpenDB(); err != nil {
-		return 0, err
-	}
-	defer this.CloseDB()
-
 	if err := this.Validate(sub); err != nil {
 		return 0, err
 	}
@@ -71,10 +66,6 @@ func (this *SubmissionModel) Insert(sub *Submission) (int64, error) {
 }
 
 func (this *SubmissionModel) Update(sub *Submission, required []string, excepts []string) error {
-	if err := this.OpenDB(); err != nil {
-		return err
-	}
-	defer this.CloseDB()
 	if err := this.InlineUpdate(sub, "run_id", required, excepts); err != nil {
 		return err
 	}

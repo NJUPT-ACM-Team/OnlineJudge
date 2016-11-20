@@ -26,10 +26,6 @@ func NewOJInfoModel() *OJInfoModel {
 }
 
 func (this *OJInfoModel) Insert(oj *OJInfo) (int64, error) {
-	if err := this.OpenDB(); err != nil {
-		return 0, err
-	}
-	defer this.CloseDB()
 	last_insert_id, err := this.InlineInsert(oj, nil, []string{"oj_id"})
 	if err != nil {
 		return 0, err
@@ -38,35 +34,34 @@ func (this *OJInfoModel) Insert(oj *OJInfo) (int64, error) {
 }
 
 func (this *OJInfoModel) QueryByName(name string, required []string, excepts []string) (*OJInfo, error) {
-	if err := this.OpenDB(); err != nil {
-		return nil, err
-	}
-	defer this.CloseDB()
 	ojinfo := OJInfo{}
 	str_fields, err := this.GenerateSelectSQL(ojinfo, required, excepts)
 	// fmt.Println(str_fields)
 	if err != nil {
 		return nil, err
 	}
-	if err := this.DB.Get(&ojinfo, fmt.Sprintf("SELECT %s FROM %s WHERE name=?", str_fields, this.Table), name); err != nil {
+	if err := this.Tx.Get(&ojinfo, fmt.Sprintf("SELECT %s FROM %s WHERE name=?", str_fields, this.Table), name); err != nil {
 		return nil, err
 	}
 	return &ojinfo, nil
 }
 
 func (this *OJInfoModel) QueryAll(required []string, excepts []string) ([]OJInfo, error) {
-	if err := this.OpenDB(); err != nil {
-		return nil, err
-	}
-	defer this.CloseDB()
 	ojs := []OJInfo{}
 	str_fields, err := this.GenerateSelectSQL(OJInfo{}, required, excepts)
 	if err != nil {
 		return nil, err
 	}
-	if err := this.DB.Select(&ojs, fmt.Sprintf("SELECT %s FROM %s", str_fields, this.Table)); err != nil {
+	if err := this.Tx.Select(&ojs, fmt.Sprintf("SELECT %s FROM %s", str_fields, this.Table)); err != nil {
 		return nil, err
 	}
 	return ojs, nil
 
+}
+
+func (this *OJInfoModel) Update(ojinfo *OJInfo, required []string, excepts []string) error {
+	if err := this.InlineUpdate(ojinfo, "oj_id", required, excepts); err != nil {
+		return err
+	}
+	return nil
 }

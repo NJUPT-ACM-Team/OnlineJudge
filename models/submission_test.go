@@ -9,6 +9,9 @@ import (
 // need to be tested
 func TestSubmissionModel(t *testing.T) {
 	subm := NewSubmissionModel()
+	if err := subm.OpenDB(); err != nil {
+		t.Errorf("Failed to open db, %s", err)
+	}
 	sub := Submission{
 		Status:          "Accepted",
 		StatusCode:      "ac",

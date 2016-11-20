@@ -35,10 +35,6 @@ func NewUserModel() *UserModel {
 }
 
 func (this *UserModel) Insert(user *User) (int64, error) {
-	if err := this.OpenDB(); err != nil {
-		return 0, err
-	}
-	defer this.CloseDB()
 	last_insert_id, err := this.InlineInsert(user, nil, []string{"user_id"})
 	if err != nil {
 		return 0, err
@@ -47,16 +43,25 @@ func (this *UserModel) Insert(user *User) (int64, error) {
 }
 
 func (this *UserModel) QueryById(id int, required []string, excepts []string) (*User, error) {
-	if err := this.OpenDB(); err != nil {
-		return nil, err
-	}
-	defer this.CloseDB()
 	user := User{}
 	str_fields, err := this.GenerateSelectSQL(user, required, excepts)
 	if err != nil {
 		return nil, err
 	}
-	if err := this.DB.Get(&user, fmt.Sprintf("SELECT %s FROM %s WHERE user_id=?", str_fields, this.Table), id); err != nil {
+	if err := this.Tx.Get(&user, fmt.Sprintf("SELECT %s FROM %s WHERE user_id=?", str_fields, this.Table), id); err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func (this *UserModel) QueryByName(name string, required []string, excepts []string) (*User, error) {
+
+	user := User{}
+	str_fields, err := this.GenerateSelectSQL(user, required, excepts)
+	if err != nil {
+		return nil, err
+	}
+	if err := this.Tx.Get(&user, fmt.Sprintf("SELECT %s FROM %s WHERE username=?", str_fields, this.Table), name); err != nil {
 		return nil, err
 	}
 	return &user, nil

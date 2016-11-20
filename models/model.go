@@ -14,17 +14,28 @@ import (
 
 type Model struct {
 	DB    *sqlx.DB
+	Tx    *sqlx.Tx
 	Table string
 }
 
 func (this *Model) OpenDB() error {
 	db.Init()
 	var err error
-	this.DB, err = db.NewDB()
-	return err
+	if this.DB, err = db.NewDB(); err != nil {
+		return err
+	}
+	if this.Tx, err = this.DB.Beginx(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (this *Model) Commit() error {
+	return this.Tx.Commit()
 }
 
 func (this *Model) CloseDB() {
+	this.Tx.Rollback()
 	this.DB.Close()
 }
 
@@ -132,20 +143,11 @@ func (this *Model) InlineInsert(st interface{}, required []string, excepts []str
 	if err != nil {
 		return 0, err
 	}
-	tx, err := this.DB.Beginx()
-	if err != nil {
-		return 0, err
-	}
-	defer tx.Rollback()
-	res, err := tx.NamedExec(sql_insert, st)
+	res, err := this.Tx.NamedExec(sql_insert, st)
 	if err != nil {
 		return 0, err
 	}
 	last_insert_id, err := res.LastInsertId()
-	if err != nil {
-		return 0, err
-	}
-	err = tx.Commit()
 	if err != nil {
 		return 0, err
 	}
@@ -157,7 +159,7 @@ func (this *Model) InlineUpdate(st interface{}, pk string, required []string, ex
 	if err != nil {
 		return err
 	}
-	if _, err := this.DB.NamedExec(sql_update, st); err != nil {
+	if _, err := this.Tx.NamedExec(sql_update, st); err != nil {
 		return err
 	}
 	return nil
