@@ -8,22 +8,6 @@ type MyModel struct {
 	Model
 }
 
-func (this *MyModel) TestFunc(t *testing.T) error {
-	t.Log("In TestFunc, try to open/close DB")
-	if err := this.OpenDB(); err != nil {
-		t.Errorf("Failed to open database: %s", err)
-		return err
-	}
-	defer this.CloseDB()
-	return nil
-}
-
-func TestModel(t *testing.T) {
-	t.Log("TestModel")
-	mymodel := MyModel{}
-	mymodel.TestFunc(t)
-}
-
 func (this *MyModel) TestFuncGetAllFields(t *testing.T) error {
 	t.Log("Get all fields from a struct")
 	type Foo struct {
@@ -80,27 +64,15 @@ func (this *MyModel) TestGenerateUpdateSQL(t *testing.T) error {
 
 func TestGenerateSelectSQL(t *testing.T) {
 	mymodel := MyModel{}
-	if err := mymodel.OpenDB(); err != nil {
-		t.Errorf("Failed to open database: %s", err)
-	}
-	defer mymodel.CloseDB()
 	mymodel.TestGenerateSelectSQL(t)
 }
 
 func TestGetAllFields(t *testing.T) {
 	mymodel := MyModel{}
-	if err := mymodel.OpenDB(); err != nil {
-		t.Errorf("Failed to open database: %s", err)
-	}
-	defer mymodel.CloseDB()
 	mymodel.TestFuncGetAllFields(t)
 }
 
 func TestGenerateUpdateSQL(t *testing.T) {
 	mymodel := MyModel{Model{Table: "mytable"}}
-	if err := mymodel.OpenDB(); err != nil {
-		t.Errorf("Failed to open database: %s", err)
-	}
-	defer mymodel.CloseDB()
 	mymodel.TestGenerateUpdateSQL(t)
 }

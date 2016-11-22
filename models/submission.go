@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"github.com/jmoiron/sqlx"
 	"time"
 )
 
@@ -53,11 +54,11 @@ func (this *SubmissionModel) Validate(sub *Submission) error {
 	return nil
 }
 
-func (this *SubmissionModel) Insert(sub *Submission) (int64, error) {
+func (this *SubmissionModel) Insert(tx *sqlx.Tx, sub *Submission) (int64, error) {
 	if err := this.Validate(sub); err != nil {
 		return 0, err
 	}
-	last_insert_id, err := this.InlineInsert(sub, nil, []string{"run_id"})
+	last_insert_id, err := this.InlineInsert(tx, sub, nil, []string{"run_id"})
 	if err != nil {
 		return 0, err
 	}
@@ -65,16 +66,16 @@ func (this *SubmissionModel) Insert(sub *Submission) (int64, error) {
 
 }
 
-func (this *SubmissionModel) Update(sub *Submission, required []string, excepts []string) error {
-	if err := this.InlineUpdate(sub, "run_id", required, excepts); err != nil {
+func (this *SubmissionModel) Update(tx *sqlx.Tx, sub *Submission, required []string, excepts []string) error {
+	if err := this.InlineUpdate(tx, sub, "run_id", required, excepts); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (this *SubmissionModel) UpdateStatus(sub *Submission) error {
+func (this *SubmissionModel) UpdateStatus(tx *sqlx.Tx, sub *Submission) error {
 	required := []string{"status", "status_code", "testcases_passed"}
-	if err := this.Update(sub, required, nil); err != nil {
+	if err := this.Update(tx, sub, required, nil); err != nil {
 		return err
 	}
 	return nil

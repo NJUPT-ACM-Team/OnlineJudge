@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"github.com/jmoiron/sqlx"
 )
 
 type Language struct {
@@ -20,22 +21,22 @@ func NewLanguageModel() *LanguageModel {
 	return &LanguageModel{Model{Table: "Languages"}}
 }
 
-func (this *LanguageModel) Insert(lang *Language) (int64, error) {
-	last_insert_id, err := this.InlineInsert(lang, nil, []string{"lang_id"})
+func (this *LanguageModel) Insert(tx *sqlx.Tx, lang *Language) (int64, error) {
+	last_insert_id, err := this.InlineInsert(tx, lang, nil, []string{"lang_id"})
 	if err != nil {
 		return 0, err
 	}
 	return last_insert_id, nil
 }
 
-func (this *LanguageModel) QueryById(id int, required []string, excepts []string) (*Language, error) {
+func (this *LanguageModel) QueryById(tx *sqlx.Tx, id int, required []string, excepts []string) (*Language, error) {
 	lang := Language{}
 	str_fields, err := this.GenerateSelectSQL(lang, required, excepts)
 	// fmt.Println(str_fields)
 	if err != nil {
 		return nil, err
 	}
-	if err := this.Tx.Get(&lang, fmt.Sprintf("SELECT %s FROM %s WHERE lang_id=?", str_fields, this.Table), id); err != nil {
+	if err := tx.Get(&lang, fmt.Sprintf("SELECT %s FROM %s WHERE lang_id=?", str_fields, this.Table), id); err != nil {
 		return nil, err
 	}
 	return &lang, nil

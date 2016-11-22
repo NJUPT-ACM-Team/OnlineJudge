@@ -1,6 +1,7 @@
 package models
 
 import (
+	"OnlineJudge/models/db"
 	"testing"
 )
 
@@ -31,12 +32,19 @@ func TestOJInfoInsert(t *testing.T) {
 */
 
 func TestOJInfoQueryByName(t *testing.T) {
-	ojim := NewOJInfoModel()
-	if err := ojim.OpenDB(); err != nil {
+	DB, err := db.NewDB()
+	if err != nil {
 		t.Errorf("Failed to open db, %s", err)
+		return
 	}
-	defer ojim.CloseDB()
-	oj, err := ojim.QueryByName("zoj", nil, nil)
+	tx, err := DB.Beginx()
+	if err != nil {
+		t.Errorf("Failed to start transaction, %s", err)
+		return
+	}
+	defer DB.Close()
+	ojim := NewOJInfoModel()
+	oj, err := ojim.QueryByName(tx, "zoj", nil, nil)
 	if err != nil {
 		t.Errorf("Failed to query by 'noj', %s", err)
 	}
@@ -44,12 +52,19 @@ func TestOJInfoQueryByName(t *testing.T) {
 }
 
 func TestOJInfoQueryALl(t *testing.T) {
-	ojim := NewOJInfoModel()
-	if err := ojim.OpenDB(); err != nil {
+	DB, err := db.NewDB()
+	if err != nil {
 		t.Errorf("Failed to open db, %s", err)
+		return
 	}
-	defer ojim.CloseDB()
-	ojs, err := ojim.QueryAll(nil, nil)
+	tx, err := DB.Beginx()
+	if err != nil {
+		t.Errorf("Failed to start transaction, %s", err)
+		return
+	}
+	defer DB.Close()
+	ojim := NewOJInfoModel()
+	ojs, err := ojim.QueryAll(tx, nil, nil)
 	if err != nil {
 		t.Errorf("Failed to query all, %s", err)
 	}
@@ -59,19 +74,26 @@ func TestOJInfoQueryALl(t *testing.T) {
 }
 
 func TestOJInfoUpdate(t *testing.T) {
-	ojim := NewOJInfoModel()
-	if err := ojim.OpenDB(); err != nil {
+	DB, err := db.NewDB()
+	if err != nil {
 		t.Errorf("Failed to open db, %s", err)
+		return
 	}
-	defer ojim.CloseDB()
+	tx, err := DB.Beginx()
+	if err != nil {
+		t.Errorf("Failed to start transaction, %s", err)
+		return
+	}
+	defer DB.Close()
+	ojim := NewOJInfoModel()
 	ojinfo := OJInfo{
 		OJId:    1,
-		Int64IO: "%I64d",
+		Int64IO: "%lld",
 	}
-	if err := ojim.Update(&ojinfo, []string{"int64io"}, nil); err != nil {
+	if err := ojim.Update(tx, &ojinfo, []string{"int64io"}, nil); err != nil {
 		t.Errorf("Failed to update, %s", err)
 	}
-	if err := ojim.Commit(); err != nil {
+	if err := tx.Commit(); err != nil {
 		t.Errorf("Failed to commit, %s", err)
 	}
 }

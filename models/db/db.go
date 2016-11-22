@@ -17,6 +17,7 @@ func UseConfig(cfg Config) {
 }
 
 func NewDB() (*sqlx.DB, error) {
+	Init()
 	dn := config.GetDriverName()
 	dsn, err := config.GetDataSourceName()
 	if err != nil {

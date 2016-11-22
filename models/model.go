@@ -8,39 +8,23 @@ import (
 	"time"
 
 	"OnlineJudge/base"
-	"OnlineJudge/models/db"
+	//"OnlineJudge/models/db"
 	"github.com/jmoiron/sqlx"
+	"github.com/jmoiron/sqlx/reflectx"
 )
 
 type Model struct {
-	DB    *sqlx.DB
-	Tx    *sqlx.Tx
 	Table string
 }
 
-func (this *Model) OpenDB() error {
-	db.Init()
-	var err error
-	if this.DB, err = db.NewDB(); err != nil {
-		return err
-	}
-	if this.Tx, err = this.DB.Beginx(); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (this *Model) Commit() error {
-	return this.Tx.Commit()
-}
-
-func (this *Model) CloseDB() {
-	this.Tx.Rollback()
-	this.DB.Close()
-}
-
 func (this *Model) GetAllFields(v interface{}) ([]string, error) {
-	mapping := this.DB.Mapper.TypeMap(reflect.TypeOf(v))
+	mapper := reflectx.NewMapperTagFunc("db", strings.ToLower, func(value string) string {
+		if strings.Contains(value, ",") {
+			return strings.Split(value, ",")[0]
+		}
+		return value
+	})
+	mapping := mapper.TypeMap(reflect.TypeOf(v))
 	if len(mapping.Paths) == 0 {
 		return nil, errors.New("Empty struct definition.")
 	}
@@ -105,9 +89,15 @@ func (this *Model) GenerateSelectSQL(st interface{}, required []string, excepts 
 	if err != nil {
 		return "", err
 	}
+	mapper := reflectx.NewMapperTagFunc("db", strings.ToLower, func(value string) string {
+		if strings.Contains(value, ",") {
+			return strings.Split(value, ",")[0]
+		}
+		return value
+	})
 	for k, v := range fields {
 		var dft string
-		val := this.DB.Mapper.FieldByName(reflect.ValueOf(st), v)
+		val := mapper.FieldByName(reflect.ValueOf(st), v)
 		switch val.Interface().(type) {
 		case int:
 			dft = "0"
@@ -134,16 +124,22 @@ func (this *Model) GenerateUpdateSQL(st interface{}, pk string, required []strin
 		values = append(values, v+"=:"+v)
 	}
 	str_fields := strings.Join(values, ",")
-	pkv := this.DB.Mapper.FieldByName(reflect.ValueOf(st), pk).Interface().(int)
+	mapper := reflectx.NewMapperTagFunc("db", strings.ToLower, func(value string) string {
+		if strings.Contains(value, ",") {
+			return strings.Split(value, ",")[0]
+		}
+		return value
+	})
+	pkv := mapper.FieldByName(reflect.ValueOf(st), pk).Interface().(int)
 	return fmt.Sprintf("UPDATE %s SET %s WHERE %s=%d", this.Table, str_fields, pk, pkv), nil
 }
 
-func (this *Model) InlineInsert(st interface{}, required []string, excepts []string) (int64, error) {
+func (this *Model) InlineInsert(tx *sqlx.Tx, st interface{}, required []string, excepts []string) (int64, error) {
 	sql_insert, err := this.GenerateInsertSQL(st, this.Table, required, excepts)
 	if err != nil {
 		return 0, err
 	}
-	res, err := this.Tx.NamedExec(sql_insert, st)
+	res, err := tx.NamedExec(sql_insert, st)
 	if err != nil {
 		return 0, err
 	}
@@ -154,12 +150,12 @@ func (this *Model) InlineInsert(st interface{}, required []string, excepts []str
 	return last_insert_id, nil
 }
 
-func (this *Model) InlineUpdate(st interface{}, pk string, required []string, excepts []string) error {
+func (this *Model) InlineUpdate(tx *sqlx.Tx, st interface{}, pk string, required []string, excepts []string) error {
 	sql_update, err := this.GenerateUpdateSQL(st, pk, required, excepts)
 	if err != nil {
 		return err
 	}
-	if _, err := this.Tx.NamedExec(sql_update, st); err != nil {
+	if _, err := tx.NamedExec(sql_update, st); err != nil {
 		return err
 	}
 	return nil

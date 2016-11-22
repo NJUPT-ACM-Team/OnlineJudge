@@ -1,6 +1,9 @@
 package models
 
-import "testing"
+import (
+	"OnlineJudge/models/db"
+	"testing"
+)
 
 /*
 func TestLanguageInsert(t *testing.T) {
@@ -21,12 +24,19 @@ func TestLanguageInsert(t *testing.T) {
 */
 
 func TestLanuageQuery(t *testing.T) {
-	lm := NewLanguageModel()
-	if err := lm.OpenDB(); err != nil {
+	DB, err := db.NewDB()
+	if err != nil {
 		t.Errorf("Failed to open db, %s", err)
+		return
 	}
-	defer lm.CloseDB()
-	lang, err := lm.QueryById(2, nil, nil)
+	tx, err := DB.Beginx()
+	if err != nil {
+		t.Errorf("Failed to start transaction, %s", err)
+		return
+	}
+	defer DB.Close()
+	lm := NewLanguageModel()
+	lang, err := lm.QueryById(tx, 2, nil, nil)
 	if err != nil {
 		t.Errorf("Failed to query, %s", err)
 	}
