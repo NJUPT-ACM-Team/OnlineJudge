@@ -2,11 +2,14 @@ package models
 
 import (
 	"OnlineJudge/models/api"
+
+	//	"github.com/golang/protobuf/jsonpb"
+	// "github.com/golang/protobuf/proto"
 	"testing"
 )
 
 func TestAPISubmitResponse(t *testing.T) {
-	subres := api.SubmitResponse{
+	subres := &api.SubmitResponse{
 		Result:       api.SubmitResponse_SUCCESS,
 		Hint:         "nothing",
 		SubmissionId: 123,
@@ -21,17 +24,13 @@ func TestAPISubmitResponse(t *testing.T) {
 
 func TestAPISubmitRequest(t *testing.T) {
 	sbreq := api.SubmitRequest{
-		Oj:           "local",
-		ProblemId:    1000,
+		ProblemSid:   "local#1000",
 		Code:         "hello world",
 		LanguageCode: 10,
 		IsShared:     false,
 	}
 	t.Log(sbreq.String())
-	if sbreq.GetOj() != "local" {
-		t.Errorf("GetOj not right")
-	}
-	if sbreq.GetProblemId() != 1000 {
+	if sbreq.GetProblemSid() != "local#1000" {
 		t.Errorf("GetProblemId not right")
 	}
 	if sbreq.GetCode() != "hello world" {
