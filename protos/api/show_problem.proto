@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package api;
+
+message ShowProblemRequest {
+  string oj = 1;
+  int32 problem_id = 2;
+
+  enum Element {
+    TITLE = 0;
+    TIME_LIMIT = 1;
+    MEMORY_LIMIT = 2;
+    DESCRIPTION = 3;
+    INPUT = 4;
+    OUTPUT = 5;
+    SAMPLE_INPUT = 6;
+    SAMPLE_OUTPUT = 7;
+    SOURCE = 8;
+    HINT = 9;
+  }
+  bool if_need_all_elements = 3;
+  repeated Element elements_needed = 4;
+
+}
+
+// response
+message ShowProblemResponse {
+  string oj = 1;
+  int32 problem_id = 2;
+
+  string title = 3;
+  int32 time_limit = 4;
+  int32 memory_limit = 5;
+  string input = 6;
+  string output = 7;
+  string sample_input = 8;
+  string sample_output = 9;
+  string source = 19;
+  string hint = 11;
+
+  message Language {
+    string language = 1;
+    int32 code = 2;
+  }
+  repeated Language languages = 12;
+}

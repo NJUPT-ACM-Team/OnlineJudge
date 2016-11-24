@@ -1,0 +1,20 @@
+syntax='proto3'
+
+service Daemon {
+    rpc StartJudging(Submission) returns () {}
+    rpc GetDBInfo() returns (DBInfo) {}
+    rpc Register(RegInfo) returns (RegResult) {}
+}
+
+
+message DBInfo {
+}
+
+message Submission {
+    int64 run_id = 1;
+
+}
+
+message Result {
+
+}
