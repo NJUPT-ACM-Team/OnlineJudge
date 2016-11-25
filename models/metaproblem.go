@@ -1,4 +1,4 @@
-package models_basic
+package models
 
 import (
 	"fmt"
@@ -20,8 +20,8 @@ type MetaProblem struct {
 	Source            string
 	Hint              string
 	Hide              int
-	OJIdFK            int `db:"oj_id_fk"`
-	OJPid             int `db:"oj_pid"`
+	OJIdFK            int64 `db:"oj_id_fk"`
+	OJPid             int64 `db:"oj_pid"`
 }
 
 type MetaProblemModel struct {

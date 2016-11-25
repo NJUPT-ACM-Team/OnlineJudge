@@ -1,4 +1,4 @@
-package models_basic
+package models
 
 import (
 	"errors"
@@ -20,11 +20,11 @@ type Submission struct {
 	IPAddr          string `db:"ip_addr"`
 	IsShared        bool   `db:"is_shared"`
 
-	IsContest bool `db:"is_contest"`
-	CPIdFK    int  `db:"cp_id_fk"`
-	CUIdFK    int  `db:"cu_id_fk"`
-	MetaPidFK int  `db:"meta_pid_fk"`
-	UserIdFK  int  `db:"user_id_fk"`
+	IsContest bool  `db:"is_contest"`
+	CPIdFK    int64 `db:"cp_id_fk"`
+	CUIdFK    int64 `db:"cu_id_fk"`
+	MetaPidFK int64 `db:"meta_pid_fk"`
+	UserIdFK  int64 `db:"user_id_fk"`
 }
 
 type SubmissionModel struct {

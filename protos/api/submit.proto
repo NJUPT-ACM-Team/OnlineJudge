@@ -2,20 +2,18 @@ syntax = "proto3";
 
 package api;
 
+import "api/common.proto";
+
 message SubmitRequest {
-    string oj = 1;
-    int32 problem_id = 2;
+    uint64 contest_id = 1;
+    string problem_sid = 2;
     string code = 3;
     int32 language_code = 4;
     bool is_shared = 5;
+    string ip_addr = 6;
 }
 
 message SubmitResponse {
-    enum Result {
-        SUCCESS = 0;
-        FAILURE = 1;
-    }
-    Result result = 1;
-    string hint = 2;
-    int64 submission_id = 3;
+    int64 run_id = 1;
+    Error error = 2;
 }

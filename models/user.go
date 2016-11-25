@@ -1,13 +1,14 @@
-package models_basic
+package models
 
 import (
+	"errors"
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"time"
 )
 
 type User struct {
-	UserId   int `db:"user_id"`
+	UserId   int64 `db:"user_id"`
 	Username string
 	Password string
 	Email    string
@@ -66,4 +67,15 @@ func (this *UserModel) QueryByName(tx *sqlx.Tx, name string, required []string, 
 		return nil, err
 	}
 	return &user, nil
+}
+
+func (this *UserModel) QueryIdByName(tx *sqlx.Tx, name string) (int64, error) {
+	user, err := this.QueryByName(tx, name, []string{"user_id"}, nil)
+	if err != nil {
+		return 0, err
+	}
+	if user.UserId == 0 {
+		return 0, errors.New("Failed to get user_id")
+	}
+	return user.UserId, nil
 }

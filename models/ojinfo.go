@@ -1,13 +1,14 @@
-package models_basic
+package models
 
 import (
+	"errors"
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"time"
 )
 
 type OJInfo struct {
-	OJId         int `db:"oj_id"`
+	OJId         int64 `db:"oj_id"`
 	Name         string
 	Version      string
 	Int64IO      string
@@ -45,6 +46,17 @@ func (this *OJInfoModel) QueryByName(tx *sqlx.Tx, name string, required []string
 		return nil, err
 	}
 	return &ojinfo, nil
+}
+
+func (this *OJInfoModel) QueryIdByName(tx *sqlx.Tx, name string) (int64, error) {
+	ojinfo, err := this.QueryByName(tx, name, []string{"oj_id"}, nil)
+	if err != nil {
+		return 0, err
+	}
+	if ojinfo.OJId == 0 {
+		return 0, errors.New("Failed to get oj_id")
+	}
+	return ojinfo.OJId, nil
 }
 
 func (this *OJInfoModel) QueryAll(tx *sqlx.Tx, required []string, excepts []string) ([]OJInfo, error) {

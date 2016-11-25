@@ -1,10 +1,9 @@
 syntax = "proto3";
-
 package api;
 
 message ShowProblemRequest {
-  string oj = 1;
-  int32 problem_id = 2;
+  uint64 contest_id = 1;
+  string problem_sid = 2;
 
   enum Element {
     TITLE = 0;
@@ -25,8 +24,8 @@ message ShowProblemRequest {
 
 // response
 message ShowProblemResponse {
-  string oj = 1;
-  int32 problem_id = 2;
+  uint64 contest_id = 1;
+  uint64 problem_sid = 2;
 
   string title = 3;
   int32 time_limit = 4;
@@ -43,4 +42,5 @@ message ShowProblemResponse {
     int32 code = 2;
   }
   repeated Language languages = 12;
+  string error = 13;
 }
