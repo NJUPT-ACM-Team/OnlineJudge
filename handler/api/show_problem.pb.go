@@ -57,7 +57,7 @@ func (x ShowProblemRequest_Element) String() string {
 	return proto.EnumName(ShowProblemRequest_Element_name, int32(x))
 }
 func (ShowProblemRequest_Element) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor1, []int{0, 0}
+	return fileDescriptor2, []int{0, 0}
 }
 
 type ShowProblemRequest struct {
@@ -70,7 +70,7 @@ type ShowProblemRequest struct {
 func (m *ShowProblemRequest) Reset()                    { *m = ShowProblemRequest{} }
 func (m *ShowProblemRequest) String() string            { return proto.CompactTextString(m) }
 func (*ShowProblemRequest) ProtoMessage()               {}
-func (*ShowProblemRequest) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{0} }
+func (*ShowProblemRequest) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{0} }
 
 func (m *ShowProblemRequest) GetContestId() uint64 {
 	if m != nil {
@@ -120,7 +120,7 @@ type ShowProblemResponse struct {
 func (m *ShowProblemResponse) Reset()                    { *m = ShowProblemResponse{} }
 func (m *ShowProblemResponse) String() string            { return proto.CompactTextString(m) }
 func (*ShowProblemResponse) ProtoMessage()               {}
-func (*ShowProblemResponse) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{1} }
+func (*ShowProblemResponse) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{1} }
 
 func (m *ShowProblemResponse) GetContestId() uint64 {
 	if m != nil {
@@ -221,7 +221,7 @@ type ShowProblemResponse_Language struct {
 func (m *ShowProblemResponse_Language) Reset()                    { *m = ShowProblemResponse_Language{} }
 func (m *ShowProblemResponse_Language) String() string            { return proto.CompactTextString(m) }
 func (*ShowProblemResponse_Language) ProtoMessage()               {}
-func (*ShowProblemResponse_Language) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{1, 0} }
+func (*ShowProblemResponse_Language) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{1, 0} }
 
 func (m *ShowProblemResponse_Language) GetLanguage() string {
 	if m != nil {
@@ -244,9 +244,9 @@ func init() {
 	proto.RegisterEnum("api.ShowProblemRequest_Element", ShowProblemRequest_Element_name, ShowProblemRequest_Element_value)
 }
 
-func init() { proto.RegisterFile("api/show_problem.proto", fileDescriptor1) }
+func init() { proto.RegisterFile("api/show_problem.proto", fileDescriptor2) }
 
-var fileDescriptor1 = []byte{
+var fileDescriptor2 = []byte{
 	// 517 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x9c, 0x93, 0xcb, 0x6a, 0xdb, 0x4e,
 	0x14, 0xc6, 0xff, 0x8a, 0x2e, 0x96, 0x8e, 0x6c, 0x47, 0x99, 0x18, 0x23, 0x02, 0x7f, 0xa2, 0xb8,

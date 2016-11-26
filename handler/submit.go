@@ -8,12 +8,22 @@ import (
 	"time"
 )
 
+var (
+	ErrProblemNotFound = errors.New("Problem does not exist or not visible.")
+	ErrNotLogin        = errors.New("You have not logged in, log in first please.")
+)
+
 // Need to be tested
 func (this *Handler) Submit(subreq *api.SubmitRequest) *api.SubmitResponse {
 	if err := this.OpenDB(); err != nil {
 		return api.NewSubmitResponseError(this.debug, 500, err)
 	}
 	defer this.CloseDB()
+
+	// if login
+	if this.session.IsLogin() == false {
+		return api.NewSubmitResponseError(true, 403, ErrNotLogin)
+	}
 
 	// Parse ProblemSid
 	var oj_name string
@@ -33,13 +43,12 @@ func (this *Handler) Submit(subreq *api.SubmitRequest) *api.SubmitResponse {
 	if err := this.tx.Get(&mc1, sql1, oj_pid, oj_name); err != nil {
 		return api.NewSubmitResponseError(this.debug, 500, err)
 	}
-	ErrProblemNotFound := errors.New("Problem does not exist or not visible.")
 	if mc1.MetaPid == 0 {
 		return api.NewSubmitResponseError(true, 404, ErrProblemNotFound)
 	}
 
 	// if visible
-	if mc1.Hide == 1 && this.session.privilege != "root" {
+	if mc1.Hide == 1 && this.session.GetPrivilege() != "root" {
 		return api.NewSubmitResponseError(true, 404, ErrProblemNotFound)
 	}
 
@@ -55,7 +64,7 @@ func (this *Handler) Submit(subreq *api.SubmitRequest) *api.SubmitResponse {
 
 		IsContest: false,
 		MetaPidFK: mc1.MetaPid,
-		UserIdFK:  this.session.user_id,
+		UserIdFK:  this.session.GetUserId(),
 	}
 	run_id, err := subm.Insert(this.tx, sub)
 	if err != nil {

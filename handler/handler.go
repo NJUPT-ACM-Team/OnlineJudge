@@ -2,23 +2,18 @@ package handler
 
 import (
 	"OnlineJudge/models/db"
+	locals "OnlineJudge/sessions"
 	"github.com/jmoiron/sqlx"
 )
 
-type Session struct {
-	username  string
-	user_id   int64
-	privilege string
-}
-
 type Handler struct {
-	session *Session
+	session locals.Session
 	db      *sqlx.DB
 	tx      *sqlx.Tx
 	debug   bool
 }
 
-func NewHandler(sess *Session, dbg bool) *Handler {
+func NewHandler(sess locals.Session, dbg bool) *Handler {
 	handler := &Handler{
 		session: sess,
 		debug:   dbg,

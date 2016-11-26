@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package api;
+
+import "api/common.proto";
+
+message LoginInitRequest {
+    string msg = 1;
+    string version = 2;
+}
+
+message LoginInitResponse {
+    bytes salt = 1;
+    string version = 2;
+    bool is_captcha = 3;
+    Error error = 4;
+}
+
+message LoginValidationRequest {
+    string username = 1;
+    bytes passwd = 2;
+    string captcha = 3;
+}
+
+message LoginValidationResponse {
+    string msg = 1;
+    string privilege = 2;
+    Error error = 3;
+}
