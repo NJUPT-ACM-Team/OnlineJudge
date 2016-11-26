@@ -7,7 +7,7 @@ import (
 )
 
 type Submission struct {
-	RunId           int `db:"run_id"`
+	RunId           int64 `db:"run_id"`
 	Status          string
 	StatusCode      string    `db:"status_code"`
 	TestCasesPassed int       `db:"testcases_passed"`

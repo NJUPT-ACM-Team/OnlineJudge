@@ -2,7 +2,7 @@ package handler
 
 import (
 	"OnlineJudge/models/db"
-	locals "OnlineJudge/sessions"
+	locals "OnlineJudge/session"
 	"github.com/jmoiron/sqlx"
 )
 

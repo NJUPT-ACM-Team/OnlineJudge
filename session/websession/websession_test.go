@@ -1,10 +1,10 @@
 package websession
 
 import (
-	"encoding/base64"
+	//"encoding/base64"
 	"github.com/gorilla/sessions"
 	"net/http"
-	// "net/http/httptest"
+	"net/http/httptest"
 	"testing"
 )
 
@@ -15,18 +15,29 @@ func TestNewWebSession(t *testing.T) {
 	if err != nil {
 		t.Fatal("failed to create request", err)
 	}
-	// w := httptest.NewRecorder()
+	w := httptest.NewRecorder()
 	session, err := store.New(req, "my session")
-	session.Values["big"] = make([]byte, base64.StdEncoding.DecodedLen(4096*2))
 
 	mysess := NewWebSession(session)
+	mysess.SetUserName("kevince")
 	t.Log(mysess.IsLogin())
-
-	/*
-		err = session.Save(req, w)
-		if err == nil {
-			t.Fatal("expected an error, got nil")
-		}
-	*/
+	t.Log(session.Values["username"])
+	if session.Values["username"] != "kevince" {
+		t.Fatal("Failed to get username")
+	}
+	if err := mysess.Set("username", "a"); err == nil {
+		t.Fatal("Supposed to be error, but nil")
+	}
+	if err := mysess.Set("test", "this is a test"); err != nil {
+		t.Fatal(err)
+	}
+	if val, err := mysess.Get("test"); err != nil || val != "this is a test" {
+		t.Fatal(err)
+	}
+	err = session.Save(req, w)
+	if err != nil {
+		t.Fatal("Save error, %s", err)
+	}
+	t.Log(w)
 
 }

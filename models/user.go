@@ -63,7 +63,7 @@ func (this *UserModel) QueryByName(tx *sqlx.Tx, name string, required []string, 
 	if err != nil {
 		return nil, err
 	}
-	if err := tx.Get(&user, fmt.Sprintf("SELECT %s FROM %s WHERE username=?", str_fields, this.Table), name); err != nil {
+	if err := tx.Get(&user, fmt.Sprintf("SELECT %s FROM %s WHERE username=? LIMIT 1", str_fields, this.Table), name); err != nil {
 		return nil, err
 	}
 	return &user, nil
@@ -78,4 +78,15 @@ func (this *UserModel) QueryIdByName(tx *sqlx.Tx, name string) (int64, error) {
 		return 0, errors.New("Failed to get user_id")
 	}
 	return user.UserId, nil
+}
+
+func (this *UserModel) Validate(tx *sqlx.Tx, name string, password string) (bool, error) {
+	user, err := this.QueryByName(tx, name, []string{"password"}, nil)
+	if err != nil {
+		return false, err
+	}
+	if user.Password == password {
+		return true, nil
+	}
+	return false, nil
 }

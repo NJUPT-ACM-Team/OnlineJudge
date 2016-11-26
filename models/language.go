@@ -6,11 +6,11 @@ import (
 )
 
 type Language struct {
-	LangId      int `db:"lang_id"`
+	LangId      int64 `db:"lang_id"`
 	Language    string
 	OptionValue string `db:"option_value"`
 	Compiler    string
-	OJIdFK      int `db:"oj_id_fk"`
+	OJIdFK      int64 `db:"oj_id_fk"`
 }
 
 type LanguageModel struct {
@@ -29,7 +29,7 @@ func (this *LanguageModel) Insert(tx *sqlx.Tx, lang *Language) (int64, error) {
 	return last_insert_id, nil
 }
 
-func (this *LanguageModel) QueryById(tx *sqlx.Tx, id int, required []string, excepts []string) (*Language, error) {
+func (this *LanguageModel) QueryById(tx *sqlx.Tx, id int64, required []string, excepts []string) (*Language, error) {
 	lang := Language{}
 	str_fields, err := this.GenerateSelectSQL(lang, required, excepts)
 	// fmt.Println(str_fields)

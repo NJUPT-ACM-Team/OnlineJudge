@@ -11,7 +11,7 @@ type MyModel struct {
 func (this *MyModel) TestFuncGetAllFields(t *testing.T) error {
 	t.Log("Get all fields from a struct")
 	type Foo struct {
-		RunId      int `db:"run_id"`
+		RunId      int64 `db:"run_id"`
 		Status     string
 		StatusCode string `db:"status_code"`
 	}
@@ -32,7 +32,7 @@ func (this *MyModel) TestFuncGetAllFields(t *testing.T) error {
 
 func (this *MyModel) TestGenerateSelectSQL(t *testing.T) error {
 	type Foo struct {
-		RunId      int `db:"run_id"`
+		RunId      int64 `db:"run_id"`
 		Status     string
 		StatusCode string `db:"status_code"`
 	}
@@ -48,7 +48,7 @@ func (this *MyModel) TestGenerateSelectSQL(t *testing.T) error {
 
 func (this *MyModel) TestGenerateUpdateSQL(t *testing.T) error {
 	type Foo struct {
-		RunId      int `db:"run_id"`
+		RunId      int64 `db:"run_id"`
 		Status     string
 		StatusCode string `db:"status_code"`
 	}

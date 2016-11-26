@@ -6,7 +6,7 @@ import (
 )
 
 type MetaProblem struct {
-	MetaPid           int `db:"meta_pid"`
+	MetaPid           int64 `db:"meta_pid"`
 	Title             string
 	Description       string
 	Input             string
@@ -40,7 +40,7 @@ func (this *MetaProblemModel) Insert(tx *sqlx.Tx, mp *MetaProblem) (int64, error
 	return last_insert_id, nil
 }
 
-func (this *MetaProblemModel) QueryById(tx *sqlx.Tx, id int, required []string, excepts []string) (*MetaProblem, error) {
+func (this *MetaProblemModel) QueryById(tx *sqlx.Tx, id int64, required []string, excepts []string) (*MetaProblem, error) {
 	mp := MetaProblem{}
 	str_fields, err := this.GenerateSelectSQL(mp, required, excepts)
 	if err != nil {
@@ -52,7 +52,7 @@ func (this *MetaProblemModel) QueryById(tx *sqlx.Tx, id int, required []string, 
 	return &mp, nil
 }
 
-func (this *MetaProblemModel) QueryByOJIdAndPid(tx *sqlx.Tx, oj_id int, pid int, required []string, excepts []string) (*MetaProblem, error) {
+func (this *MetaProblemModel) QueryByOJIdAndPid(tx *sqlx.Tx, oj_id int64, pid int, required []string, excepts []string) (*MetaProblem, error) {
 
 	mp := MetaProblem{}
 	str_fields, err := this.GenerateSelectSQL(mp, required, excepts)

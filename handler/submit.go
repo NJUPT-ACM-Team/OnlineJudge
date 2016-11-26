@@ -14,6 +14,7 @@ var (
 )
 
 // Need to be tested
+// Depend on MetaProblems, OJInfo,
 func (this *Handler) Submit(subreq *api.SubmitRequest) *api.SubmitResponse {
 	if err := this.OpenDB(); err != nil {
 		return api.NewSubmitResponseError(this.debug, 500, err)
@@ -74,7 +75,7 @@ func (this *Handler) Submit(subreq *api.SubmitRequest) *api.SubmitResponse {
 		return api.NewSubmitResponseError(this.debug, 500, err)
 	}
 
-	// Use RPC to judge the submission
+	// Use RPC to call Daemon to judge the submission
 
 	return &api.SubmitResponse{
 		RunId: run_id,

@@ -130,7 +130,7 @@ func (this *Model) GenerateUpdateSQL(st interface{}, pk string, required []strin
 		}
 		return value
 	})
-	pkv := mapper.FieldByName(reflect.ValueOf(st), pk).Interface().(int)
+	pkv := mapper.FieldByName(reflect.ValueOf(st), pk).Interface().(int64)
 	return fmt.Sprintf("UPDATE %s SET %s WHERE %s=%d", this.Table, str_fields, pk, pkv), nil
 }
 
