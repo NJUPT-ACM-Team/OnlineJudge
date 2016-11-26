@@ -17,7 +17,7 @@ type Model struct {
 	Table string
 }
 
-func (this *Model) GetAllFields(v interface{}) ([]string, error) {
+func GetAllFields(v interface{}) ([]string, error) {
 	mapper := reflectx.NewMapperTagFunc("db", strings.ToLower, func(value string) string {
 		if strings.Contains(value, ",") {
 			return strings.Split(value, ",")[0]
@@ -35,7 +35,7 @@ func (this *Model) GetAllFields(v interface{}) ([]string, error) {
 	return fields, nil
 }
 
-func (this *Model) FilterFields(all_fields []string, required []string, excepts []string) ([]string, error) {
+func FilterFields(all_fields []string, required []string, excepts []string) ([]string, error) {
 	if (excepts != nil && len(excepts) > 0) && (required != nil && len(required) > 0) {
 		return nil, errors.New("Parameters conficted, using only required or only excepts.")
 	}
@@ -60,12 +60,12 @@ func (this *Model) FilterFields(all_fields []string, required []string, excepts 
 	return fields, nil
 }
 
-func (this *Model) GenerateInsertSQL(st interface{}, table string, required []string, excepts []string) (string, error) {
-	all_fields, err := this.GetAllFields(st)
+func GenerateInsertSQL(st interface{}, table string, required []string, excepts []string) (string, error) {
+	all_fields, err := GetAllFields(st)
 	if err != nil {
 		return "", err
 	}
-	reversed_fields, err := this.FilterFields(all_fields, required, excepts)
+	reversed_fields, err := FilterFields(all_fields, required, excepts)
 	if err != nil {
 		return "", err
 	}
@@ -80,12 +80,12 @@ func (this *Model) GenerateInsertSQL(st interface{}, table string, required []st
 	return fmt.Sprintf("INSERT INTO %s %s VALUES %s", table, cols, vals), nil
 }
 
-func (this *Model) GenerateSelectSQL(st interface{}, required []string, excepts []string) (string, error) {
-	all_fields, err := this.GetAllFields(st)
+func GenerateSelectSQL(st interface{}, required []string, excepts []string) (string, error) {
+	all_fields, err := GetAllFields(st)
 	if err != nil {
 		return "", err
 	}
-	fields, err := this.FilterFields(all_fields, required, excepts)
+	fields, err := FilterFields(all_fields, required, excepts)
 	if err != nil {
 		return "", err
 	}
@@ -113,12 +113,12 @@ func (this *Model) GenerateSelectSQL(st interface{}, required []string, excepts 
 	return strings.Join(fields, ","), nil
 }
 
-func (this *Model) GenerateUpdateSQL(st interface{}, pk string, required []string, excepts []string) (string, error) {
-	all_fields, err := this.GetAllFields(st)
+func GenerateUpdateSQL(st interface{}, pk string, table string, required []string, excepts []string) (string, error) {
+	all_fields, err := GetAllFields(st)
 	if err != nil {
 		return "", err
 	}
-	fields, err := this.FilterFields(all_fields, required, excepts)
+	fields, err := FilterFields(all_fields, required, excepts)
 	values := []string{}
 	for _, v := range fields {
 		values = append(values, v+"=:"+v)
@@ -131,11 +131,11 @@ func (this *Model) GenerateUpdateSQL(st interface{}, pk string, required []strin
 		return value
 	})
 	pkv := mapper.FieldByName(reflect.ValueOf(st), pk).Interface().(int64)
-	return fmt.Sprintf("UPDATE %s SET %s WHERE %s=%d", this.Table, str_fields, pk, pkv), nil
+	return fmt.Sprintf("UPDATE %s SET %s WHERE %s=%d", table, str_fields, pk, pkv), nil
 }
 
 func (this *Model) InlineInsert(tx *sqlx.Tx, st interface{}, required []string, excepts []string) (int64, error) {
-	sql_insert, err := this.GenerateInsertSQL(st, this.Table, required, excepts)
+	sql_insert, err := GenerateInsertSQL(st, this.Table, required, excepts)
 	if err != nil {
 		return 0, err
 	}
@@ -151,7 +151,7 @@ func (this *Model) InlineInsert(tx *sqlx.Tx, st interface{}, required []string, 
 }
 
 func (this *Model) InlineUpdate(tx *sqlx.Tx, st interface{}, pk string, required []string, excepts []string) error {
-	sql_update, err := this.GenerateUpdateSQL(st, pk, required, excepts)
+	sql_update, err := GenerateUpdateSQL(st, pk, this.Table, required, excepts)
 	if err != nil {
 		return err
 	}

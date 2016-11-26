@@ -37,7 +37,7 @@ func (this *OJInfoModel) Insert(tx *sqlx.Tx, oj *OJInfo) (int64, error) {
 
 func (this *OJInfoModel) QueryByName(tx *sqlx.Tx, name string, required []string, excepts []string) (*OJInfo, error) {
 	ojinfo := OJInfo{}
-	str_fields, err := this.GenerateSelectSQL(ojinfo, required, excepts)
+	str_fields, err := GenerateSelectSQL(ojinfo, required, excepts)
 	// fmt.Println(str_fields)
 	if err != nil {
 		return nil, err
@@ -61,7 +61,7 @@ func (this *OJInfoModel) QueryIdByName(tx *sqlx.Tx, name string) (int64, error) 
 
 func (this *OJInfoModel) QueryAll(tx *sqlx.Tx, required []string, excepts []string) ([]OJInfo, error) {
 	ojs := []OJInfo{}
-	str_fields, err := this.GenerateSelectSQL(OJInfo{}, required, excepts)
+	str_fields, err := GenerateSelectSQL(OJInfo{}, required, excepts)
 	if err != nil {
 		return nil, err
 	}

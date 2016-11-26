@@ -42,7 +42,7 @@ func (this *MetaProblemModel) Insert(tx *sqlx.Tx, mp *MetaProblem) (int64, error
 
 func (this *MetaProblemModel) QueryById(tx *sqlx.Tx, id int64, required []string, excepts []string) (*MetaProblem, error) {
 	mp := MetaProblem{}
-	str_fields, err := this.GenerateSelectSQL(mp, required, excepts)
+	str_fields, err := GenerateSelectSQL(mp, required, excepts)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func (this *MetaProblemModel) QueryById(tx *sqlx.Tx, id int64, required []string
 func (this *MetaProblemModel) QueryByOJIdAndPid(tx *sqlx.Tx, oj_id int64, pid int, required []string, excepts []string) (*MetaProblem, error) {
 
 	mp := MetaProblem{}
-	str_fields, err := this.GenerateSelectSQL(mp, required, excepts)
+	str_fields, err := GenerateSelectSQL(mp, required, excepts)
 	if err != nil {
 		return nil, err
 	}

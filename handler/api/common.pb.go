@@ -15,8 +15,8 @@ It has these top-level messages:
 	Error
 	LoginInitRequest
 	LoginInitResponse
-	LoginValidationRequest
-	LoginValidationResponse
+	LoginAuthRequest
+	LoginAuthResponse
 	ShowProblemRequest
 	ShowProblemResponse
 	SubmitRequest

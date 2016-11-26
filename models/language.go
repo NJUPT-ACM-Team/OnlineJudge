@@ -31,7 +31,7 @@ func (this *LanguageModel) Insert(tx *sqlx.Tx, lang *Language) (int64, error) {
 
 func (this *LanguageModel) QueryById(tx *sqlx.Tx, id int64, required []string, excepts []string) (*Language, error) {
 	lang := Language{}
-	str_fields, err := this.GenerateSelectSQL(lang, required, excepts)
+	str_fields, err := GenerateSelectSQL(lang, required, excepts)
 	// fmt.Println(str_fields)
 	if err != nil {
 		return nil, err

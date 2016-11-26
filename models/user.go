@@ -46,7 +46,7 @@ func (this *UserModel) Insert(tx *sqlx.Tx, user *User) (int64, error) {
 
 func (this *UserModel) QueryById(tx *sqlx.Tx, id int, required []string, excepts []string) (*User, error) {
 	user := User{}
-	str_fields, err := this.GenerateSelectSQL(user, required, excepts)
+	str_fields, err := GenerateSelectSQL(user, required, excepts)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (this *UserModel) QueryById(tx *sqlx.Tx, id int, required []string, excepts
 func (this *UserModel) QueryByName(tx *sqlx.Tx, name string, required []string, excepts []string) (*User, error) {
 
 	user := User{}
-	str_fields, err := this.GenerateSelectSQL(user, required, excepts)
+	str_fields, err := GenerateSelectSQL(user, required, excepts)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ func (this *UserModel) QueryIdByName(tx *sqlx.Tx, name string) (int64, error) {
 	return user.UserId, nil
 }
 
-func (this *UserModel) Validate(tx *sqlx.Tx, name string, password string) (bool, error) {
+func (this *UserModel) Auth(tx *sqlx.Tx, name string, password string) (bool, error) {
 	user, err := this.QueryByName(tx, name, []string{"password"}, nil)
 	if err != nil {
 		return false, err

@@ -16,12 +16,12 @@ func (this *MyModel) TestFuncGetAllFields(t *testing.T) error {
 		StatusCode string `db:"status_code"`
 	}
 	f := Foo{1, "a", "b"}
-	sql, err := this.GenerateInsertSQL(f, "foo", nil, []string{"run_id"})
+	sql, err := GenerateInsertSQL(f, "foo", nil, []string{"run_id"})
 	t.Log(sql)
 	if err != nil {
 		t.Errorf("%s", err)
 	}
-	_, err = this.GenerateInsertSQL(f, "foo", []string{"status"}, []string{"run_id"})
+	_, err = GenerateInsertSQL(f, "foo", []string{"status"}, []string{"run_id"})
 	t.Log(err)
 	if err == nil {
 		t.Errorf("Supposed to be failed, %s", err)
@@ -37,7 +37,7 @@ func (this *MyModel) TestGenerateSelectSQL(t *testing.T) error {
 		StatusCode string `db:"status_code"`
 	}
 	f := Foo{1, "a", "b"}
-	sql, err := this.GenerateSelectSQL(f, nil, nil)
+	sql, err := GenerateSelectSQL(f, nil, nil)
 	if err != nil {
 		t.Errorf("Failed to generate select sql, %s", err)
 		return err
@@ -53,7 +53,7 @@ func (this *MyModel) TestGenerateUpdateSQL(t *testing.T) error {
 		StatusCode string `db:"status_code"`
 	}
 	f := Foo{1, "a", "b"}
-	sql, err := this.GenerateUpdateSQL(f, "run_id", []string{"status"}, nil)
+	sql, err := GenerateUpdateSQL(f, "run_id", "foo", []string{"status"}, nil)
 	if err != nil {
 		t.Errorf("Failed to generate update sql, %s", err)
 		return err

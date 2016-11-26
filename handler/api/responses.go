@@ -14,7 +14,21 @@ func NewSubmitResponseError(debug bool, code int32, err error) *SubmitResponse {
 	}
 }
 
-func NewLoginValidationResponseError(debug bool, code int32, err error) *LoginValidationResponse {
+func NewLoginInitResponseError(debug bool, code int32, err error) *LoginInitResponse {
+	errmsg := "Failed to init."
+	if debug == true && err != nil {
+		errmsg = err.Error()
+	}
+	theerror := &Error{
+		Code: code,
+		Msg:  errmsg,
+	}
+	return &LoginInitResponse{
+		Error: theerror,
+	}
+}
+
+func NewLoginAuthResponseError(debug bool, code int32, err error) *LoginAuthResponse {
 	errmsg := "Wrong username or password."
 	if debug == true && err != nil {
 		errmsg = err.Error()
@@ -23,7 +37,7 @@ func NewLoginValidationResponseError(debug bool, code int32, err error) *LoginVa
 		Code: code,
 		Msg:  errmsg,
 	}
-	return &LoginValidationResponse{
+	return &LoginAuthResponse{
 		Error: theerror,
 	}
 }

@@ -16,13 +16,13 @@ message LoginInitResponse {
     Error error = 4;
 }
 
-message LoginValidationRequest {
+message LoginAuthRequest {
     string username = 1;
-    bytes passwd = 2;
+    string passwd = 2;
     string captcha = 3;
 }
 
-message LoginValidationResponse {
+message LoginAuthResponse {
     string msg = 1;
     string privilege = 2;
     Error error = 3;

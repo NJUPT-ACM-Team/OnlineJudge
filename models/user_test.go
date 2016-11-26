@@ -51,7 +51,7 @@ func TestUserQueryByName(t *testing.T) {
 	t.Log(user)
 }
 
-func TestValidate(t *testing.T) {
+func TestAuth(t *testing.T) {
 	db, err := db.NewDB()
 	if err != nil {
 		t.Fatal(err)
@@ -61,7 +61,7 @@ func TestValidate(t *testing.T) {
 		t.Fatal(err)
 	}
 	um := NewUserModel()
-	r, err := um.Validate(tx, "kevince", "123456")
+	r, err := um.Auth(tx, "kevince", "123456")
 	if err != nil {
 		t.Fatal(err)
 	}
