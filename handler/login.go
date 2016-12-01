@@ -23,7 +23,7 @@ func (this *Handler) LoginAuth(response *api.LoginAuthResponse, req *api.LoginAu
 
 	// Authentic the login information
 	um := models.NewUserModel()
-	is_login, err := um.Auth(this.tx, req.GetUsername(), req.GetPassword())
+	is_login, err := um.Auth(this.tx, req.GetUsername(), []byte(req.GetPassword()))
 	if err != nil {
 		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
 		return

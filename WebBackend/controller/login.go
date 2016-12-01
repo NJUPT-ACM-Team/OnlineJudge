@@ -24,7 +24,10 @@ func (this *Controller) LoginAuth(w http.ResponseWriter, r *http.Request) {
 	defer SetResponse(w, response)
 
 	// Decode json to pb
-	DecodePBFromJsonStream(io.LimitReader(r.Body, 1048576), request)
+	if err := DecodePBFromJsonStream(io.LimitReader(r.Body, 1048576), request); err != nil {
+		api.MakeResponseError(response, this.debug, api.PBBadRequest, err)
+		return
+	}
 
 	// Get session
 	session, err := this.store.Get(r, "default")

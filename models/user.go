@@ -117,6 +117,7 @@ func (this *UserModel) QueryIdByName(tx *sqlx.Tx, name string) (int64, error) {
 }
 
 func (this *UserModel) Auth(tx *sqlx.Tx, name string, password []byte) (bool, error) {
+	// log.Println(password)
 	user, err := this.QueryByName(tx, name, []string{"password"}, nil)
 	if err != nil {
 		return false, err
