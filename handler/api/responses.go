@@ -1,43 +1,21 @@
 package api
 
-func NewSubmitResponseError(debug bool, code int32, err error) *SubmitResponse {
-	errmsg := "Internal Error"
-	if debug == true {
-		errmsg = err.Error()
-	}
-	theerror := &Error{
+import (
+	"reflect"
+)
+
+func NewPBError(code int32, msg string) *Error {
+	return &Error{
 		Code: code,
-		Msg:  errmsg,
-	}
-	return &SubmitResponse{
-		Error: theerror,
+		Msg:  msg,
 	}
 }
 
-func NewLoginInitResponseError(debug bool, code int32, err error) *LoginInitResponse {
-	errmsg := "Failed to init."
+// response, debug, Error, debug err
+func MakeResponseError(res interface{}, debug bool, pberr *Error, err error) {
+	field := reflect.ValueOf(res).Elem().FieldByName("Error")
 	if debug == true && err != nil {
-		errmsg = err.Error()
+		pberr.Debug = err.Error()
 	}
-	theerror := &Error{
-		Code: code,
-		Msg:  errmsg,
-	}
-	return &LoginInitResponse{
-		Error: theerror,
-	}
-}
-
-func NewLoginAuthResponseError(debug bool, code int32, err error) *LoginAuthResponse {
-	errmsg := "Wrong username or password."
-	if debug == true && err != nil {
-		errmsg = err.Error()
-	}
-	theerror := &Error{
-		Code: code,
-		Msg:  errmsg,
-	}
-	return &LoginAuthResponse{
-		Error: theerror,
-	}
+	field.Set(reflect.ValueOf(pberr))
 }

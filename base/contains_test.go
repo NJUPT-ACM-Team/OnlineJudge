@@ -2,6 +2,12 @@ package base
 
 import "testing"
 
+func TestArrayContainsNil(t *testing.T) {
+	if ArrayContains(nil, 1) == true {
+		t.Errorf("1 is in arrint, expected true")
+	}
+}
+
 func TestArrayContains(t *testing.T) {
 	arrint := []int{1, 2}
 	if ArrayContains(arrint[:], 1) == false {

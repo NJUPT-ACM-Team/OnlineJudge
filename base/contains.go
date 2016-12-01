@@ -2,7 +2,14 @@ package base
 
 import "reflect"
 
-func ToSlice(arrv interface{}) []interface{} {
+func IsNilOrZero(x interface{}) bool {
+	if x == nil {
+		return true
+	}
+	return reflect.DeepEqual(x, reflect.Zero(reflect.TypeOf(x)).Interface())
+}
+
+func toSlice(arrv interface{}) []interface{} {
 	v := reflect.ValueOf(arrv)
 	if v.Kind() != reflect.Slice {
 		panic("toslice arr not slice")
@@ -16,7 +23,10 @@ func ToSlice(arrv interface{}) []interface{} {
 }
 
 func ArrayContains(arrv interface{}, v interface{}) bool {
-	arr := ToSlice(arrv)
+	if arrv == nil {
+		return false
+	}
+	arr := toSlice(arrv)
 	for _, a := range arr {
 		if a == v {
 			return true

@@ -5,12 +5,12 @@ import ()
 type Session interface {
 	IsLogin() bool
 
-	GetUserName() (string, error)
+	GetUsername() (string, error)
 	GetUserId() (int64, error)
 	GetPrivilege() (string, error)
 	Get(key interface{}) (interface{}, error)
 
-	SetUserName(username string)
+	SetUsername(username string)
 	SetUserId(user_id int64)
 	SetPrivilege(privilege string)
 	Set(key interface{}, val interface{}) error

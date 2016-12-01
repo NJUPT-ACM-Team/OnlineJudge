@@ -36,7 +36,7 @@ func TestLanuageQuery(t *testing.T) {
 	}
 	defer DB.Close()
 	lm := NewLanguageModel()
-	lang, err := lm.QueryById(tx, 2, nil, nil)
+	lang, err := lm.QueryById(tx, 1, nil, nil)
 	if err != nil {
 		t.Errorf("Failed to query, %s", err)
 	}

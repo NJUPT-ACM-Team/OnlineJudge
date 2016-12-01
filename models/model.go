@@ -36,18 +36,18 @@ func GetAllFields(v interface{}) ([]string, error) {
 }
 
 func FilterFields(all_fields []string, required []string, excepts []string) ([]string, error) {
-	if (excepts != nil && len(excepts) > 0) && (required != nil && len(required) > 0) {
+	if !base.IsNilOrZero(excepts) && !base.IsNilOrZero(required) {
 		return nil, errors.New("Parameters conficted, using only required or only excepts.")
 	}
 	fields := []string{}
-	if required != nil && len(required) > 0 {
+	if !base.IsNilOrZero(required) {
 		for _, v := range required {
 			if base.ArrayContains(all_fields, v) {
 				fields = append(fields, v)
 			}
 		}
 	} else {
-		if excepts != nil && len(excepts) > 0 {
+		if !base.IsNilOrZero(excepts) {
 			for _, v := range all_fields {
 				if !base.ArrayContains(excepts, v) {
 					fields = append(fields, v)
@@ -103,7 +103,7 @@ func GenerateSelectSQL(st interface{}, required []string, excepts []string) (str
 			dft = "0"
 		case int64:
 			dft = "0"
-		case string:
+		case string, []byte:
 			dft = "''"
 		case time.Time:
 			dft = "CURRENT_TIMESTAMP"
@@ -124,14 +124,15 @@ func GenerateUpdateSQL(st interface{}, pk string, table string, required []strin
 		values = append(values, v+"=:"+v)
 	}
 	str_fields := strings.Join(values, ",")
-	mapper := reflectx.NewMapperTagFunc("db", strings.ToLower, func(value string) string {
-		if strings.Contains(value, ",") {
-			return strings.Split(value, ",")[0]
-		}
-		return value
-	})
-	pkv := mapper.FieldByName(reflect.ValueOf(st), pk).Interface().(int64)
-	return fmt.Sprintf("UPDATE %s SET %s WHERE %s=%d", table, str_fields, pk, pkv), nil
+	/*
+		mapper := reflectx.NewMapperTagFunc("db", strings.ToLower, func(value string) string {
+			if strings.Contains(value, ",") {
+				return strings.Split(value, ",")[0]
+			}
+			return value
+		})
+	*/
+	return fmt.Sprintf("UPDATE %s SET %s WHERE %s=%s", table, str_fields, pk, ":"+pk), nil
 }
 
 func (this *Model) InlineInsert(tx *sqlx.Tx, st interface{}, required []string, excepts []string) (int64, error) {

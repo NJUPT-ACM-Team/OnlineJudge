@@ -6,6 +6,8 @@ import (
 )
 
 /*
+import "time"
+
 func TestUserInsert(t *testing.T) {
 	db, err := db.NewDB()
 	if err != nil {
@@ -17,11 +19,11 @@ func TestUserInsert(t *testing.T) {
 	}
 	um := NewUserModel()
 	user := &User{
-		Username:     "Kevince",
-		Password:     "123456",
+		Username:     "kevince",
+		Password:     []byte("123456"),
 		Email:        "abc@gmail.com",
 		RegisterTime: time.Now(),
-		Permission:   "root",
+		Privilege:    "root",
 	}
 	id, err := um.Insert(tx, user)
 	if err != nil {
@@ -34,6 +36,25 @@ func TestUserInsert(t *testing.T) {
 }
 */
 
+func TestUpdatePassword(t *testing.T) {
+	db, err := db.NewDB()
+	if err != nil {
+		t.Fatal(err)
+	}
+	tx, err := db.Beginx()
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer tx.Rollback()
+	um := NewUserModel()
+	if err := um.UpdatePassword(tx, "kevince", []byte("abc")); err != nil {
+		t.Fatal(err)
+	}
+	if err := tx.Commit(); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestUserQueryByName(t *testing.T) {
 	db, err := db.NewDB()
 	if err != nil {
@@ -44,7 +65,7 @@ func TestUserQueryByName(t *testing.T) {
 		t.Fatal(err)
 	}
 	um := NewUserModel()
-	user, err := um.QueryByName(tx, "Kevince", nil, nil)
+	user, err := um.QueryByName(tx, "kevince", nil, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -61,7 +82,7 @@ func TestAuth(t *testing.T) {
 		t.Fatal(err)
 	}
 	um := NewUserModel()
-	r, err := um.Auth(tx, "kevince", "123456")
+	r, err := um.Auth(tx, "kevince", []byte("abc"))
 	if err != nil {
 		t.Fatal(err)
 	}

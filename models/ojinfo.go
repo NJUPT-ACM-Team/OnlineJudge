@@ -72,8 +72,11 @@ func (this *OJInfoModel) QueryAll(tx *sqlx.Tx, required []string, excepts []stri
 
 }
 
-func (this *OJInfoModel) Update(tx *sqlx.Tx, ojinfo *OJInfo, required []string, excepts []string) error {
-	if err := this.InlineUpdate(tx, ojinfo, "oj_id", required, excepts); err != nil {
+func (this *OJInfoModel) Update(tx *sqlx.Tx, ojinfo *OJInfo, pk string, required []string, excepts []string) error {
+	if pk == "" {
+		pk = "oj_id"
+	}
+	if err := this.InlineUpdate(tx, ojinfo, pk, required, excepts); err != nil {
 		return err
 	}
 	return nil

@@ -8,11 +8,11 @@ import (
 )
 
 var (
-	KeyUserName  = "username"
+	KeyUsername  = "username"
 	KeyPrivilege = "privilege"
 	KeyUserId    = "user_id"
 
-	KEYS = []string{KeyUserName, KeyPrivilege, KeyUserId}
+	KEYS = []string{KeyUsername, KeyPrivilege, KeyUserId}
 
 	ErrNotFound   = errors.New("Key not in the session")
 	ErrKeyInvalid = errors.New("Key invalid")
@@ -23,14 +23,14 @@ type WebSession struct {
 }
 
 func (this *WebSession) IsLogin() bool {
-	if _, ok := this.Values[KeyUserName].(string); ok {
+	if _, ok := this.Values[KeyUsername].(string); ok {
 		return true
 	}
 	return false
 }
 
-func (this *WebSession) GetUserName() (string, error) {
-	username, ok := this.Values[KeyUserName].(string)
+func (this *WebSession) GetUsername() (string, error) {
+	username, ok := this.Values[KeyUsername].(string)
 	if !ok {
 		return "", ErrNotFound
 	}
@@ -70,8 +70,8 @@ func (this *WebSession) Set(key interface{}, val interface{}) error {
 	return nil
 }
 
-func (this *WebSession) SetUserName(username string) {
-	this.Values[KeyUserName] = username
+func (this *WebSession) SetUsername(username string) {
+	this.Values[KeyUsername] = username
 }
 
 func (this *WebSession) SetPrivilege(privilege string) {
@@ -82,7 +82,7 @@ func (this *WebSession) SetUserId(user_id int64) {
 	this.Values[KeyUserId] = user_id
 }
 
-func NewWebSession(sess *sessions.Session) locals.Session {
+func NewSession(sess *sessions.Session) locals.Session {
 	newsess := &WebSession{
 		Values: sess.Values,
 	}

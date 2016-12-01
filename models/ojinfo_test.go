@@ -88,9 +88,9 @@ func TestOJInfoUpdate(t *testing.T) {
 	ojim := NewOJInfoModel()
 	ojinfo := OJInfo{
 		OJId:    1,
-		Int64IO: "%lld",
+		Int64IO: "%I64d",
 	}
-	if err := ojim.Update(tx, &ojinfo, []string{"int64io"}, nil); err != nil {
+	if err := ojim.Update(tx, &ojinfo, "", []string{"int64io"}, nil); err != nil {
 		t.Errorf("Failed to update, %s", err)
 	}
 	if err := tx.Commit(); err != nil {

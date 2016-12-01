@@ -6,6 +6,24 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+// For testing purpose
+import (
+	"OnlineJudge/session/websession"
+	"github.com/gorilla/sessions"
+	"net/http"
+)
+
+var store = sessions.NewCookieStore([]byte("something-very-secret"))
+
+func NewHandlerForTest() (*Handler, *sessions.Session) {
+	req, _ := http.NewRequest("GET", "http://www.example.com", nil)
+	session, _ := store.New(req, "my session")
+	sess := websession.NewSession(session)
+	return NewHandler(sess, true), session
+}
+
+//
+
 type Handler struct {
 	session locals.Session
 	db      *sqlx.DB

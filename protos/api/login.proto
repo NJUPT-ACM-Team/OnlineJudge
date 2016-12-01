@@ -18,12 +18,13 @@ message LoginInitResponse {
 
 message LoginAuthRequest {
     string username = 1;
-    string passwd = 2;
+    bytes password = 2;
     string captcha = 3;
 }
 
 message LoginAuthResponse {
     string msg = 1;
-    string privilege = 2;
-    Error error = 3;
+    string username = 2;
+    string privilege = 3;
+    Error error = 4;
 }

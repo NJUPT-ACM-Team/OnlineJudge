@@ -10,7 +10,7 @@ import (
 
 var store = sessions.NewCookieStore([]byte("something-very-secret"))
 
-func TestNewWebSession(t *testing.T) {
+func TestNewSession(t *testing.T) {
 	req, err := http.NewRequest("GET", "http://www.example.com", nil)
 	if err != nil {
 		t.Fatal("failed to create request", err)
@@ -18,8 +18,8 @@ func TestNewWebSession(t *testing.T) {
 	w := httptest.NewRecorder()
 	session, err := store.New(req, "my session")
 
-	mysess := NewWebSession(session)
-	mysess.SetUserName("kevince")
+	mysess := NewSession(session)
+	mysess.SetUsername("kevince")
 	t.Log(mysess.IsLogin())
 	t.Log(session.Values["username"])
 	if session.Values["username"] != "kevince" {

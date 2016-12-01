@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package api;
+
+import "api/common.proto";
+
+// username, golang `^[a-zA-Z][0-9a-zA-Z_]{3,19}$`
+// email, golang `^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$`
+// phone, 
+// school,
+// motto, less than 60 words
+message RegisterRequest {
+    string username = 1;
+    bytes password = 2;
+    string email = 3;
+    string phone = 4;
+    string school = 5;
+    string motto = 6;
+}
+
+// if not empty, something is wrong.
+message RegisterResponse {
+    int64 user_id = 1;
+    string check_username = 2;
+    string check_password = 3;
+    string check_email = 4;
+    string check_phone = 5;
+    string check_school = 6;
+    string check_motto = 7;
+    Error error = 8;
+}
+

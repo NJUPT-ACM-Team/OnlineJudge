@@ -10,7 +10,6 @@ message SubmitRequest {
     string code = 3;
     int32 language_code = 4;
     bool is_shared = 5;
-    string ip_addr = 6;
 }
 
 message SubmitResponse {

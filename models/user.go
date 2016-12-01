@@ -1,16 +1,19 @@
 package models
 
 import (
+	"OnlineJudge/base"
+
+	"github.com/jmoiron/sqlx"
+
 	"errors"
 	"fmt"
-	"github.com/jmoiron/sqlx"
 	"time"
 )
 
 type User struct {
 	UserId   int64 `db:"user_id"`
 	Username string
-	Password string
+	Password []byte
 	Email    string
 	Phone    string
 	School   string
@@ -24,7 +27,7 @@ type User struct {
 	RegisterTime  time.Time `db:"register_time"`
 	LastLoginTime time.Time `db:"last_login_time"`
 	IPAddr        string    `db:"ip_addr"`
-	Permission    string
+	Privilege     string
 	LockStatus    int `db:"lock_status"`
 }
 
@@ -36,12 +39,45 @@ func NewUserModel() *UserModel {
 	return &UserModel{Model{Table: "Users"}}
 }
 
+func hashPassword(passwd []byte) ([]byte, error) {
+	if passwd == nil {
+		return nil, errors.New("Empty password field")
+	}
+	return base.GenHash(passwd)
+}
+
+// Hash password before insert
 func (this *UserModel) Insert(tx *sqlx.Tx, user *User) (int64, error) {
+	var err error
+	if user.Password, err = hashPassword(user.Password); err != nil {
+		return 0, err
+	}
 	last_insert_id, err := this.InlineInsert(tx, user, nil, []string{"user_id"})
 	if err != nil {
 		return 0, err
 	}
 	return last_insert_id, nil
+}
+
+func (this *UserModel) Update(tx *sqlx.Tx, user *User, pk string, required []string, excepts []string) error {
+	var err error
+	if base.ArrayContains(required, "password") {
+		if user.Password, err = hashPassword(user.Password); err != nil {
+			return err
+		}
+	}
+	if base.IsNilOrZero(required) && !base.ArrayContains(excepts, "password") {
+		if user.Password, err = hashPassword(user.Password); err != nil {
+			return err
+		}
+	}
+	if pk == "" {
+		pk = "user_id"
+	}
+	if err := this.InlineUpdate(tx, user, pk, required, excepts); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (this *UserModel) QueryById(tx *sqlx.Tx, id int, required []string, excepts []string) (*User, error) {
@@ -80,13 +116,18 @@ func (this *UserModel) QueryIdByName(tx *sqlx.Tx, name string) (int64, error) {
 	return user.UserId, nil
 }
 
-func (this *UserModel) Auth(tx *sqlx.Tx, name string, password string) (bool, error) {
+func (this *UserModel) Auth(tx *sqlx.Tx, name string, password []byte) (bool, error) {
 	user, err := this.QueryByName(tx, name, []string{"password"}, nil)
 	if err != nil {
 		return false, err
 	}
-	if user.Password == password {
-		return true, nil
+	return base.MatchHash(user.Password, password), nil
+}
+
+func (this *UserModel) UpdatePassword(tx *sqlx.Tx, name string, passwd []byte) error {
+	user := &User{
+		Username: name,
+		Password: passwd,
 	}
-	return false, nil
+	return this.Update(tx, user, "username", []string{"password"}, nil)
 }

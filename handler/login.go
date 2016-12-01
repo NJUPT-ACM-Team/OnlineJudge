@@ -5,26 +5,54 @@ import (
 	"OnlineJudge/models"
 )
 
-func (this *Handler) LoginInit(li *api.LoginInitRequest) *api.LoginInitResponse {
+func (this *Handler) LoginInit(req *api.LoginInitRequest) *api.LoginInitResponse {
+	var response = &api.LoginInitResponse{}
 	if err := this.OpenDB(); err != nil {
-		return api.NewLoginInitResponseError(this.debug, 500, err)
+		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
+		return response
 	}
 	defer this.CloseDB()
-	return nil
+	return response
 }
 
-func (this *Handler) LoginAuth(li *api.LoginAuthRequest) *api.LoginAuthResponse {
+func (this *Handler) LoginAuth(req *api.LoginAuthRequest) *api.LoginAuthResponse {
+	var response = &api.LoginAuthResponse{}
 	if err := this.OpenDB(); err != nil {
-		return api.NewLoginAuthResponseError(this.debug, 500, err)
+		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
+		return response
 	}
 	defer this.CloseDB()
 
 	// Authentic the login information
 	um := models.NewUserModel()
-	_, err := um.Auth(this.tx, li.GetUsername(), li.GetPasswd())
+	is_login, err := um.Auth(this.tx, req.GetUsername(), req.GetPassword())
 	if err != nil {
-
+		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
+		return response
+	}
+	if is_login == false {
+		api.MakeResponseError(response, this.debug, api.PBAuthFailure, nil)
+		return response
 	}
 
-	return nil
+	// Query necessary information: username, user_id, privilege
+	user, err := models.Query_User_By_Username(this.tx, req.GetUsername(), []string{"username", "user_id", "privilege"}, nil)
+	if err != nil {
+		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
+		return response
+	}
+
+	// Set IPAddr into database
+
+	// Set session
+	this.session.SetUsername(user.Username)
+	this.session.SetUserId(user.UserId)
+	this.session.SetPrivilege(user.Privilege)
+
+	// Make response
+	response.Msg = "Hello " + user.Username + "!"
+	response.Username = user.Username
+	response.Privilege = user.Privilege
+
+	return response
 }

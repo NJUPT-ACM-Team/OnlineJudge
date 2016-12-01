@@ -66,7 +66,10 @@ func (this *SubmissionModel) Insert(tx *sqlx.Tx, sub *Submission) (int64, error)
 
 }
 
-func (this *SubmissionModel) Update(tx *sqlx.Tx, sub *Submission, required []string, excepts []string) error {
+func (this *SubmissionModel) Update(tx *sqlx.Tx, sub *Submission, pk string, required []string, excepts []string) error {
+	if pk == "" {
+		pk = "run_id"
+	}
 	if err := this.InlineUpdate(tx, sub, "run_id", required, excepts); err != nil {
 		return err
 	}
@@ -75,7 +78,7 @@ func (this *SubmissionModel) Update(tx *sqlx.Tx, sub *Submission, required []str
 
 func (this *SubmissionModel) UpdateStatus(tx *sqlx.Tx, sub *Submission) error {
 	required := []string{"status", "status_code", "testcases_passed"}
-	if err := this.Update(tx, sub, required, nil); err != nil {
+	if err := this.Update(tx, sub, "", required, nil); err != nil {
 		return err
 	}
 	return nil
