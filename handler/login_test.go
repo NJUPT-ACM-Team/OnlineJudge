@@ -7,16 +7,18 @@ import (
 )
 
 func TestLoginAuth(t *testing.T) {
+	res := &api.LoginAuthResponse{}
 	handler, session := NewHandlerForTest()
 	req := &api.LoginAuthRequest{
 		Username: "kevince",
 		Password: []byte("abc"),
 	}
-	res := handler.LoginAuth(req)
+	handler.LoginAuth(res, req)
 	t.Log(res)
 	t.Log(session)
 
+	res.Reset()
 	req.Password = []byte("123")
-	res = handler.LoginAuth(req)
+	handler.LoginAuth(res, req)
 	t.Log(res)
 }

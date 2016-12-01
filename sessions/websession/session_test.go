@@ -21,11 +21,11 @@ func TestNewSession(t *testing.T) {
 	mysess := NewSession(session)
 	mysess.SetUsername("kevince")
 	t.Log(mysess.IsLogin())
-	t.Log(session.Values["username"])
-	if session.Values["username"] != "kevince" {
+	t.Log(session.Values[".username"])
+	if session.Values[".username"] != "kevince" {
 		t.Fatal("Failed to get username")
 	}
-	if err := mysess.Set("username", "a"); err == nil {
+	if err := mysess.Set(".username", "a"); err == nil {
 		t.Fatal("Supposed to be error, but nil")
 	}
 	if err := mysess.Set("test", "this is a test"); err != nil {

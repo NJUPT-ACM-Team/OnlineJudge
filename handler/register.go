@@ -15,18 +15,17 @@ func CheckRegisterRequest(tx *sqlx.Tx, req *api.RegisterRequest, res *api.Regist
 	return nil
 }
 
-func (this *Handler) Register(req *api.RegisterRequest) *api.RegisterResponse {
-	var response = &api.RegisterResponse{}
+func (this *Handler) Register(response *api.RegisterResponse, req *api.RegisterRequest) {
 	if err := this.OpenDB(); err != nil {
 		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
-		return response
+		return
 	}
 	defer this.CloseDB()
 
 	// Check Request
 	if err := CheckRegisterRequest(this.tx, req, response); err != nil {
 		api.MakeResponseError(response, this.debug, api.PBBadRequest, err)
-		return response
+		return
 	}
 
 	// Insert into database
@@ -43,15 +42,13 @@ func (this *Handler) Register(req *api.RegisterRequest) *api.RegisterResponse {
 	user_id, err := um.Insert(this.tx, user)
 	if err != nil {
 		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
-		return response
+		return
 	}
 	if err := this.Commit(); err != nil {
 		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
-		return response
+		return
 	}
 
 	// Make response
 	response.UserId = user_id
-
-	return response
 }

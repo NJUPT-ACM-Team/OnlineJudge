@@ -1,9 +1,30 @@
 package api
 
+import (
+	"net/http"
+	"reflect"
+)
+
+func NewPBError(code int32, msg string) *Error {
+	return &Error{
+		Code: code,
+		Msg:  msg,
+	}
+}
+
+// response, debug, Error, debug err
+func MakeResponseError(res interface{}, debug bool, pberr *Error, err error) {
+	field := reflect.ValueOf(res).Elem().FieldByName("Error")
+	if debug == true && err != nil {
+		pberr.Debug = err.Error()
+	}
+	field.Set(reflect.ValueOf(pberr))
+}
+
 var (
-	PBInternalError   = NewPBError(500, "inernal error")
-	PBAuthFailure     = NewPBError(401, "username not exists or wrong password")
-	PBBadRequest      = NewPBError(400, "bad request")
-	PBProblemNotFound = NewPBError(404, "problem does not exist or not visible")
-	PBLoginRequired   = NewPBError(401, "login required")
+	PBInternalError   = NewPBError(http.StatusInternalServerError, "inernal server error")
+	PBAuthFailure     = NewPBError(http.StatusUnauthorized, "username not exists or wrong password")
+	PBBadRequest      = NewPBError(http.StatusBadRequest, "bad request")
+	PBProblemNotFound = NewPBError(http.StatusNotFound, "problem does not exist or not visible")
+	PBLoginRequired   = NewPBError(http.StatusUnauthorized, "login required")
 )

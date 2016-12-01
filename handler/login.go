@@ -5,21 +5,19 @@ import (
 	"OnlineJudge/models"
 )
 
-func (this *Handler) LoginInit(req *api.LoginInitRequest) *api.LoginInitResponse {
-	var response = &api.LoginInitResponse{}
+func (this *Handler) LoginInit(response *api.LoginInitResponse, req *api.LoginInitRequest) {
 	if err := this.OpenDB(); err != nil {
 		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
-		return response
+		return
 	}
 	defer this.CloseDB()
-	return response
+	return
 }
 
-func (this *Handler) LoginAuth(req *api.LoginAuthRequest) *api.LoginAuthResponse {
-	var response = &api.LoginAuthResponse{}
+func (this *Handler) LoginAuth(response *api.LoginAuthResponse, req *api.LoginAuthRequest) {
 	if err := this.OpenDB(); err != nil {
 		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
-		return response
+		return
 	}
 	defer this.CloseDB()
 
@@ -28,18 +26,18 @@ func (this *Handler) LoginAuth(req *api.LoginAuthRequest) *api.LoginAuthResponse
 	is_login, err := um.Auth(this.tx, req.GetUsername(), req.GetPassword())
 	if err != nil {
 		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
-		return response
+		return
 	}
 	if is_login == false {
 		api.MakeResponseError(response, this.debug, api.PBAuthFailure, nil)
-		return response
+		return
 	}
 
 	// Query necessary information: username, user_id, privilege
 	user, err := models.Query_User_By_Username(this.tx, req.GetUsername(), []string{"username", "user_id", "privilege"}, nil)
 	if err != nil {
 		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
-		return response
+		return
 	}
 
 	// Set IPAddr into database
@@ -53,6 +51,4 @@ func (this *Handler) LoginAuth(req *api.LoginAuthRequest) *api.LoginAuthResponse
 	response.Msg = "Hello " + user.Username + "!"
 	response.Username = user.Username
 	response.Privilege = user.Privilege
-
-	return response
 }

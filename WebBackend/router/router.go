@@ -1,11 +1,11 @@
-package routers
+package router
 
 import (
 	"github.com/gorilla/mux"
 )
 
 func Init() *mux.Router {
-	router := mux.NewRouter()
+	router := mux.NewRouter().StrictSlash(true)
 	RegisterAll(router)
 	return router
 }
@@ -29,5 +29,5 @@ func RegisterOpen(router *mux.Router) {
 }
 
 func RegisterCommonAPIs(router *mux.Router) {
-
+	RegisterHandlers(router, api_routes)
 }

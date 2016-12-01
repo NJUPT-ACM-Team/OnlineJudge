@@ -1,4 +1,4 @@
-package session
+package sessions
 
 import ()
 
@@ -14,4 +14,7 @@ type Session interface {
 	SetUserId(user_id int64)
 	SetPrivilege(privilege string)
 	Set(key interface{}, val interface{}) error
+
+	Flashes(vars ...string) []interface{}
+	AddFlash(value interface{}, vars ...string)
 }

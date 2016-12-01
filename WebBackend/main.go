@@ -1,7 +1,7 @@
 package main
 
 import (
-	"OnlineJudge/WebBackend/routers"
+	"OnlineJudge/WebBackend/router"
 
 	"github.com/gorilla/context"
 
@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	router := routers.Init()
+	router := router.Init()
 	// http.Handle("/", router)
 	http.ListenAndServe(":8000", context.ClearHandler(router))
 }

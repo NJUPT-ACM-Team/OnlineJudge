@@ -2,17 +2,18 @@ package websession
 
 import (
 	"OnlineJudge/base"
-	locals "OnlineJudge/session"
-	"errors"
+	locals "OnlineJudge/sessions"
+
 	"github.com/gorilla/sessions"
+
+	"errors"
 )
 
 var (
-	KeyUsername  = "username"
-	KeyPrivilege = "privilege"
-	KeyUserId    = "user_id"
-
-	KEYS = []string{KeyUsername, KeyPrivilege, KeyUserId}
+	KeyUsername  = ".username"
+	KeyPrivilege = ".privilege"
+	KeyUserId    = ".user_id"
+	KeyFlash     = ".flash"
 
 	ErrNotFound   = errors.New("Key not in the session")
 	ErrKeyInvalid = errors.New("Key invalid")
@@ -62,8 +63,10 @@ func (this *WebSession) Get(key interface{}) (interface{}, error) {
 
 func (this *WebSession) Set(key interface{}, val interface{}) error {
 	if val, ok := key.(string); ok {
-		if base.ArrayContains(KEYS, val) {
-			return ErrKeyInvalid
+		if !base.IsNilOrZero(val) {
+			if val[0] == '.' {
+				return ErrKeyInvalid
+			}
 		}
 	}
 	this.Values[key] = val
@@ -80,6 +83,36 @@ func (this *WebSession) SetPrivilege(privilege string) {
 
 func (this *WebSession) SetUserId(user_id int64) {
 	this.Values[KeyUserId] = user_id
+}
+
+func (this *WebSession) Flashes(vars ...string) []interface{} {
+	var flashes []interface{}
+	key := KeyFlash
+	if len(vars) > 0 {
+		key = vars[0]
+	}
+	if v, ok := this.Values[key]; ok {
+		// Drop the flashes and return it.
+		delete(this.Values, key)
+		flashes = v.([]interface{})
+	}
+	return flashes
+}
+
+// AddFlash adds a flash message to the session.
+//
+// A single variadic argument is accepted, and it is optional: it defines
+// the flash key. If not defined "_flash" is used by default.
+func (this *WebSession) AddFlash(value interface{}, vars ...string) {
+	key := KeyFlash
+	if len(vars) > 0 {
+		key = vars[0]
+	}
+	var flashes []interface{}
+	if v, ok := this.Values[key]; ok {
+		flashes = v.([]interface{})
+	}
+	this.Values[key] = append(flashes, value)
 }
 
 func NewSession(sess *sessions.Session) locals.Session {

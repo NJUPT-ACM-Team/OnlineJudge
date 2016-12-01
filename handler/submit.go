@@ -10,18 +10,17 @@ import (
 
 // Need to be tested
 // Depend on MetaProblems, OJInfo,
-func (this *Handler) Submit(subreq *api.SubmitRequest) *api.SubmitResponse {
-	var response = &api.SubmitResponse{}
+func (this *Handler) Submit(response *api.SubmitResponse, subreq *api.SubmitRequest) {
 	if err := this.OpenDB(); err != nil {
 		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
-		return response
+		return
 	}
 	defer this.CloseDB()
 
 	// if login
 	if this.session.IsLogin() == false {
 		api.MakeResponseError(response, this.debug, api.PBLoginRequired, nil)
-		return response
+		return
 	}
 
 	// Parse ProblemSid
@@ -32,19 +31,19 @@ func (this *Handler) Submit(subreq *api.SubmitRequest) *api.SubmitResponse {
 	mp, err := models.Query_MetaProblem_By_OJName_OJPid(this.tx, oj_name, oj_pid, []string{"meta_pid", "hide"}, nil)
 	if err != nil {
 		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
-		return response
+		return
 	}
 
 	if mp.MetaPid == 0 {
 		api.MakeResponseError(response, this.debug, api.PBProblemNotFound, nil)
-		return response
+		return
 	}
 
 	// if visible
 	privilege, _ := this.session.GetPrivilege()
 	if mp.Hide == 1 && privilege != "root" {
 		api.MakeResponseError(response, this.debug, api.PBProblemNotFound, nil)
-		return response
+		return
 	}
 
 	// Add Submission
@@ -52,7 +51,7 @@ func (this *Handler) Submit(subreq *api.SubmitRequest) *api.SubmitResponse {
 	user_id, err := this.session.GetUserId()
 	if err != nil {
 		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
-		return response
+		return
 	}
 	sub := &models.Submission{
 		Status:     "Pending",
@@ -69,17 +68,15 @@ func (this *Handler) Submit(subreq *api.SubmitRequest) *api.SubmitResponse {
 	run_id, err := subm.Insert(this.tx, sub)
 	if err != nil {
 		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
-		return response
+		return
 	}
 	if err := this.Commit(); err != nil {
 		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
-		return response
+		return
 	}
 
 	// Use RPC to call Daemon to judge the submission
 
 	// Return
 	response.RunId = run_id
-	return response
-
 }

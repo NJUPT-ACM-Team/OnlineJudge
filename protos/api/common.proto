@@ -7,3 +7,4 @@ message Error {
     string msg = 2;
     string debug = 3;
 }
+

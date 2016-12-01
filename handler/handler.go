@@ -2,20 +2,19 @@ package handler
 
 import (
 	"OnlineJudge/models/db"
-	locals "OnlineJudge/session"
+	locals "OnlineJudge/sessions"
 	"github.com/jmoiron/sqlx"
 )
 
 // For testing purpose
 import (
-	"OnlineJudge/session/websession"
+	"OnlineJudge/sessions/websession"
 	"github.com/gorilla/sessions"
 	"net/http"
 )
 
-var store = sessions.NewCookieStore([]byte("something-very-secret"))
-
 func NewHandlerForTest() (*Handler, *sessions.Session) {
+	var store = sessions.NewCookieStore([]byte("something-very-secret"))
 	req, _ := http.NewRequest("GET", "http://www.example.com", nil)
 	session, _ := store.New(req, "my session")
 	sess := websession.NewSession(session)
