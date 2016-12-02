@@ -132,3 +132,11 @@ func (this *UserModel) UpdatePassword(tx *sqlx.Tx, name string, passwd []byte) e
 	}
 	return this.Update(tx, user, "username", []string{"password"}, nil)
 }
+
+func (this *UserModel) UpdateIPAddr(tx *sqlx.Tx, name string, ip string) error {
+	user := &User{
+		Username: name,
+		IPAddr:   ip,
+	}
+	return this.Update(tx, user, "username", []string{"ip_addr"}, nil)
+}
