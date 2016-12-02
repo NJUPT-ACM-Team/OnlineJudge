@@ -24,7 +24,7 @@ type SubmitRequest struct {
 func (m *SubmitRequest) Reset()                    { *m = SubmitRequest{} }
 func (m *SubmitRequest) String() string            { return proto.CompactTextString(m) }
 func (*SubmitRequest) ProtoMessage()               {}
-func (*SubmitRequest) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{0} }
+func (*SubmitRequest) Descriptor() ([]byte, []int) { return fileDescriptor5, []int{0} }
 
 func (m *SubmitRequest) GetContestId() uint64 {
 	if m != nil {
@@ -69,7 +69,7 @@ type SubmitResponse struct {
 func (m *SubmitResponse) Reset()                    { *m = SubmitResponse{} }
 func (m *SubmitResponse) String() string            { return proto.CompactTextString(m) }
 func (*SubmitResponse) ProtoMessage()               {}
-func (*SubmitResponse) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{1} }
+func (*SubmitResponse) Descriptor() ([]byte, []int) { return fileDescriptor5, []int{1} }
 
 func (m *SubmitResponse) GetRunId() int64 {
 	if m != nil {
@@ -90,9 +90,9 @@ func init() {
 	proto.RegisterType((*SubmitResponse)(nil), "api.SubmitResponse")
 }
 
-func init() { proto.RegisterFile("api/submit.proto", fileDescriptor4) }
+func init() { proto.RegisterFile("api/submit.proto", fileDescriptor5) }
 
-var fileDescriptor4 = []byte{
+var fileDescriptor5 = []byte{
 	// 234 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x34, 0xcf, 0xd1, 0x4a, 0xc3, 0x30,
 	0x14, 0x06, 0x60, 0x62, 0xdb, 0xb1, 0x9e, 0x39, 0x91, 0x80, 0x50, 0x14, 0x31, 0xcc, 0x9b, 0x5e,

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package api;
+
+message Language {
+    string compiler = 1;
+    string language = 2;
+    int32 submit_value = 3;
+}

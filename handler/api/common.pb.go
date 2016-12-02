@@ -7,6 +7,7 @@ Package api is a generated protocol buffer package.
 
 It is generated from these files:
 	api/common.proto
+	api/language.proto
 	api/login.proto
 	api/register.proto
 	api/show_problem.proto
@@ -14,6 +15,7 @@ It is generated from these files:
 
 It has these top-level messages:
 	Error
+	Language
 	LoginInitRequest
 	LoginInitResponse
 	LoginAuthRequest
