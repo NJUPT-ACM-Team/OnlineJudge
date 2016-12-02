@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/sessions"
 
 	"errors"
+	"net/http"
 )
 
 var (
@@ -20,18 +21,18 @@ var (
 )
 
 type WebSession struct {
-	Values map[interface{}]interface{}
+	session *sessions.Session
 }
 
 func (this *WebSession) IsLogin() bool {
-	if _, ok := this.Values[KeyUsername].(string); ok {
+	if _, ok := this.session.Values[KeyUsername].(string); ok {
 		return true
 	}
 	return false
 }
 
 func (this *WebSession) GetUsername() (string, error) {
-	username, ok := this.Values[KeyUsername].(string)
+	username, ok := this.session.Values[KeyUsername].(string)
 	if !ok {
 		return "", ErrNotFound
 	}
@@ -39,7 +40,7 @@ func (this *WebSession) GetUsername() (string, error) {
 }
 
 func (this *WebSession) GetPrivilege() (string, error) {
-	privilege, ok := this.Values[KeyPrivilege].(string)
+	privilege, ok := this.session.Values[KeyPrivilege].(string)
 	if !ok {
 		return "", ErrNotFound
 	}
@@ -47,7 +48,7 @@ func (this *WebSession) GetPrivilege() (string, error) {
 }
 
 func (this *WebSession) GetUserId() (int64, error) {
-	userid, ok := this.Values[KeyUserId].(int64)
+	userid, ok := this.session.Values[KeyUserId].(int64)
 	if !ok {
 		return 0, ErrNotFound
 	}
@@ -55,10 +56,10 @@ func (this *WebSession) GetUserId() (int64, error) {
 }
 
 func (this *WebSession) Get(key interface{}) (interface{}, error) {
-	if _, ok := this.Values[key]; !ok {
+	if _, ok := this.session.Values[key]; !ok {
 		return nil, ErrNotFound
 	}
-	return this.Values[key], nil
+	return this.session.Values[key], nil
 }
 
 func (this *WebSession) Set(key interface{}, val interface{}) error {
@@ -69,56 +70,44 @@ func (this *WebSession) Set(key interface{}, val interface{}) error {
 			}
 		}
 	}
-	this.Values[key] = val
+	this.session.Values[key] = val
 	return nil
 }
 
 func (this *WebSession) SetUsername(username string) {
-	this.Values[KeyUsername] = username
+	this.session.Values[KeyUsername] = username
 }
 
 func (this *WebSession) SetPrivilege(privilege string) {
-	this.Values[KeyPrivilege] = privilege
+	this.session.Values[KeyPrivilege] = privilege
 }
 
 func (this *WebSession) SetUserId(user_id int64) {
-	this.Values[KeyUserId] = user_id
+	this.session.Values[KeyUserId] = user_id
 }
 
 func (this *WebSession) Flashes(vars ...string) []interface{} {
-	var flashes []interface{}
-	key := KeyFlash
-	if len(vars) > 0 {
-		key = vars[0]
-	}
-	if v, ok := this.Values[key]; ok {
-		// Drop the flashes and return it.
-		delete(this.Values, key)
-		flashes = v.([]interface{})
-	}
-	return flashes
+	return this.session.Flashes(vars...)
 }
 
-// AddFlash adds a flash message to the session.
-//
-// A single variadic argument is accepted, and it is optional: it defines
-// the flash key. If not defined "_flash" is used by default.
 func (this *WebSession) AddFlash(value interface{}, vars ...string) {
-	key := KeyFlash
-	if len(vars) > 0 {
-		key = vars[0]
-	}
-	var flashes []interface{}
-	if v, ok := this.Values[key]; ok {
-		flashes = v.([]interface{})
-	}
-	this.Values[key] = append(flashes, value)
+	this.session.AddFlash(value, vars...)
+}
+
+func (this *WebSession) Save(h *http.Request, w http.ResponseWriter) {
+	this.session.Save(h, w)
 }
 
 func NewSession(sess *sessions.Session) locals.Session {
 	newsess := &WebSession{
-		Values: sess.Values,
+		session: sess,
 	}
 	var session locals.Session = newsess
 	return session
+}
+
+func NewWebSession(sess *sessions.Session) *WebSession {
+	return &WebSession{
+		session: sess,
+	}
 }

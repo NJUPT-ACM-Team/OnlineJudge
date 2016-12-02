@@ -3,19 +3,23 @@ package controller
 import (
 	"OnlineJudge/handler"
 	"OnlineJudge/handler/api"
-	"OnlineJudge/sessions/websession"
 
-	"io"
 	"net/http"
 )
 
-// Get session
-// Parse request
-// Use handler to dispose
-// Encode response
-// Return
 func (this *Controller) LoginInit(w http.ResponseWriter, r *http.Request) {
+	var response = &api.LoginInitResponse{}
+	var request = &api.LoginInitRequest{}
+	defer SetResponse(w, response)
 
+	session, err := this.Prepare(response, request, w, r)
+	if err != nil {
+		return
+	}
+	defer session.Save(r, w)
+
+	handler := handler.NewHandler(session, this.debug)
+	handler.LoginInit(response, request)
 }
 
 func (this *Controller) LoginAuth(w http.ResponseWriter, r *http.Request) {
@@ -23,20 +27,12 @@ func (this *Controller) LoginAuth(w http.ResponseWriter, r *http.Request) {
 	var request = &api.LoginAuthRequest{}
 	defer SetResponse(w, response)
 
-	// Decode json to pb
-	if err := DecodePBFromJsonStream(io.LimitReader(r.Body, 1048576), request); err != nil {
-		api.MakeResponseError(response, this.debug, api.PBBadRequest, err)
-		return
-	}
-
-	// Get session
-	session, err := this.store.Get(r, "default")
+	session, err := this.Prepare(response, request, w, r)
 	if err != nil {
-		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
 		return
 	}
-	sess := websession.NewSession(session)
-	// Handler
-	handler := handler.NewHandler(sess, this.debug)
+	defer session.Save(r, w)
+
+	handler := handler.NewHandler(session, this.debug)
 	handler.LoginAuth(response, request)
 }

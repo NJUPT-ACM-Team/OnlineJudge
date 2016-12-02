@@ -1,8 +1,9 @@
 package controller
 
 import (
-	//"OnlineJudge/handler"
+	// "OnlineJudge/handler"
 	"OnlineJudge/handler/api"
+	// locals "OnlineJudge/sessions"
 	"OnlineJudge/sessions/websession"
 
 	"github.com/golang/protobuf/jsonpb"
@@ -20,20 +21,45 @@ var (
 )
 
 type Controller struct {
-	store websession.Store
-	debug bool
-}
-
-func NewController(dbg bool) *Controller {
-	return &Controller{
-		store: websession.NewStore(),
-		debug: dbg,
-	}
+	store   websession.Store
+	debug   bool
+	MaxSize int64
 }
 
 type Response interface {
 	proto.Message
 	GetError() *api.Error
+}
+
+func (this *Controller) GetSession(r *http.Request) (*websession.WebSession, error) {
+	sess, err := this.store.Get(r, "default")
+	if err != nil {
+		return nil, err
+	}
+	return websession.NewWebSession(sess), nil
+}
+
+func (this *Controller) Prepare(response Response, request proto.Message, w http.ResponseWriter, r *http.Request) (*websession.WebSession, error) {
+	// Decode json to pb
+	if err := DecodePBFromJsonStream(io.LimitReader(r.Body, this.MaxSize), request); err != nil {
+		api.MakeResponseError(response, this.debug, api.PBBadRequest, err)
+		return nil, err
+	}
+
+	session, err := this.GetSession(r)
+	if err != nil {
+		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
+		return nil, err
+	}
+	return session, nil
+}
+
+func NewController(dbg bool) *Controller {
+	return &Controller{
+		store:   websession.NewStore(),
+		debug:   dbg,
+		MaxSize: 1048576,
+	}
 }
 
 func SetResponse(w http.ResponseWriter, response Response) {

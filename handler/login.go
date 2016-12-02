@@ -11,7 +11,12 @@ func (this *Handler) LoginInit(response *api.LoginInitResponse, req *api.LoginIn
 		return
 	}
 	defer this.CloseDB()
-	return
+
+	if this.session.IsLogin() == true {
+		response.Version = "login" + req.GetVersion()
+	} else {
+		response.Version = "notlogin" + req.GetVersion()
+	}
 }
 
 func (this *Handler) LoginAuth(response *api.LoginAuthResponse, req *api.LoginAuthRequest) {
