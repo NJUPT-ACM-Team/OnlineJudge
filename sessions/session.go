@@ -5,9 +5,9 @@ import ()
 type Session interface {
 	IsLogin() bool
 
-	GetUsername() (string, error)
-	GetUserId() (int64, error)
-	GetPrivilege() (string, error)
+	GetUsername() string
+	GetUserId() int64
+	GetPrivilege() string
 	Get(key interface{}) (interface{}, error)
 
 	SetUsername(username string)

@@ -36,3 +36,20 @@ func Query_User_By_Username(tx *sqlx.Tx, name string, required []string, excepts
 	}
 	return user, nil
 }
+
+func Query_Languages_By_OJIdFK(tx *sqlx.Tx, oj_id_fk int64, required []string, excepts []string) ([]Language, error) {
+	lang := Language{}
+	langs := []Language{}
+	str_fields, err := GenerateSelectSQL(&lang, required, excepts)
+	if err != nil {
+		return nil, err
+	}
+	sql := `
+	SELECT %s FROM Languages
+	WHERE oj_id_fk=?
+	`
+	if err := tx.Select(&langs, fmt.Sprintf(sql, str_fields), oj_id_fk); err != nil {
+		return nil, err
+	}
+	return langs, nil
+}

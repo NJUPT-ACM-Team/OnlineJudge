@@ -11,14 +11,14 @@ func TestLoginAuth(t *testing.T) {
 	handler, session := NewHandlerForTest()
 	req := &api.LoginAuthRequest{
 		Username: "kevince",
-		Password: []byte("abc"),
+		Password: "abc",
 	}
 	handler.LoginAuth(res, req)
 	t.Log(res)
 	t.Log(session)
 
 	res.Reset()
-	req.Password = []byte("123")
+	req.Password = "123"
 	handler.LoginAuth(res, req)
 	t.Log(res)
 }

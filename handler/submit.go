@@ -40,19 +40,14 @@ func (this *Handler) Submit(response *api.SubmitResponse, subreq *api.SubmitRequ
 	}
 
 	// if visible
-	privilege, _ := this.session.GetPrivilege()
-	if mp.Hide == 1 && privilege != "root" {
+	if mp.Hide == 1 && this.session.GetPrivilege() != "root" {
 		api.MakeResponseError(response, this.debug, api.PBProblemNotFound, nil)
 		return
 	}
 
 	// Add Submission
 	subm := models.NewSubmissionModel()
-	user_id, err := this.session.GetUserId()
-	if err != nil {
-		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
-		return
-	}
+	user_id := this.session.GetUserId()
 	sub := &models.Submission{
 		Status:     "Pending",
 		StatusCode: "wt",

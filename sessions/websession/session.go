@@ -31,28 +31,28 @@ func (this *WebSession) IsLogin() bool {
 	return false
 }
 
-func (this *WebSession) GetUsername() (string, error) {
+func (this *WebSession) GetUsername() string {
 	username, ok := this.session.Values[KeyUsername].(string)
 	if !ok {
-		return "", ErrNotFound
+		return ""
 	}
-	return username, nil
+	return username
 }
 
-func (this *WebSession) GetPrivilege() (string, error) {
+func (this *WebSession) GetPrivilege() string {
 	privilege, ok := this.session.Values[KeyPrivilege].(string)
 	if !ok {
-		return "", ErrNotFound
+		return ""
 	}
-	return privilege, nil
+	return privilege
 }
 
-func (this *WebSession) GetUserId() (int64, error) {
+func (this *WebSession) GetUserId() int64 {
 	userid, ok := this.session.Values[KeyUserId].(int64)
 	if !ok {
-		return 0, ErrNotFound
+		return 0
 	}
-	return userid, nil
+	return userid
 }
 
 func (this *WebSession) Get(key interface{}) (interface{}, error) {

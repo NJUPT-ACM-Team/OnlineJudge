@@ -12,18 +12,20 @@ message ShowProblemRequest {
 // response
 message ShowProblemResponse {
   uint64 contest_id = 1;
-  uint64 problem_sid = 2;
+  string problem_sid = 2;
 
   string title = 3;
   int32 time_limit = 4;
-  int32 memory_limit = 5;
-  string input = 6;
-  string output = 7;
-  string sample_input = 8;
-  string sample_output = 9;
-  string source = 19;
-  string hint = 11;
+  int32 case_time_limit = 5;
+  int32 memory_limit = 6;
+  string input = 7;
+  string output = 8;
+  string sample_input = 9;
+  string sample_output = 10;
+  string source = 11;
+  string hint = 12;
+  bool hide = 13;
 
-  repeated Language languages = 12;
-  Error error = 13;
+  repeated Language languages = 14;
+  Error error = 15;
 }
