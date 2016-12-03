@@ -8,7 +8,7 @@ message SubmitRequest {
     uint64 contest_id = 1;
     string problem_sid = 2;
     string code = 3;
-    int32 language_code = 4;
+    int64 language_id= 4;
     bool is_shared = 5;
 }
 

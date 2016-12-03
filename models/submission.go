@@ -1,8 +1,9 @@
 package models
 
 import (
-	"errors"
 	"github.com/jmoiron/sqlx"
+
+	"errors"
 	"time"
 )
 
@@ -15,7 +16,7 @@ type Submission struct {
 	TimeUsed        int       `db:"time_used"`
 	MemoryUsed      int       `db:"memory_used"`
 	Code            string
-	LangIdFK        int    `db:"lang_id_fk"`
+	LangIdFK        int64  `db:"lang_id_fk"`
 	CEInfo          string `db:"ce_info"`
 	IPAddr          string `db:"ip_addr"`
 	IsShared        bool   `db:"is_shared"`

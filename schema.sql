@@ -147,17 +147,17 @@ CREATE TABLE Submissions (
     is_shared BOOLEAN NOT NULL,
 
     is_contest BOOLEAN NOT NULL,
-    cp_id_fk INTEGER UNSIGNED DEFAULT NULL,
-    cu_id_fk INTEGER UNSIGNED DEFAULT NULL,
-    meta_pid_fk INTEGER UNSIGNED DEFAULT NULL,
-    user_id_fk INTEGER UNSIGNED DEFAULT NULL,
+    cp_id_fk INTEGER UNSIGNED NOT NULL,
+    cu_id_fk INTEGER UNSIGNED NOT NULL,
+    meta_pid_fk INTEGER UNSIGNED NOT NULL,
+    user_id_fk INTEGER UNSIGNED NOT NULL,
 
     PRIMARY KEY (run_id),
     FOREIGN KEY (lang_id_fk) REFERENCES Languages(lang_id) ON DELETE SET NULL,
-    FOREIGN KEY (cp_id_fk) REFERENCES ContestsProblems(cp_id) ON DELETE SET NULL,
-    FOREIGN KEY (cu_id_fk) REFERENCES ContestsUsers(cu_id) ON DELETE SET NULL,
-    FOREIGN KEY (meta_pid_fk) REFERENCES MetaProblems(meta_pid) ON DELETE SET NULL,
-    FOREIGN KEY (user_id_fk) REFERENCES Users(user_id) ON DELETE SET NULL
+    KEY (cp_id_fk),
+    KEY (cu_id_fk),
+    KEY (meta_pid_fk),
+    KEY (user_id_fk)
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
 
 -- For testing purpose

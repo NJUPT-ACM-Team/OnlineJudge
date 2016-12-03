@@ -15,6 +15,7 @@ var (
 	KeyPrivilege = ".privilege"
 	KeyUserId    = ".user_id"
 	KeyFlash     = ".flash"
+	KeyIPAddr    = ".ipaddr"
 
 	ErrNotFound   = errors.New("Key not in the session")
 	ErrKeyInvalid = errors.New("Key invalid")
@@ -55,6 +56,14 @@ func (this *WebSession) GetUserId() int64 {
 	return userid
 }
 
+func (this *WebSession) GetIPAddr() string {
+	ip, ok := this.session.Values[KeyIPAddr].(string)
+	if !ok {
+		return ""
+	}
+	return ip
+}
+
 func (this *WebSession) Get(key interface{}) (interface{}, error) {
 	if _, ok := this.session.Values[key]; !ok {
 		return nil, ErrNotFound
@@ -84,6 +93,10 @@ func (this *WebSession) SetPrivilege(privilege string) {
 
 func (this *WebSession) SetUserId(user_id int64) {
 	this.session.Values[KeyUserId] = user_id
+}
+
+func (this *WebSession) SetIPAddr(ip string) {
+	this.session.Values[KeyIPAddr] = ip
 }
 
 func (this *WebSession) Flashes(vars ...string) []interface{} {

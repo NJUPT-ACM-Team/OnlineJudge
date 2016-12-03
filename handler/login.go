@@ -48,14 +48,10 @@ func (this *Handler) LoginAuth(response *api.LoginAuthResponse, req *api.LoginAu
 	}
 
 	// Save IPAddr into database
-	if flashes := this.session.Flashes(); len(flashes) > 0 {
-		ip_addr, ok := flashes[0].(string)
-		if ok {
-			if err := um.UpdateIPAddr(this.tx, user.Username, ip_addr); err != nil {
-				api.MakeResponseError(response, this.debug, api.PBInternalError, err)
-				return
-			}
-		}
+	ip_addr := this.session.GetIPAddr()
+	if err := um.UpdateIPAddr(this.tx, user.Username, ip_addr); err != nil {
+		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
+		return
 	}
 
 	// Save last login time

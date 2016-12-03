@@ -5,5 +5,5 @@ package api;
 message Language {
     string compiler = 1;
     string language = 2;
-    int32 submit_value = 3;
+    int32 language_id = 3;
 }

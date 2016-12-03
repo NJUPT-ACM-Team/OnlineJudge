@@ -79,4 +79,10 @@ var api_routes = Routes{
 		Pattern:     "/problem",
 		HandlerFunc: ctler.ShowProblem,
 	},
+	Route{
+		Name:        "Submit",
+		Method:      "POST",
+		Pattern:     "/submit",
+		HandlerFunc: ctler.Submit,
+	},
 }

@@ -68,9 +68,9 @@ func (this *Handler) ShowProblem(response *api.ShowProblemResponse, req *api.Sho
 	languages := []*api.Language{}
 	for _, lang := range langs {
 		temp := &api.Language{
-			Compiler:    lang.Compiler,
-			Language:    lang.Language,
-			SubmitValue: int32(lang.LangId),
+			Compiler:   lang.Compiler,
+			Language:   lang.Language,
+			LanguageId: int32(lang.LangId),
 		}
 		languages = append(languages, temp)
 	}

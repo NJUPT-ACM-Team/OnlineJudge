@@ -1,16 +1,16 @@
 package handler
 
 import (
+	"OnlineJudge/base"
 	"OnlineJudge/handler/api"
 	"OnlineJudge/models"
 
-	"fmt"
 	"time"
 )
 
 // Need to be tested
 // Depend on MetaProblems, OJInfo,
-func (this *Handler) Submit(response *api.SubmitResponse, subreq *api.SubmitRequest) {
+func (this *Handler) Submit(response *api.SubmitResponse, req *api.SubmitRequest) {
 	if err := this.OpenDB(); err != nil {
 		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
 		return
@@ -24,11 +24,12 @@ func (this *Handler) Submit(response *api.SubmitResponse, subreq *api.SubmitRequ
 	}
 
 	// Parse ProblemSid
-	var oj_name string
-	var oj_pid int
-	fmt.Sscanf(subreq.GetProblemSid(), "%s#%d", &oj_name, &oj_pid)
-
-	mp, err := models.Query_MetaProblem_By_OJName_OJPid(this.tx, oj_name, oj_pid, []string{"meta_pid", "hide"}, nil)
+	pid, err := base.ParseSid(req.GetProblemSid())
+	if err != nil {
+		api.MakeResponseError(response, this.debug, api.PBBadRequest, err)
+		return
+	}
+	mp, err := models.Query_MetaProblem_By_OJName_OJPid(this.tx, pid.OJName, pid.OJPid, []string{"meta_pid", "hide"}, nil)
 	if err != nil {
 		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
 		return
@@ -52,13 +53,14 @@ func (this *Handler) Submit(response *api.SubmitResponse, subreq *api.SubmitRequ
 		Status:     "Pending",
 		StatusCode: "wt",
 		SubmitTime: time.Now(),
-		Code:       subreq.GetCode(),
-		// IPAddr:     subreq.GetIpAddr(),
-		IsShared: subreq.GetIsShared(),
+		Code:       req.GetCode(),
+		IPAddr:     this.session.GetIPAddr(),
+		IsShared:   req.GetIsShared(),
 
 		IsContest: false,
 		MetaPidFK: mp.MetaPid,
 		UserIdFK:  user_id,
+		LangIdFK:  req.GetLanguageId(),
 	}
 	run_id, err := subm.Insert(this.tx, sub)
 	if err != nil {

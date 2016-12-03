@@ -4,6 +4,7 @@ import (
 	"OnlineJudge/base"
 	"OnlineJudge/handler"
 	"OnlineJudge/handler/api"
+	locals "OnlineJudge/sessions"
 
 	"net/http"
 )
@@ -35,7 +36,7 @@ func (this *Controller) LoginAuth(w http.ResponseWriter, r *http.Request) {
 	defer session.Save(r, w)
 
 	ip_addr := base.GetIPAddress(r)
-	session.AddFlash(ip_addr)
+	locals.Session(session).SetIPAddr(ip_addr)
 
 	handler := handler.NewHandler(session, this.debug)
 	handler.LoginAuth(response, request)
