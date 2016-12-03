@@ -67,7 +67,12 @@ func isPrivateSubnet(ipAddress net.IP) bool {
 	return false
 }
 
+// Use simple r.RemoteAddr to get remote address,
+// TBD: When applying Nginx, test the original function
 func GetIPAddress(r *http.Request) string {
+	host, _, _ := net.SplitHostPort(r.RemoteAddr)
+	return host
+
 	for _, h := range []string{"X-Forwarded-For", "X-Real-Ip"} {
 		addresses := strings.Split(r.Header.Get(h), ",")
 		// march from right to left until we get a public address

@@ -140,3 +140,11 @@ func (this *UserModel) UpdateIPAddr(tx *sqlx.Tx, name string, ip string) error {
 	}
 	return this.Update(tx, user, "username", []string{"ip_addr"}, nil)
 }
+
+func (this *UserModel) UpdateLastLoginTime(tx *sqlx.Tx, name string, t time.Time) error {
+	user := &User{
+		Username:      name,
+		LastLoginTime: t,
+	}
+	return this.Update(tx, user, "username", []string{"last_login_time"}, nil)
+}

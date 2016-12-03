@@ -2,6 +2,7 @@ package router
 
 import (
 	"OnlineJudge/WebBackend/controller"
+	"OnlineJudge/base"
 
 	"github.com/gorilla/mux"
 
@@ -26,7 +27,8 @@ func Logger(inner http.Handler, name string) http.Handler {
 		inner.ServeHTTP(w, r)
 
 		log.Printf(
-			"%s\t%s\t%s\t%s",
+			"%s\t%s\t%s\t%s\t%s",
+			base.GetIPAddress(r),
 			r.Method,
 			r.RequestURI,
 			name,

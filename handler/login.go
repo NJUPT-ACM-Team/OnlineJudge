@@ -3,6 +3,8 @@ package handler
 import (
 	"OnlineJudge/handler/api"
 	"OnlineJudge/models"
+
+	"time"
 )
 
 func (this *Handler) LoginInit(response *api.LoginInitResponse, req *api.LoginInitRequest) {
@@ -45,7 +47,7 @@ func (this *Handler) LoginAuth(response *api.LoginAuthResponse, req *api.LoginAu
 		return
 	}
 
-	// Set IPAddr into database
+	// Save IPAddr into database
 	if flashes := this.session.Flashes(); len(flashes) > 0 {
 		ip_addr, ok := flashes[0].(string)
 		if ok {
@@ -54,6 +56,18 @@ func (this *Handler) LoginAuth(response *api.LoginAuthResponse, req *api.LoginAu
 				return
 			}
 		}
+	}
+
+	// Save last login time
+	if err := um.UpdateLastLoginTime(this.tx, user.Username, time.Now()); err != nil {
+		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
+		return
+	}
+
+	// Commit change
+	if err := this.Commit(); err != nil {
+		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
+		return
 	}
 
 	// Set session
