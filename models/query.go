@@ -13,7 +13,7 @@ func Query_MetaProblem_By_OJName_OJPid(tx *sqlx.Tx, oj_name string, oj_pid int, 
 	}
 	sql := `
 	SELECT %s FROM MetaProblems
-	WHERE oj_pid=? AND oj_id_fk=(SELECT oj_id FROM OJInfo WHERE name=?)
+	WHERE oj_pid=? AND oj_name=?
 	`
 	if err := tx.Get(mp, fmt.Sprintf(sql, str_fields), oj_pid, oj_name); err != nil {
 		return nil, err

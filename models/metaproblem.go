@@ -20,8 +20,9 @@ type MetaProblem struct {
 	Source            string
 	Hint              string
 	Hide              int
-	OJIdFK            int64 `db:"oj_id_fk"`
-	OJPid             int64 `db:"oj_pid"`
+	OJName            string `db:"oj_name"`
+	OJIdFK            int64  `db:"oj_id_fk"`
+	OJPid             int64  `db:"oj_pid"`
 }
 
 type MetaProblemModel struct {

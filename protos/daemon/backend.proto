@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package pb.backend;
+package pb;
 
 message SubmitRequest {
     int64 run_id = 1;

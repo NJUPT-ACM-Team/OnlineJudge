@@ -5,9 +5,9 @@ import (
 	"testing"
 )
 
-/*
 import "time"
 
+/*
 func TestUserInsert(t *testing.T) {
 	db, err := db.NewDB()
 	if err != nil {

@@ -73,6 +73,7 @@ CREATE TABLE MetaProblems (
     source VARCHAR(1024) NOT NULL,
     hint TEXT NOT NULL,
     hide BOOLEAN NOT NULL DEFAULT 1 COMMENT 'Hide the problem or not, for contest purpose',
+    oj_name VARCHAR(64) NOT NULL,
     oj_id_fk INTEGER UNSIGNED DEFAULT NULL,
     oj_pid INTEGER UNSIGNED NOT NULL,
     
@@ -164,4 +165,4 @@ CREATE TABLE Submissions (
 
 INSERT INTO OJInfo (name, version, int64io, javaclass, status, status_info, lastcheck) VALUES ('zoj', '1', '%lld', 'Main', 'ok', 'OK', '2016-11-17 09:19:16');
 INSERT INTO Languages (language, option_value, compiler, oj_id_fk) VALUES ('c++', '1', 'g++4.9', '1');
-INSERT INTO MetaProblems (title, description, input, output, sample_in, sample_out, time_limit, case_time_limit, memory_limit, number_of_testcases, source, hint, hide, oj_id_fk, oj_pid) VALUES ('A+B', 'caculate result of a+b', 'Two integers', 'Sum of two integers a+b', '1 1', '2', '1000', '1000', '65536', '10', 'test', 'for test', 0, 1, 1000);
+INSERT INTO MetaProblems (title, description, input, output, sample_in, sample_out, time_limit, case_time_limit, memory_limit, number_of_testcases, source, hint, hide, oj_name, oj_id_fk, oj_pid) VALUES ('A+B', 'caculate result of a+b', 'Two integers', 'Sum of two integers a+b', '1 1', '2', '1000', '1000', '65536', '10', 'test', 'for test', 0,'zoj', 1, 1000);
