@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package rpc;
+
+message SubmitCodeRequest {
+    int64 run_id = 1;
+}
+
+message SubmitCodeResponse {
+    bool received = 1; 
+}
+
+service BackendHelper {
+    rpc Submit(SubmitCodeRequest) returns (SubmitCodeResponse) {}
+}

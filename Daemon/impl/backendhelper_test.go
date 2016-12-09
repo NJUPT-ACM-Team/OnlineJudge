@@ -1,7 +1,7 @@
 package impl
 
 import (
-	"OnlineJudge/Daemon/pb"
+	"OnlineJudge/pbgen/rpc"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -16,9 +16,9 @@ func TestBackend(t *testing.T) {
 	}
 	defer conn.Close()
 
-	client := pb.NewBackendHelperClient(conn)
+	client := rpc.NewBackendHelperClient(conn)
 
-	req := &pb.SubmitRequest{
+	req := &rpc.SubmitCallRequest{
 		RunId: 123,
 	}
 	res, err := client.Submit(context.Background(), req)

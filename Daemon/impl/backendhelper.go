@@ -1,7 +1,7 @@
 package impl
 
 import (
-	"OnlineJudge/Daemon/pb"
+	"OnlineJudge/pbgen/rpc"
 	//	"OnlineJudge/models"
 	//	"OnlineJudge/models/db"
 
@@ -11,14 +11,14 @@ import (
 
 type backendHelperServer struct{}
 
-func (this *backendHelperServer) Submit(ctx context.Context, req *pb.SubmitRequest) (*pb.SubmitResponse, error) {
+func (this *backendHelperServer) Submit(ctx context.Context, req *rpc.SubmitCodeRequest) (*rpc.SubmitCodeResponse, error) {
 	// Submit the code to MQ
-	go SumitCode(req)
-	return &pb.SubmitResponse{
+	// go SumitCode(req)
+	return &rpc.SubmitCodeResponse{
 		Received: true,
 	}, nil
 }
 
 func RegisterBackendHelper(server *grpc.Server) {
-	pb.RegisterBackendHelperServer(server, &backendHelperServer{})
+	rpc.RegisterBackendHelperServer(server, &backendHelperServer{})
 }
