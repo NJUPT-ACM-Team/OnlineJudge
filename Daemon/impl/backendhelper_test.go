@@ -18,7 +18,7 @@ func TestBackend(t *testing.T) {
 
 	client := rpc.NewBackendHelperClient(conn)
 
-	req := &rpc.SubmitCallRequest{
+	req := &rpc.SubmitCodeRequest{
 		RunId: 123,
 	}
 	res, err := client.Submit(context.Background(), req)
