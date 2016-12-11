@@ -32,6 +32,10 @@ func (this *Judger) GetOJPid() string {
 	return this.info.GetOjPid()
 }
 
+func (this *Judger) GetCode() string {
+	return this.info.GetCode()
+}
+
 func (this *Judger) IsLocal() bool {
 	if this.info.GetIsLocal() {
 		return true

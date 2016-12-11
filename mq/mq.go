@@ -19,6 +19,10 @@ type MQ struct {
 
 var DSN string
 
+func Init() {
+	DSN = "amqp://guest:guest@localhost:5672/"
+}
+
 func New() *MQ {
 	return &MQ{
 		DSN: DSN,
@@ -47,10 +51,6 @@ func (this *MQ) Connect() error {
 
 func (this *MQ) Disconnect() {
 	this.conn.Close()
-}
-
-func Init() {
-	DSN = "amqp://guest:guest@localhost:5672/"
 }
 
 func (this *MQ) Declare(name string) (amqp.Queue, error) {

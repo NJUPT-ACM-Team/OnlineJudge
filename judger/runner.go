@@ -13,6 +13,7 @@ type JudgerInterface interface {
 	GetRunId() int64
 	GetOJName() string
 	GetOJPid() string
+	GetCode() string
 	IsLocal() bool
 	IsVirtual() bool
 	IsSpj() bool
@@ -29,7 +30,7 @@ var judger *Judger
 
 func Init() {
 	mq.Init()
-	jmq := mq.New()
+	jmq = mq.New()
 	if err := jmq.Connect(); err != nil {
 		panic(err)
 	}

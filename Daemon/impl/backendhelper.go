@@ -1,10 +1,9 @@
 package impl
 
 import (
+	"OnlineJudge/Daemon/utils"
 	"OnlineJudge/mq"
 	"OnlineJudge/pbgen/rpc"
-	//	"OnlineJudge/models"
-	//	"OnlineJudge/models/db"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -33,7 +32,7 @@ func NewBackendHelperServer() *backendHelperServer {
 
 func (this *backendHelperServer) Submit(ctx context.Context, req *rpc.SubmitCodeRequest) (*rpc.SubmitCodeResponse, error) {
 	// Submit the code to MQ
-	// go SumitCode(req)
+	go utils.SumitToMQ(this.jmq, req)
 	return &rpc.SubmitCodeResponse{
 		Received: true,
 	}, nil
