@@ -10,7 +10,7 @@ var ptests = []struct {
 	{
 		Str:   "LOCAL#1000",
 		Valid: true,
-		Res:   &Pid{OJName: "LOCAL", OJPid: 1000},
+		Res:   &Pid{OJName: "LOCAL", OJPid: "1000"},
 	},
 	{
 		Str:   "#1000",

@@ -5,7 +5,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func Query_MetaProblem_By_OJName_OJPid(tx *sqlx.Tx, oj_name string, oj_pid int, required []string, excepts []string) (*MetaProblem, error) {
+func Query_MetaProblem_By_OJName_OJPid(tx *sqlx.Tx, oj_name string, oj_pid string, required []string, excepts []string) (*MetaProblem, error) {
 	mp := &MetaProblem{}
 	str_fields, err := GenerateSelectSQL(mp, required, excepts)
 	if err != nil {

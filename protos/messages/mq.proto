@@ -2,6 +2,12 @@ syntax = "proto3";
 
 package messages;
 
+message SubmitLanguage {
+    string compiler = 1;
+    string lang = 2;
+    string option_value = 3;
+}
+
 message TestCase {
     int64 case_id = 1;
     bytes input_hash = 2;
@@ -19,9 +25,10 @@ message SpjCode {
 message SubmitMQ {
     int64 run_id = 1;
     string oj_name = 2;
-    int64 oj_pid = 3;
+    string oj_pid = 3;
     string code = 4;
     bool is_local = 5;
     bool is_spj = 6;
-    repeated TestCase testcases = 7;
+    SubmitLanguage language = 7;
+    repeated TestCase testcases = 8;
 }

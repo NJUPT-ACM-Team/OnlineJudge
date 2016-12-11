@@ -22,7 +22,7 @@ type MetaProblem struct {
 	Hide              int
 	OJName            string `db:"oj_name"`
 	OJIdFK            int64  `db:"oj_id_fk"`
-	OJPid             int64  `db:"oj_pid"`
+	OJPid             string `db:"oj_pid"`
 }
 
 type MetaProblemModel struct {

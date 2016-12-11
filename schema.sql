@@ -75,7 +75,7 @@ CREATE TABLE MetaProblems (
     hide BOOLEAN NOT NULL DEFAULT 1 COMMENT 'Hide the problem or not, for contest purpose',
     oj_name VARCHAR(64) NOT NULL,
     oj_id_fk INTEGER UNSIGNED DEFAULT NULL,
-    oj_pid INTEGER UNSIGNED NOT NULL,
+    oj_pid VARCHAR(64) NOT NULL,
     
     PRIMARY KEY (meta_pid),
     FOREIGN KEY (oj_id_fk) REFERENCES OJInfo(oj_id) ON DELETE SET NULL,
