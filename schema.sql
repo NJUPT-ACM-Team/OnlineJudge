@@ -82,6 +82,17 @@ CREATE TABLE MetaProblems (
     UNIQUE KEY (oj_id_fk, oj_pid)
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
 
+CREATE TABLE TestCases (
+    case_id INTEGER UNSINGED NOT NULL AUTO_INCREMENT,
+    local_pid_fk INTEGER UNSIGNED NOT NULL,
+    input BLOB NOT NULL,
+    input_md5 BLOB NOT NULL,
+    output BLOB NOT NULL,
+    output_md5 BLOB NOT NULL,
+
+    FOREIGN KEY (local_pid_fk) REFERENCES LocalProblems(local_pid) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
+
 CREATE TABLE LocalProblems (
     local_pid INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     meta_pid_fk INTEGER UNSIGNED DEFAULT NULL,
