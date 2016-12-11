@@ -31,7 +31,7 @@ func NewBackendHelperServer() *backendHelperServer {
 
 func (this *backendHelperServer) Submit(ctx context.Context, req *rpc.SubmitCodeRequest) (*rpc.SubmitCodeResponse, error) {
 	// Submit the code to MQ
-	go utils.SumitToMQ(this.jmq, req)
+	go utils.SubmitToMQ(this.jmq, req)
 	return &rpc.SubmitCodeResponse{
 		Received: true,
 	}, nil
@@ -39,4 +39,38 @@ func (this *backendHelperServer) Submit(ctx context.Context, req *rpc.SubmitCode
 
 func RegisterBackendHelper(server *grpc.Server) {
 	rpc.RegisterBackendHelperServer(server, NewBackendHelperServer())
+}
+
+type BackendHelper struct {
+	conn   *grpc.ClientConn
+	bind   string
+	client rpc.BackendHelperClient
+}
+
+func NewBackendHelper() *BackendHelper {
+	return &BackendHelper{
+		bind: BIND,
+	}
+}
+
+func (this *BackendHelper) Connect() error {
+	var err error
+	this.conn, err = grpc.Dial(this.bind, grpc.WithInsecure())
+	return err
+}
+
+func (this *BackendHelper) Disconnect() {
+	this.conn.Close()
+}
+
+func (this *BackendHelper) Submit(run_id int64) (*rpc.SubmitCodeResponse, error) {
+	req := &rpc.SubmitCodeRequest{
+		RunId: run_id,
+	}
+	return this.client.Submit(context.Background(), req)
+
+}
+
+func (this *BackendHelper) NewClient() {
+	this.client = rpc.NewBackendHelperClient(this.conn)
 }

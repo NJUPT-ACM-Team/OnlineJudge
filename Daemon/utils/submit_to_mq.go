@@ -30,6 +30,7 @@ func SetSystemError(tx *sqlx.Tx, run_id int64) {
 }
 
 func SubmitToMQ(jmq *mq.MQ, req *rpc.SubmitCodeRequest) {
+	log.Println(req)
 	DB := db.New()
 	defer DB.Close()
 	tx := DB.MustBegin()
