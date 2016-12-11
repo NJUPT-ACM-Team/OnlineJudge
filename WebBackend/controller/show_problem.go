@@ -2,7 +2,7 @@ package controller
 
 import (
 	"OnlineJudge/handler"
-	"OnlineJudge/handler/api"
+	"OnlineJudge/pbgen/api"
 
 	"net/http"
 )

@@ -1,19 +1,21 @@
-package api
+package handler
 
 import (
+	"OnlineJudge/pbgen/api"
+
 	"net/http"
 	"reflect"
 )
 
-func NewPBError(code int32, msg string) *Error {
-	return &Error{
+func NewPBError(code int32, msg string) *api.Error {
+	return &api.Error{
 		Code: code,
 		Msg:  msg,
 	}
 }
 
 // response, debug, Error, debug err
-func MakeResponseError(res interface{}, debug bool, pberr *Error, err error) {
+func MakeResponseError(res interface{}, debug bool, pberr *api.Error, err error) {
 	field := reflect.ValueOf(res).Elem().FieldByName("Error")
 	if debug == true && err != nil {
 		pberr.Debug = err.Error()

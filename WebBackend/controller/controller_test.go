@@ -2,7 +2,7 @@ package controller
 
 import (
 	"OnlineJudge/base"
-	"OnlineJudge/handler/api"
+	"OnlineJudge/pbgen/api"
 
 	"net/http/httptest"
 	"testing"

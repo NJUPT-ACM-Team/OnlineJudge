@@ -12,37 +12,37 @@ import (
 // Depend on MetaProblems, OJInfo,
 func (this *Handler) Submit(response *api.SubmitResponse, req *api.SubmitRequest) {
 	if err := this.OpenDB(); err != nil {
-		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
+		MakeResponseError(response, this.debug, PBInternalError, err)
 		return
 	}
 	defer this.CloseDB()
 
 	// if login
 	if this.session.IsLogin() == false {
-		api.MakeResponseError(response, this.debug, api.PBLoginRequired, nil)
+		MakeResponseError(response, this.debug, PBLoginRequired, nil)
 		return
 	}
 
 	// Parse ProblemSid
 	pid, err := base.ParseSid(req.GetProblemSid())
 	if err != nil {
-		api.MakeResponseError(response, this.debug, api.PBBadRequest, err)
+		MakeResponseError(response, this.debug, PBBadRequest, err)
 		return
 	}
 	mp, err := models.Query_MetaProblem_By_OJName_OJPid(this.tx, pid.OJName, pid.OJPid, []string{"meta_pid", "hide"}, nil)
 	if err != nil {
-		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
+		MakeResponseError(response, this.debug, PBInternalError, err)
 		return
 	}
 
 	if mp.MetaPid == 0 {
-		api.MakeResponseError(response, this.debug, api.PBProblemNotFound, nil)
+		MakeResponseError(response, this.debug, PBProblemNotFound, nil)
 		return
 	}
 
 	// if visible
 	if mp.Hide == 1 && this.session.GetPrivilege() != "root" {
-		api.MakeResponseError(response, this.debug, api.PBProblemNotFound, nil)
+		MakeResponseError(response, this.debug, PBProblemNotFound, nil)
 		return
 	}
 
@@ -64,11 +64,11 @@ func (this *Handler) Submit(response *api.SubmitResponse, req *api.SubmitRequest
 	}
 	run_id, err := subm.Insert(this.tx, sub)
 	if err != nil {
-		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
+		MakeResponseError(response, this.debug, PBInternalError, err)
 		return
 	}
 	if err := this.Commit(); err != nil {
-		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
+		MakeResponseError(response, this.debug, PBInternalError, err)
 		return
 	}
 

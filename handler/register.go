@@ -17,14 +17,14 @@ func CheckRegisterRequest(tx *sqlx.Tx, req *api.RegisterRequest, res *api.Regist
 
 func (this *Handler) Register(response *api.RegisterResponse, req *api.RegisterRequest) {
 	if err := this.OpenDB(); err != nil {
-		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
+		MakeResponseError(response, this.debug, PBInternalError, err)
 		return
 	}
 	defer this.CloseDB()
 
 	// Check Request
 	if err := CheckRegisterRequest(this.tx, req, response); err != nil {
-		api.MakeResponseError(response, this.debug, api.PBBadRequest, err)
+		MakeResponseError(response, this.debug, PBBadRequest, err)
 		return
 	}
 
@@ -41,11 +41,11 @@ func (this *Handler) Register(response *api.RegisterResponse, req *api.RegisterR
 	}
 	user_id, err := um.Insert(this.tx, user)
 	if err != nil {
-		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
+		MakeResponseError(response, this.debug, PBInternalError, err)
 		return
 	}
 	if err := this.Commit(); err != nil {
-		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
+		MakeResponseError(response, this.debug, PBInternalError, err)
 		return
 	}
 

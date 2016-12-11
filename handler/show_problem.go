@@ -8,7 +8,7 @@ import (
 
 func (this *Handler) ShowProblem(response *api.ShowProblemResponse, req *api.ShowProblemRequest) {
 	if err := this.OpenDB(); err != nil {
-		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
+		MakeResponseError(response, this.debug, PBInternalError, err)
 		return
 	}
 	defer this.CloseDB()
@@ -16,32 +16,32 @@ func (this *Handler) ShowProblem(response *api.ShowProblemResponse, req *api.Sho
 	// Get Sid
 	pid, err := base.ParseSid(req.GetProblemSid())
 	if err != nil {
-		api.MakeResponseError(response, this.debug, api.PBBadRequest, err)
+		MakeResponseError(response, this.debug, PBBadRequest, err)
 		return
 	}
 
 	// Query problem
 	mp, err := models.Query_MetaProblem_By_OJName_OJPid(this.tx, pid.OJName, pid.OJPid, nil, nil)
 	if err != nil {
-		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
+		MakeResponseError(response, this.debug, PBInternalError, err)
 		return
 	}
 
 	// QueryLanguages
 	langs, err := models.Query_Languages_By_OJIdFK(this.tx, mp.OJIdFK, nil, nil)
 	if err != nil {
-		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
+		MakeResponseError(response, this.debug, PBInternalError, err)
 		return
 	}
 
 	// Judge if authorized
 	if mp.Hide != 0 {
 		if this.session.IsLogin() == false {
-			api.MakeResponseError(response, this.debug, api.PBProblemNotFound, err)
+			MakeResponseError(response, this.debug, PBProblemNotFound, err)
 			return
 		} else {
 			if this.session.GetPrivilege() != "root" {
-				api.MakeResponseError(response, this.debug, api.PBProblemNotFound, err)
+				MakeResponseError(response, this.debug, PBProblemNotFound, err)
 				return
 			}
 		}

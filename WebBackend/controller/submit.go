@@ -3,7 +3,7 @@ package controller
 import (
 	"OnlineJudge/base"
 	"OnlineJudge/handler"
-	"OnlineJudge/handler/api"
+	"OnlineJudge/pbgen/api"
 	locals "OnlineJudge/sessions"
 
 	"net/http"

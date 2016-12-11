@@ -1,15 +1,13 @@
 package controller
 
 import (
-	// "OnlineJudge/handler"
-	"OnlineJudge/handler/api"
-	// locals "OnlineJudge/sessions"
+	"OnlineJudge/handler"
+	"OnlineJudge/pbgen/api"
 	"OnlineJudge/sessions/websession"
 
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/golang/protobuf/proto"
 
-	//"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -42,13 +40,13 @@ func (this *Controller) GetSession(r *http.Request) (*websession.WebSession, err
 func (this *Controller) Prepare(response Response, request proto.Message, w http.ResponseWriter, r *http.Request) (*websession.WebSession, error) {
 	// Decode json to pb
 	if err := DecodePBFromJsonStream(io.LimitReader(r.Body, this.MaxSize), request); err != nil {
-		api.MakeResponseError(response, this.debug, api.PBBadRequest, err)
+		handler.MakeResponseError(response, this.debug, handler.PBBadRequest, err)
 		return nil, err
 	}
 
 	session, err := this.GetSession(r)
 	if err != nil {
-		api.MakeResponseError(response, this.debug, api.PBInternalError, err)
+		handler.MakeResponseError(response, this.debug, handler.PBInternalError, err)
 		return nil, err
 	}
 	return session, nil
