@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"OnlineJudge/handler/api"
+	"OnlineJudge/pbgen/api"
 
 	"testing"
 )

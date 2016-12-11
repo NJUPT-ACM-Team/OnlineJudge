@@ -2,8 +2,8 @@ package handler
 
 import (
 	"OnlineJudge/base"
-	"OnlineJudge/handler/api"
 	"OnlineJudge/models"
+	"OnlineJudge/pbgen/api"
 )
 
 func (this *Handler) ShowProblem(response *api.ShowProblemResponse, req *api.ShowProblemRequest) {

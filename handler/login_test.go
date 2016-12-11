@@ -3,7 +3,7 @@ package handler
 import (
 	"testing"
 
-	"OnlineJudge/handler/api"
+	"OnlineJudge/pbgen/api"
 )
 
 func TestLoginAuth(t *testing.T) {

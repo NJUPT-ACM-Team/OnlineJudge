@@ -1,7 +1,7 @@
 package models
 
 import (
-	"OnlineJudge/models/db"
+	"OnlineJudge/db"
 	"testing"
 )
 

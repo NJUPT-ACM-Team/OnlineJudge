@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"OnlineJudge/handler/api"
 	"OnlineJudge/models"
+	"OnlineJudge/pbgen/api"
 
 	"time"
 )
