@@ -4,7 +4,7 @@ package handler
 import (
 	"testing"
 
-	"OnlineJudge/handler/api"
+	"OnlineJudge/pbgen/api"
 )
 
 func TestRegister(t *testing.T) {

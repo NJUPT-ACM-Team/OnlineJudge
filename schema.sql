@@ -73,6 +73,8 @@ CREATE TABLE MetaProblems (
     source VARCHAR(1024) NOT NULL,
     hint TEXT NOT NULL,
     hide BOOLEAN NOT NULL DEFAULT 1 COMMENT 'Hide the problem or not, for contest purpose',
+	is_spj BOOLEAN NOT NULL DEFAULT false,
+	spj_code TEXT NOT NULL,
     oj_name VARCHAR(64) NOT NULL,
     oj_id_fk INTEGER UNSIGNED DEFAULT NULL,
     oj_pid VARCHAR(64) NOT NULL,
@@ -82,17 +84,6 @@ CREATE TABLE MetaProblems (
     UNIQUE KEY (oj_id_fk, oj_pid)
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
 
-CREATE TABLE TestCases (
-    case_id INTEGER UNSINGED NOT NULL AUTO_INCREMENT,
-    local_pid_fk INTEGER UNSIGNED NOT NULL,
-    input BLOB NOT NULL,
-    input_md5 BLOB NOT NULL,
-    output BLOB NOT NULL,
-    output_md5 BLOB NOT NULL,
-
-    FOREIGN KEY (local_pid_fk) REFERENCES LocalProblems(local_pid) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
-
 CREATE TABLE LocalProblems (
     local_pid INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     meta_pid_fk INTEGER UNSIGNED DEFAULT NULL,
@@ -100,6 +91,36 @@ CREATE TABLE LocalProblems (
     PRIMARY KEY (local_pid),
     FOREIGN KEY (meta_pid_fk) REFERENCES MetaProblems(meta_pid) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
+
+CREATE TABLE TestCases (
+    case_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    meta_pid_fk INTEGER UNSIGNED NOT NULL,
+    input BLOB NOT NULL,
+    input_md5 BLOB NOT NULL,
+    output BLOB NOT NULL,
+    output_md5 BLOB NOT NULL,
+
+	PRIMARY KEY (case_id),
+    FOREIGN KEY (meta_pid_fk) REFERENCES MetaProblems(meta_pid) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
+
+-- Update number of testcases while insert/delete testcases.
+delimiter //
+CREATE TRIGGER AFTER_INS_TESTCASES AFTER INSERT ON TestCases
+FOR EACH ROW
+BEGIN
+    UPDATE MetaProblems SET number_of_testcases = number_of_testcases + 1 WHERE meta_pid = NEW.meta_pid_fk;
+END;//
+delimiter ;
+
+delimiter //
+CREATE TRIGGER AFTER_DEL_TESTCASES AFTER DELETE ON TestCases
+FOR EACH ROW
+BEGIN
+    UPDATE MetaProblems SET number_of_testcases = number_of_testcases - 1 WHERE meta_pid = OLD.meta_pid_fk;
+END;//
+delimiter ;
+
 
 CREATE TABLE Contests (
     contest_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -157,6 +178,7 @@ CREATE TABLE Submissions (
     ce_info TEXT NOT NULL,
     ip_addr VARCHAR(255) NOT NULL DEFAULT '',
     is_shared BOOLEAN NOT NULL,
+	is_spj BOOLEAN NOT NULL DEFAULT false,
 
     is_contest BOOLEAN NOT NULL,
     cp_id_fk INTEGER UNSIGNED NOT NULL,
@@ -176,4 +198,4 @@ CREATE TABLE Submissions (
 
 INSERT INTO OJInfo (name, version, int64io, javaclass, status, status_info, lastcheck) VALUES ('zoj', '1', '%lld', 'Main', 'ok', 'OK', '2016-11-17 09:19:16');
 INSERT INTO Languages (language, option_value, compiler, oj_id_fk) VALUES ('c++', '1', 'g++4.9', '1');
-INSERT INTO MetaProblems (title, description, input, output, sample_in, sample_out, time_limit, case_time_limit, memory_limit, number_of_testcases, source, hint, hide, oj_name, oj_id_fk, oj_pid) VALUES ('A+B', 'caculate result of a+b', 'Two integers', 'Sum of two integers a+b', '1 1', '2', '1000', '1000', '65536', '10', 'test', 'for test', 0,'zoj', 1, 1000);
+INSERT INTO MetaProblems (spj_code, title, description, input, output, sample_in, sample_out, time_limit, case_time_limit, memory_limit, number_of_testcases, source, hint, hide, oj_name, oj_id_fk, oj_pid) VALUES ('', 'A+B', 'caculate result of a+b', 'Two integers', 'Sum of two integers a+b', '1 1', '2', '1000', '1000', '65536', '0', 'test', 'for test', 0,'zoj', 1, 1000);

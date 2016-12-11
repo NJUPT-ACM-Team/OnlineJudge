@@ -20,6 +20,7 @@ type Submission struct {
 	CEInfo          string `db:"ce_info"`
 	IPAddr          string `db:"ip_addr"`
 	IsShared        bool   `db:"is_shared"`
+	IsSpj           bool   `db:"is_spj"`
 
 	IsContest bool  `db:"is_contest"`
 	CPIdFK    int64 `db:"cp_id_fk"`

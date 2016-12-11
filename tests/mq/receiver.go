@@ -20,11 +20,11 @@ func main() {
 		return
 	}
 	defer m.Disconnect()
-	if err := m.DeclareLJ(); err != nil {
+	if err := m.DeclareVJ(); err != nil {
 		log.Fatal(err)
 		return
 	}
-	if err := m.LJReceiver(handle); err != nil {
+	if err := m.VJReceiver(handle); err != nil {
 		log.Fatal(err)
 		return
 	}

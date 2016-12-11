@@ -19,7 +19,9 @@ type MetaProblem struct {
 	NumberOfTestCases int    `db:"number_of_testcases"`
 	Source            string
 	Hint              string
-	Hide              int
+	Hide              bool
+	IsSpj             bool   `db:"is_spj"`
+	SpjCode           string `db:"spj_code"`
 	OJName            string `db:"oj_name"`
 	OJIdFK            int64  `db:"oj_id_fk"`
 	OJPid             string `db:"oj_pid"`

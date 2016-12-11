@@ -1,6 +1,8 @@
 package models
 
 import (
+	"OnlineJudge/base"
+
 	"github.com/jmoiron/sqlx"
 )
 
@@ -11,7 +13,7 @@ type TestCase struct {
 	Output    []byte
 	OutputMD5 []byte `db:"output_md5"`
 
-	LocalPidFK int64 `db:"local_pid_fk"`
+	MetaPidFK int64 `db:"meta_pid_fk"`
 }
 
 type TestCaseModel struct {
@@ -29,4 +31,15 @@ func (this *TestCaseModel) Insert(tx *sqlx.Tx, tc *TestCase) (int64, error) {
 		return 0, err
 	}
 	return last_insert_id, nil
+}
+
+func (this *TestCaseModel) InsertTestCase(tx *sqlx.Tx, input []byte, output []byte, meta_pid int64) (int64, error) {
+	tc := &TestCase{
+		Input:     input,
+		Output:    output,
+		MetaPidFK: meta_pid,
+	}
+	tc.InputMD5 = base.MD5Hash(tc.Input)
+	tc.OutputMD5 = base.MD5Hash(tc.Output)
+	return this.Insert(tx, tc)
 }

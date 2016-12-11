@@ -14,7 +14,6 @@ type backendHelperServer struct {
 }
 
 func NewBackendHelperServer() *backendHelperServer {
-	mq.Init()
 	jmq := mq.New()
 	if err := jmq.Connect(); err != nil {
 		panic(err)

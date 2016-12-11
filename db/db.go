@@ -16,6 +16,14 @@ func UseConfig(cfg Config) {
 	config = cfg
 }
 
+func New() *sqlx.DB {
+	db, err := NewDB()
+	if err != nil {
+		panic(err)
+	}
+	return db
+}
+
 func NewDB() (*sqlx.DB, error) {
 	Init()
 	dn := config.GetDriverName()

@@ -29,7 +29,7 @@ func (this *Handler) Submit(response *api.SubmitResponse, req *api.SubmitRequest
 		MakeResponseError(response, this.debug, PBBadRequest, err)
 		return
 	}
-	mp, err := models.Query_MetaProblem_By_OJName_OJPid(this.tx, pid.OJName, pid.OJPid, []string{"meta_pid", "hide"}, nil)
+	mp, err := models.Query_MetaProblem_By_OJName_OJPid(this.tx, pid.OJName, pid.OJPid, []string{"meta_pid", "hide", "is_spj"}, nil)
 	if err != nil {
 		MakeResponseError(response, this.debug, PBInternalError, err)
 		return
@@ -41,7 +41,7 @@ func (this *Handler) Submit(response *api.SubmitResponse, req *api.SubmitRequest
 	}
 
 	// if visible
-	if mp.Hide == 1 && this.session.GetPrivilege() != "root" {
+	if mp.Hide == true && this.session.GetPrivilege() != "root" {
 		MakeResponseError(response, this.debug, PBProblemNotFound, nil)
 		return
 	}
@@ -58,6 +58,7 @@ func (this *Handler) Submit(response *api.SubmitResponse, req *api.SubmitRequest
 		IsShared:   req.GetIsShared(),
 
 		IsContest: false,
+		IsSpj:     mp.IsSpj,
 		MetaPidFK: mp.MetaPid,
 		UserIdFK:  user_id,
 		LangIdFK:  req.GetLanguageId(),

@@ -2,6 +2,7 @@ package base
 
 import (
 	"bytes"
+	"crypto/md5"
 	"crypto/rand"
 	"crypto/sha256"
 	"io"
@@ -29,4 +30,10 @@ func MatchHash(data, secret []byte) bool {
 	h.Write(data[:SaltSize])
 	h.Write(secret)
 	return bytes.Equal(h.Sum(nil), data[SaltSize:])
+}
+
+func MD5Hash(data []byte) []byte {
+	h := md5.New()
+	h.Write(data)
+	return h.Sum(nil)
 }

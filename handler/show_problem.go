@@ -35,7 +35,7 @@ func (this *Handler) ShowProblem(response *api.ShowProblemResponse, req *api.Sho
 	}
 
 	// Judge if authorized
-	if mp.Hide != 0 {
+	if mp.Hide != false {
 		if this.session.IsLogin() == false {
 			MakeResponseError(response, this.debug, PBProblemNotFound, err)
 			return
@@ -59,11 +59,7 @@ func (this *Handler) ShowProblem(response *api.ShowProblemResponse, req *api.Sho
 	response.SampleOutput = mp.SampleOut
 	response.Source = mp.Source
 	response.Hint = mp.Hint
-	if mp.Hide != 0 {
-		response.Hide = true
-	} else {
-		response.Hide = false
-	}
+	response.Hide = mp.Hide
 
 	languages := []*api.Language{}
 	for _, lang := range langs {

@@ -75,7 +75,7 @@ func (this *MQ) DeclareLJ() error {
 
 func (this *MQ) DeclareVJ() error {
 	var err error
-	this.ljq, err = this.Declare(VJQueueName)
+	this.vjq, err = this.Declare(VJQueueName)
 	if err != nil {
 		return err
 	}

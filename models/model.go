@@ -107,6 +107,8 @@ func GenerateSelectSQL(st interface{}, required []string, excepts []string) (str
 			dft = "''"
 		case time.Time:
 			dft = "CURRENT_TIMESTAMP"
+		case bool:
+			dft = "0"
 		}
 		fields[k] = fmt.Sprintf("COALESCE(%s, %s) AS %s", v, dft, v)
 	}

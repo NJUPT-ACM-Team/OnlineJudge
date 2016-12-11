@@ -12,8 +12,8 @@ message TestCase {
     int64 case_id = 1;
     bytes input_hash = 2;
     bytes output_hash = 3;
-    string input = 4;
-    string output = 5;
+    bytes input = 4;
+    bytes output = 5;
 }
 
 message SpjCode {
@@ -29,6 +29,6 @@ message SubmitMQ {
     string code = 4;
     bool is_local = 5;
     bool is_spj = 6;
-    SubmitLanguage language = 7;
-    repeated TestCase testcases = 8;
+    SubmitLanguage language = 8;
+    repeated TestCase testcases = 9;
 }
