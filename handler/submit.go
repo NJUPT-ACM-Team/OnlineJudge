@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"OnlineJudge/Daemon/impl"
+	"OnlineJudge/Daemon/irpc"
 	"OnlineJudge/base"
 	"OnlineJudge/models"
 	"OnlineJudge/pbgen/api"
@@ -75,7 +75,7 @@ func (this *Handler) Submit(response *api.SubmitResponse, req *api.SubmitRequest
 	}
 
 	// Use RPC to call Daemon to judge the submission
-	helper := impl.NewBackendHelper()
+	helper := irpc.NewBackendHelper()
 	if err := helper.Connect(); err != nil {
 		MakeResponseError(response, this.debug, PBInternalError, err)
 		return

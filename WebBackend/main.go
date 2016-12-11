@@ -1,7 +1,7 @@
 package main
 
 import (
-	"OnlineJudge/Daemon/impl"
+	"OnlineJudge/Daemon/irpc"
 	"OnlineJudge/WebBackend/router"
 
 	"github.com/gorilla/context"
@@ -10,7 +10,7 @@ import (
 )
 
 func Init() {
-	impl.Init()
+	irpc.Init()
 }
 
 func main() {

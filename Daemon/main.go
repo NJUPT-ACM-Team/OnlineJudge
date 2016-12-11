@@ -1,7 +1,7 @@
 package main
 
 import (
-	"OnlineJudge/Daemon/impl"
+	"OnlineJudge/Daemon/irpc"
 	"OnlineJudge/db"
 	"OnlineJudge/mq"
 
@@ -11,11 +11,11 @@ import (
 func Init() {
 	db.Init()
 	mq.Init()
-	impl.Init()
+	irpc.Init()
 }
 
 func main() {
 	fmt.Println("Hello Daemon.")
 	Init()
-	impl.Run()
+	irpc.Run()
 }

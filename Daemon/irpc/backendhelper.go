@@ -1,4 +1,4 @@
-package impl
+package irpc
 
 import (
 	"OnlineJudge/Daemon/utils"
