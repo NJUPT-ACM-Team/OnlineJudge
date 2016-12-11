@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package api;
+
+import "api/common.proto";
+import "api/show_problem.proto";
+
+message EditProblemRequest {
+    string sid = 1;
+}
+
+message EditProblemResponse {
+    ShowProblemResponse problem = 1;
+    Error error = 2;
+}
+
+

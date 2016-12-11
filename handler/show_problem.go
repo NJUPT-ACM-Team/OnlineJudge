@@ -53,6 +53,7 @@ func (this *Handler) ShowProblem(response *api.ShowProblemResponse, req *api.Sho
 	response.TimeLimit = int32(mp.TimeLimit)
 	response.CaseTimeLimit = int32(mp.CaseTimeLimit)
 	response.MemoryLimit = int32(mp.MemoryLimit)
+	response.Description = mp.Description
 	response.Input = mp.Input
 	response.Output = mp.Output
 	response.SampleInput = mp.SampleIn

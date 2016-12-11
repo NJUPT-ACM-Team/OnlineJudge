@@ -1,0 +1,33 @@
+syntax = "proto3";
+package api;
+
+import "api/common.proto";
+
+message UploadProblemRequest {
+    string title = 1;
+    int32 time_limit = 2;
+    int32 case_time_limit =3;
+    string description = 4;
+    string input = 5;
+    string output = 6;
+    string sample_input = 7;
+    string sample_output = 8;
+    string source = 9;
+    string hint = 10;
+}
+
+message UploadProblemResponse {
+    int64 local_pid = 1;
+    string check_title = 2;
+    string check_time_limit = 3;
+    string check_case_time_limit = 4;
+    string check_description = 5;
+    string check_input = 6;
+    string check_output = 7;
+    string check_sample_input = 8;
+    string check_sample_output = 9;
+    string check_source = 10;
+    string check_int = 11;
+
+    Error error = 12;
+}

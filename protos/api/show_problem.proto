@@ -18,14 +18,15 @@ message ShowProblemResponse {
   int32 time_limit = 4;
   int32 case_time_limit = 5;
   int32 memory_limit = 6;
-  string input = 7;
-  string output = 8;
-  string sample_input = 9;
-  string sample_output = 10;
-  string source = 11;
-  string hint = 12;
-  bool hide = 13;
+  string description = 7;
+  string input = 8;
+  string output = 9;
+  string sample_input = 10;
+  string sample_output = 11;
+  string source = 12;
+  string hint = 13;
+  bool hide = 14;
 
-  repeated Language languages = 14;
-  Error error = 15;
+  repeated Language languages = 15;
+  Error error = 16;
 }
