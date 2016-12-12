@@ -85,3 +85,16 @@ func (this *SubmissionModel) UpdateStatus(tx *sqlx.Tx, sub *Submission) error {
 	}
 	return nil
 }
+
+func (this *SubmissionModel) SetSystemError(tx *sqlx.Tx, run_id int64) error {
+	sub := &Submission{
+		RunId:           run_id,
+		Status:          "System Error",
+		StatusCode:      "se",
+		TestCasesPassed: 0,
+	}
+	if err := this.UpdateStatus(tx, sub); err != nil {
+		return err
+	}
+	return nil
+}

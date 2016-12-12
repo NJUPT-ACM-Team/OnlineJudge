@@ -3,18 +3,19 @@ package main
 import (
 	"OnlineJudge/Daemon/irpc"
 	"OnlineJudge/WebBackend/router"
+	"OnlineJudge/db"
 
 	"github.com/gorilla/context"
 
 	"net/http"
 )
 
-func Init() {
+func init() {
+	db.Init()
 	irpc.Init()
 }
 
 func main() {
-	Init()
 	router := router.Init()
 	// http.Handle("/", router)
 	http.ListenAndServe(":8000", context.ClearHandler(router))

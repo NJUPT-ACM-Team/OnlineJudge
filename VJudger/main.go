@@ -3,15 +3,14 @@ package main
 import (
 	"OnlineJudge/VJudger/vjudger"
 	"OnlineJudge/judger"
-
-	"log"
+	"OnlineJudge/mq"
 )
 
-func Init() {
+func init() {
+	mq.Init()
 	judger.Init()
 }
 
 func main() {
-	Init()
 	judger.RunVJ(vjudger.EntryPoint)
 }

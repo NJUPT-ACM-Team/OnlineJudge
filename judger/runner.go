@@ -29,7 +29,6 @@ var jmq *mq.MQ
 var judger *Judger
 
 func Init() {
-	mq.Init()
 	jmq = mq.New()
 	if err := jmq.Connect(); err != nil {
 		panic(err)

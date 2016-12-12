@@ -2,10 +2,11 @@ package vjudger
 
 import (
 	"OnlineJudge/judger"
+	"log"
 )
 
 func EntryPoint(jdi judger.JudgerInterface) {
-
+	log.Println(jdi.GetRunId())
 }
 
 type VJudger interface {

@@ -6,6 +6,7 @@ import (
 	"OnlineJudge/models"
 	"OnlineJudge/pbgen/api"
 
+	"log"
 	"time"
 )
 
@@ -73,21 +74,37 @@ func (this *Handler) Submit(response *api.SubmitResponse, req *api.SubmitRequest
 		MakeResponseError(response, this.debug, PBInternalError, err)
 		return
 	}
+	response.RunId = run_id
 
 	// Use RPC to call Daemon to judge the submission
+
 	helper := irpc.NewBackendHelper()
+
 	if err := helper.Connect(); err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
+		// Log the error
+		log.Println(err)
+		if err := subm.SetSystemError(this.tx, run_id); err != nil {
+			MakeResponseError(response, this.debug, PBInternalError, err)
+		}
+		if err := this.Commit(); err != nil {
+			MakeResponseError(response, this.debug, PBInternalError, err)
+		}
 		return
 	}
 	defer helper.Disconnect()
+
 	helper.NewClient()
 	res, err := helper.Submit(run_id)
+
 	if err != nil || res.Received != true {
-		MakeResponseError(response, this.debug, PBInternalError, err)
+		// Log the error
+		log.Println(err)
+		if err := subm.SetSystemError(this.tx, run_id); err != nil {
+			MakeResponseError(response, this.debug, PBInternalError, err)
+		}
+		if err := this.Commit(); err != nil {
+			MakeResponseError(response, this.debug, PBInternalError, err)
+		}
 		return
 	}
-
-	// Return
-	response.RunId = run_id
 }

@@ -8,7 +8,7 @@ import (
 	"fmt"
 )
 
-func Init() {
+func init() {
 	db.Init()
 	mq.Init()
 	irpc.Init()
@@ -16,6 +16,5 @@ func Init() {
 
 func main() {
 	fmt.Println("Hello Daemon.")
-	Init()
 	irpc.Run()
 }
