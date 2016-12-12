@@ -37,6 +37,7 @@ func SubmitToMQ(jmq *mq.MQ, req *rpc.SubmitCodeRequest) {
 	sub, err := models.Query_Submission_By_RunId(tx, req.GetRunId(), nil, nil)
 	if err != nil {
 		log.Println(err)
+		SetSystemError(tx, sub.RunId)
 		return
 	}
 
@@ -44,6 +45,7 @@ func SubmitToMQ(jmq *mq.MQ, req *rpc.SubmitCodeRequest) {
 	mp, err := models.Query_MetaProblem_By_MetaPid(tx, sub.MetaPidFK, []string{"oj_name", "oj_pid", "is_spj"}, nil)
 	if err != nil {
 		log.Println(err)
+		SetSystemError(tx, sub.RunId)
 		return
 	}
 
@@ -51,6 +53,7 @@ func SubmitToMQ(jmq *mq.MQ, req *rpc.SubmitCodeRequest) {
 	tcs, err := models.Query_TestCases_By_MetaPid(tx, sub.MetaPidFK, nil, nil)
 	if err != nil {
 		log.Println(err)
+		SetSystemError(tx, sub.RunId)
 		return
 	}
 	testcases := []*msgs.TestCase{}
@@ -69,6 +72,7 @@ func SubmitToMQ(jmq *mq.MQ, req *rpc.SubmitCodeRequest) {
 	lang, err := models.Query_Language_By_LangId(tx, sub.LangIdFK, nil, nil)
 	if err != nil {
 		log.Println(err)
+		SetSystemError(tx, sub.RunId)
 		return
 	}
 
@@ -90,6 +94,7 @@ func SubmitToMQ(jmq *mq.MQ, req *rpc.SubmitCodeRequest) {
 	buffer, err := proto.Marshal(request)
 	if err != nil {
 		log.Println(err)
+		SetSystemError(tx, sub.RunId)
 		return
 	}
 	if request.IsLocal == true {
