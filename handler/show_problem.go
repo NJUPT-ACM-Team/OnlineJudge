@@ -37,11 +37,11 @@ func (this *Handler) ShowProblem(response *api.ShowProblemResponse, req *api.Sho
 	// Judge if authorized
 	if mp.Hide != false {
 		if this.session.IsLogin() == false {
-			MakeResponseError(response, this.debug, PBProblemNotFound, err)
+			MakeResponseError(response, this.debug, PBProblemNotFound, nil)
 			return
 		} else {
 			if this.session.GetPrivilege() != "root" {
-				MakeResponseError(response, this.debug, PBProblemNotFound, err)
+				MakeResponseError(response, this.debug, PBProblemNotFound, nil)
 				return
 			}
 		}
@@ -49,19 +49,21 @@ func (this *Handler) ShowProblem(response *api.ShowProblemResponse, req *api.Sho
 
 	// Make response
 	response.ProblemSid = req.GetProblemSid()
-	response.Title = mp.Title
-	response.TimeLimit = int32(mp.TimeLimit)
-	response.CaseTimeLimit = int32(mp.CaseTimeLimit)
-	response.MemoryLimit = int32(mp.MemoryLimit)
-	response.Description = mp.Description
-	response.Input = mp.Input
-	response.Output = mp.Output
-	response.SampleInput = mp.SampleIn
-	response.SampleOutput = mp.SampleOut
-	response.Source = mp.Source
-	response.Hint = mp.Hint
-	response.Hide = mp.Hide
-
+	problem := &api.Problem{
+		Title:         mp.Title,
+		TimeLimit:     int32(mp.TimeLimit),
+		CaseTimeLimit: int32(mp.CaseTimeLimit),
+		MemoryLimit:   int32(mp.MemoryLimit),
+		Description:   mp.Description,
+		Input:         mp.Input,
+		Output:        mp.Output,
+		SampleInput:   mp.SampleIn,
+		SampleOutput:  mp.SampleOut,
+		Source:        mp.Source,
+		Hint:          mp.Hint,
+		Hide:          mp.Hide,
+	}
+	response.Problem = problem
 	languages := []*api.Language{}
 	for _, lang := range langs {
 		temp := &api.Language{

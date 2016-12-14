@@ -9,24 +9,28 @@ message ShowProblemRequest {
   string problem_sid = 2;
 }
 
+message Problem {
+  string title = 1;
+  int32 time_limit = 2;
+  int32 case_time_limit = 3;
+  int32 memory_limit = 4;
+  string description = 5;
+  string input = 6;
+  string output = 7;
+  string sample_input = 8;
+  string sample_output = 9;
+  string source = 10;
+  string hint = 11;
+  bool hide = 12;
+}
+
 // response
 message ShowProblemResponse {
   uint64 contest_id = 1;
   string problem_sid = 2;
 
-  string title = 3;
-  int32 time_limit = 4;
-  int32 case_time_limit = 5;
-  int32 memory_limit = 6;
-  string description = 7;
-  string input = 8;
-  string output = 9;
-  string sample_input = 10;
-  string sample_output = 11;
-  string source = 12;
-  string hint = 13;
-  bool hide = 14;
+  Problem problem = 3;
 
-  repeated Language languages = 15;
-  Error error = 16;
+  repeated Language languages = 4;
+  Error error = 5;
 }

@@ -27,6 +27,7 @@ It has these top-level messages:
 	RegisterRequest
 	RegisterResponse
 	ShowProblemRequest
+	Problem
 	ShowProblemResponse
 	SubmitRequest
 	SubmitResponse

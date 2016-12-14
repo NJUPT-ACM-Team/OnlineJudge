@@ -29,4 +29,5 @@ var (
 	PBBadRequest      = NewPBError(http.StatusBadRequest, "bad request")
 	PBProblemNotFound = NewPBError(http.StatusNotFound, "problem does not exist or not visible")
 	PBLoginRequired   = NewPBError(http.StatusUnauthorized, "login required")
+	PBUnauthorized    = NewPBError(http.StatusUnauthorized, "unauthorized")
 )
