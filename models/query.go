@@ -173,7 +173,7 @@ type Pagination struct {
 	TotalLines  int
 	TotalPages  int
 	CurrentPage int
-	Lines       []MetaProblem
+	Problems    []MetaProblem
 }
 
 func XQuery_List_Problems_With_Filter(
@@ -304,6 +304,6 @@ func XQuery_List_Problems_With_Filter(
 	if err := tx.Select(&mps, full_sql, filter_oj); err != nil {
 		return nil, err
 	}
-	ret.Lines = mps
+	ret.Problems = mps
 	return ret, nil
 }
