@@ -14,8 +14,13 @@ import (
 )
 
 var (
-	marshaler   = jsonpb.Marshaler{}
-	unmarshaler = jsonpb.Unmarshaler{}
+	marshaler = jsonpb.Marshaler{
+		EmitDefaults: true,
+		OrigName:     true,
+	}
+	unmarshaler = jsonpb.Unmarshaler{
+		AllowUnknownFields: true,
+	}
 )
 
 type Controller struct {
