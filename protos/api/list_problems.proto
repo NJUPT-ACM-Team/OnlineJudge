@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package api;
 
+import "api/common.proto";
+
 message ListProblemsRequest {
     int32 offset = 1;
     int32 per_page = 2;
@@ -42,4 +44,5 @@ message ListProblemsResponse {
     int32 total_lines = 2;
     int32 total_pages = 3;
     int32 current_page = 4;
+    Error error = 5;
 }
