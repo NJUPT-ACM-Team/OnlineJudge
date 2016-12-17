@@ -11,13 +11,15 @@ func TestXQuery_List_Problems_With_Filter(t *testing.T) {
 	tx := DB.MustBegin()
 	paging, err := XQuery_List_Problems_With_Filter(
 		tx,
+		"kevince",
+		true,
 		"zoj",
-		0,
+		3,
 		0,
 		false,
 		0,
 
-		1,
+		10,
 		2,
 		nil,
 		nil,

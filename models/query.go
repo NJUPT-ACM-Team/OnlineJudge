@@ -167,8 +167,7 @@ func Query_TestCases_By_MetaPid(
  	@params
  		filter_status: 0 all, 1 accepted, 2 unsolved, 3 attempted
 		orderby_element: 0 pid, 1 title, 2 ac_rate,
-	TODO: filter_status
-	TODO: hidden problems
+	TODO: ac_rate
 */
 type Pagination struct {
 	TotalLines  int
@@ -179,6 +178,8 @@ type Pagination struct {
 
 func XQuery_List_Problems_With_Filter(
 	tx *sqlx.Tx,
+	username string,
+	show_hidden bool,
 	filter_oj string,
 	filter_status int,
 	orderby_element int,
@@ -198,11 +199,66 @@ func XQuery_List_Problems_With_Filter(
 		return nil, err
 	}
 
+	// Build from_sql
+	var from_sql string
+	switch filter_status {
+	case 0:
+		from_sql = " MetaProblems "
+	case 1:
+		// Accepted
+		from_sql = fmt.Sprintf(
+			` (SELECT %s FROM MetaProblems 
+			   WHERE meta_pid IN 
+			     (SELECT meta_pid_fk FROM Submissions
+				  WHERE status_code="ac" AND
+			  		user_id_fk=(
+						SELECT user_id FROM Users
+						WHERE username="%s"))) AS ACCEPTED `, str_fields, username)
+	case 2:
+		// Unsolved
+		from_sql = fmt.Sprintf(
+			` (SELECT %s FROM MetaProblems 
+			   WHERE meta_pid NOT IN 
+			     (SELECT meta_pid_fk FROM Submissions
+				  WHERE status_code="ac" AND
+			  		user_id_fk=(
+						SELECT user_id FROM Users
+						WHERE username="%s"))) AS UNSOLVED `, str_fields, username)
+	case 3:
+		// Attempted
+		from_sql = fmt.Sprintf(
+			` (SELECT %s FROM MetaProblems 
+			   WHERE meta_pid NOT IN 
+			     (SELECT meta_pid_fk FROM Submissions
+				  WHERE status_code="ac" AND
+			  		user_id_fk=(
+						SELECT user_id FROM Users
+						WHERE username="%s"))
+			   AND meta_pid IN
+			     (SELECT meta_pid_fk FROM Submissions
+			 	  WHERE user_id_fk=(
+						SELECT user_id FROM Users
+						WHERE username="%s")
+				  GROUP BY meta_pid_fk
+				  HAVING COUNT(run_id) > 0)) AS ATTEMPTED `, str_fields, username, username)
+	}
+
+	// Build where_sql
+	var where_sql string
+	if show_hidden {
+		where_sql = `
+		WHERE oj_name=?
+		`
+	} else {
+		where_sql = `
+		WHERE oj_name=? AND hide=0
+		`
+	}
+
 	// Get count of lines
 	count_sql := `
-	SELECT COUNT(*) FROM MetaProblems
-	WHERE oj_name=?
-	`
+	SELECT COUNT(*) FROM 
+	` + from_sql + where_sql
 	var count int
 	if err := tx.Get(&count, count_sql, filter_oj); err != nil {
 		return nil, err
@@ -229,13 +285,9 @@ func XQuery_List_Problems_With_Filter(
 	ret.CurrentPage = current_page
 
 	// Get lines
-	// TODO: problem status
-	sql := `
-	SELECT %s FROM MetaProblems
-	WHERE oj_name=?
-	ORDER BY %s
-	LIMIT %d, %d
-	`
+	sql :=
+		"SELECT %s FROM " +
+			from_sql + where_sql + " ORDER BY %s LIMIT %d, %d"
 	var orderby string
 	switch orderby_element {
 	case 0:
@@ -249,7 +301,6 @@ func XQuery_List_Problems_With_Filter(
 	}
 	offset = (ret.CurrentPage-1)*per_page + offset
 	full_sql := fmt.Sprintf(sql, str_fields, orderby, offset, per_page)
-
 	if err := tx.Select(&mps, full_sql, filter_oj); err != nil {
 		return nil, err
 	}
