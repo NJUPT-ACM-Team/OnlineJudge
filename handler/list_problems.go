@@ -5,7 +5,6 @@ import (
 	"OnlineJudge/pbgen/api"
 )
 
-// Need to be tested
 func (this *Handler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
 	if err := this.OpenDB(); err != nil {
 		MakeResponseError(response, this.debug, PBInternalError, err)
@@ -23,7 +22,7 @@ func (this *Handler) ListProblems(response *api.ListProblemsResponse, req *api.L
 	}
 
 	filter := req.GetFilter()
-	if filter.GetPStatus() == 0 {
+	if filter.GetPStatus() != 0 {
 		if this.session.IsLogin() == false {
 			MakeResponseError(response, this.debug, PBLoginRequired, nil)
 			return
