@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"OnlineJudge/base"
 	"OnlineJudge/models"
 	"OnlineJudge/pbgen/api"
 )
@@ -51,7 +52,9 @@ func (this *Handler) ListProblems(response *api.ListProblemsResponse, req *api.L
 	lines := []*api.ListProblemsResponse_PerLine{}
 	for _, problem := range page.Problems {
 		line := &api.ListProblemsResponse_PerLine{
-			Sid:             "",
+			Sid: base.GenSid(&base.Pid{
+				OJName: problem.OJName,
+				OJPid:  problem.OJPid}),
 			Oj:              problem.OJName,
 			Pid:             problem.OJPid,
 			Title:           problem.Title,

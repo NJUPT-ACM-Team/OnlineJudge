@@ -70,7 +70,14 @@ func SetResponse(w http.ResponseWriter, response Response) {
 		// Set response code
 		w.WriteHeader(int(err.GetCode()))
 	}
-	EncodePBToJsonStream(w, response)
+	if err := EncodePBToJsonStream(w, response); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+}
+
+// TODO: add captcha information to respnose and sessions
+func SetResponseWithCAPTCHA(w http.ResponseWriter, response Response) {
+	SetResponse(w, response)
 }
 
 func DecodePBFromJson(json string, pb proto.Message) error {
