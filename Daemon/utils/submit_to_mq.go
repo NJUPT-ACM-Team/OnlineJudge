@@ -46,25 +46,6 @@ func SubmitToMQ(jmq *mq.MQ, req *rpc.SubmitCodeRequest) {
 		return
 	}
 
-	// Get testcases of meta problem
-	tcs, err := models.Query_TestCases_By_MetaPid(tx, sub.MetaPidFK, nil, nil)
-	if err != nil {
-		log.Println(err)
-		MustSetSystemError(tx, sub.RunId)
-		return
-	}
-	testcases := []*msgs.TestCase{}
-	for _, tc := range tcs {
-		temp := &msgs.TestCase{
-			CaseId:     tc.CaseId,
-			Input:      tc.Input,
-			InputHash:  tc.InputMD5,
-			Output:     tc.Input,
-			OutputHash: tc.OutputMD5,
-		}
-		testcases = append(testcases, temp)
-	}
-
 	// Get language of submission
 	lang, err := models.Query_Language_By_LangId(tx, sub.LangIdFK, nil, nil)
 	if err != nil {
@@ -85,7 +66,30 @@ func SubmitToMQ(jmq *mq.MQ, req *rpc.SubmitCodeRequest) {
 			Lang:        lang.Language,
 			OptionValue: lang.OptionValue,
 		},
-		Testcases: testcases,
+	}
+
+	// Get testcases of meta problem
+	if mp.OJName == "local" {
+		tcs, err := models.Query_TestCases_By_MetaPid(tx, sub.MetaPidFK, nil, nil)
+		if err != nil {
+			log.Println(err)
+			MustSetSystemError(tx, sub.RunId)
+			return
+		}
+		testcases := []*msgs.TestCase{}
+		for _, tc := range tcs {
+			temp := &msgs.TestCase{
+				CaseId:     tc.CaseId,
+				Input:      tc.Input,
+				InputHash:  tc.InputMD5,
+				Output:     tc.Input,
+				OutputHash: tc.OutputMD5,
+			}
+			testcases = append(testcases, temp)
+		}
+		request.Testcases = testcases
+	} else {
+		request.Testcases = nil
 	}
 
 	buffer, err := proto.Marshal(request)

@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"OnlineJudge/db"
 	"OnlineJudge/mq"
 	"OnlineJudge/pbgen/rpc"
 
@@ -9,6 +10,7 @@ import (
 
 func TestSubmitCodeToMQ(t *testing.T) {
 	mq.Init()
+	db.Init()
 	jmq := mq.New()
 	if err := jmq.Connect(); err != nil {
 		t.Fatal(err)
