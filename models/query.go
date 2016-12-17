@@ -26,6 +26,7 @@ func Query_MetaProblem_By_MetaPid(
 	return mp, nil
 }
 
+// Need to be tested
 func Query_All_OJNames(tx *sqlx.Tx) ([]string, error) {
 	ojs := []string{}
 	sql := `
@@ -35,6 +36,29 @@ func Query_All_OJNames(tx *sqlx.Tx) ([]string, error) {
 		return nil, err
 	}
 	return ojs, nil
+}
+
+//
+func Query_All_Languages(
+	tx *sqlx.Tx,
+	required []string,
+	excepts []string) ([]Language, error) {
+
+	/*-- Func start --*/
+	lang := Language{}
+	langs := []Language{}
+	str_fields, err := GenerateSelectSQL(&lang, required, excepts)
+	if err != nil {
+		return nil, err
+	}
+	sql := `
+	SELECT %s FROM Languages
+	`
+	if err := tx.Select(&langs, fmt.Sprintf(sql, str_fields)); err != nil {
+		return nil, err
+	}
+	return langs, nil
+
 }
 
 func Query_MetaProblem_By_OJName_OJPid(
@@ -196,7 +220,7 @@ func Query_TestCases_By_MetaPid(
 		orderby_element: 0 pid, 1 title, 2 ac_rate,
 	TODO: ac_rate
 */
-type Pagination struct {
+type ListProblemsPagination struct {
 	TotalLines  int
 	TotalPages  int
 	CurrentPage int
@@ -215,10 +239,10 @@ func XQuery_List_Problems_With_Filter(
 	per_page int,
 	current_page int,
 	required []string,
-	excepts []string) (*Pagination, error) {
+	excepts []string) (*ListProblemsPagination, error) {
 
 	/*-- Func start --*/
-	ret := &Pagination{}
+	ret := &ListProblemsPagination{}
 	mp := MetaProblem{}
 	mps := []MetaProblem{}
 	str_fields, err := GenerateSelectSQL(&mp, required, excepts)
@@ -332,5 +356,144 @@ func XQuery_List_Problems_With_Filter(
 		return nil, err
 	}
 	ret.Problems = mps
+	return ret, nil
+}
+
+type ListSubmissionsPagination struct {
+	TotalLines  int
+	TotalPages  int
+	CurrentPage int
+	Submissions []Submission
+}
+
+/*
+	Submission pages
+	@params:
+		show_private: if true, show all submissions and code both shared or not
+					  if false, show only public submissions and shared code.
+*/
+
+func Query_List_Submissions_By_Filter(
+	tx *sqlx.Tx,
+	username string,
+	show_private bool,
+	filter_oj string,
+	filter_pid string,
+	filter_status_code string,
+	filter_language string,
+	filter_compiler string,
+	per_page int,
+	current_page int,
+	required []string,
+	excepts []string) (*ListSubmissionsPagination, error) {
+
+	/*-- Func start --*/
+	need_filter := false
+	if username == "" {
+		username = "%"
+	} else {
+		need_filter = true
+	}
+	if filter_oj == "" {
+		filter_oj = "%"
+	} else {
+		need_filter = true
+	}
+	if filter_pid == "" {
+		filter_pid = "%"
+	} else {
+		need_filter = true
+	}
+	if filter_status_code == "" {
+		filter_status_code = "%"
+	} else {
+		need_filter = true
+	}
+	if filter_language == "" {
+		filter_language = "%"
+	} else {
+		need_filter = true
+	}
+	if filter_compiler == "" {
+		filter_compiler = "%"
+	} else {
+		need_filter = true
+	}
+
+	where_sql := ` WHERE 1 `
+
+	if show_private == false {
+		where_sql += `AND is_private = 0 `
+	}
+
+	if need_filter {
+		where_sql += `
+		AND
+		user_id_fk IN (SELECT user_id FROM Users WHERE username LIKE ?) AND
+		meta_pid_fk IN 
+			(SELECT meta_pid FROM MetaProblems 
+			 WHERE oj_name LIKE ? AND oj_pid LIKE ?) AND
+		statuc_code like ? AND
+		lang_id_fk IN
+			(SELECT lang_id FROM Languages
+			 WHERE language like ? AND compiler like ?)`
+	}
+
+	ret := &ListSubmissionsPagination{}
+
+	// Get count
+	count_sql := "SELECT COUNT(*) FROM Submissions " + where_sql
+	var count int
+	if err := tx.Get(&count, count_sql, filter_oj); err != nil {
+		return nil, err
+	}
+	ret.TotalLines = count
+
+	if per_page == 0 {
+		ret.TotalPages = 1
+		per_page = ret.TotalLines
+	} else {
+		ret.TotalPages = ret.TotalLines / per_page
+		if ret.TotalLines%per_page != 0 {
+			ret.TotalPages += 1
+		}
+		if ret.TotalPages == 0 {
+			ret.TotalPages = 1
+		}
+	}
+	if current_page == 0 {
+		current_page = 1
+	}
+	if current_page > ret.TotalPages {
+		current_page = ret.TotalPages
+	}
+	ret.CurrentPage = current_page
+
+	// Get lines
+	sub := &Submission{}
+	subs := []Submission{}
+	str_fields, err := GenerateSelectSQL(sub, required, excepts)
+	if err != nil {
+		return nil, err
+	}
+
+	offset := (current_page - 1) * per_page
+	sql := `SELECT %s FROM Submission ` + where_sql + ` LIMIT %d, %d`
+	real_sql := fmt.Sprintf(sql, str_fields, offset, per_page)
+
+	if need_filter {
+		if err := tx.Select(
+			&subs, real_sql, username,
+			filter_oj, filter_pid, filter_status_code,
+			filter_language, filter_compiler); err != nil {
+
+			return nil, err
+		}
+	} else {
+		if err := tx.Select(&subs, real_sql); err != nil {
+			return nil, err
+		}
+	}
+	ret.Submissions = subs
 	return ret, nil
 }

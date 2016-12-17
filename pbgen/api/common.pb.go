@@ -25,7 +25,7 @@ It has these top-level messages:
 	ListProblemsRequest
 	ListProblemsResponse
 	ListSubmissionsRequest
-	ListSubmissionResponse
+	ListSubmissionsResponse
 	LoginInitRequest
 	LoginInitResponse
 	LoginAuthRequest

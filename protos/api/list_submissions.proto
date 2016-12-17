@@ -13,15 +13,16 @@ message ListSubmissionsRequest {
         string username = 1;
         string oj = 2;
         string pid = 3;
-        string result = 4;
-        int64 language_id = 5;
+        string status_code = 4;
+        string language = 5;
+        string compiler = 6;
     }
     Filter filter = 3;
     bool need_languages_list = 4;
     bool need_ojs_list = 5;
 }
 
-message ListSubmissionResponse {
+message ListSubmissionsResponse {
     message PerLine {
         string sid = 1;
         string run_id = 2;

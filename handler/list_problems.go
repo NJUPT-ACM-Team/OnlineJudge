@@ -13,8 +13,6 @@ func (this *Handler) ListProblems(response *api.ListProblemsResponse, req *api.L
 	}
 	defer this.CloseDB()
 
-	// Format filter information
-
 	var show_hidden bool
 	if this.session.GetPrivilege() == "root" {
 		show_hidden = true
@@ -48,13 +46,13 @@ func (this *Handler) ListProblems(response *api.ListProblemsResponse, req *api.L
 		return
 	}
 
-	var ojs []string
 	if req.GetNeedOjsList() == true {
-		var err error
-		if ojs, err = models.Query_All_OJNames(this.tx); err != nil {
+		ojs, err := models.Query_All_OJNames(this.tx)
+		if err != nil {
 			MakeResponseError(response, this.debug, PBInternalError, err)
 			return
 		}
+		response.OjsList = ojs
 	}
 
 	// Build response
@@ -77,6 +75,5 @@ func (this *Handler) ListProblems(response *api.ListProblemsResponse, req *api.L
 	response.TotalLines = int32(page.TotalLines)
 	response.TotalPages = int32(page.TotalPages)
 	response.CurrentPage = int32(page.CurrentPage)
-	response.OjsList = ojs
 
 }
