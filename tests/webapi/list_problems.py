@@ -12,11 +12,10 @@ def Login():
 
 def List():
     data = {
-        "offset": 1,
         "per_page": 2,
         "current_page": 1,
         "order_by": 0,
-        "is_desc": True,
+        "isDesc": True,
         "filter": {
             "oj": "zoj",
             "p_status": 0,

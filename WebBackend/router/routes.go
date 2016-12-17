@@ -62,6 +62,12 @@ var api_routes = Routes{
 		HandlerFunc: ctler.HelloWorld,
 	},
 	Route{
+		Name:        "Register",
+		Method:      "POST",
+		Pattern:     "/register",
+		HandlerFunc: ctler.Register,
+	},
+	Route{
 		Name:        "LoginInit",
 		Method:      "POST",
 		Pattern:     "/login/init",

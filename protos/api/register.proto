@@ -11,7 +11,7 @@ import "api/common.proto";
 // motto, less than 60 words
 message RegisterRequest {
     string username = 1;
-    bytes password = 2;
+    string password = 2;
     string email = 3;
     string phone = 4;
     string school = 5;
@@ -21,12 +21,13 @@ message RegisterRequest {
 // if not empty, something is wrong.
 message RegisterResponse {
     int64 user_id = 1;
-    string check_username = 2;
-    string check_password = 3;
-    string check_email = 4;
-    string check_phone = 5;
-    string check_school = 6;
-    string check_motto = 7;
-    Error error = 8;
+    string username = 2;
+    string check_username = 3;
+    string check_password = 4;
+    string check_email = 5;
+    string check_phone = 6;
+    string check_school = 7;
+    string check_motto = 8;
+    Error error = 9;
 }
 

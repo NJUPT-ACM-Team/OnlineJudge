@@ -1,17 +1,57 @@
 package handler
 
 import (
+	"OnlineJudge/base"
 	"OnlineJudge/models"
 	"OnlineJudge/pbgen/api"
 
 	"github.com/jmoiron/sqlx"
 
+	"errors"
 	"time"
 )
 
+// TODO: Some checks
 func CheckRegisterRequest(tx *sqlx.Tx, req *api.RegisterRequest, res *api.RegisterResponse) error {
+	is_err := false
+	// Check username
+	if base.CheckUsername(req.GetUsername()) != true {
+		res.CheckUsername = "invalid username format"
+		is_err = true
+	} else {
+		if_exist, err := models.Query_If_User_Exists(tx, req.GetUsername())
+		if err != nil {
+			res.CheckUsername = "internel error while checking username"
+			is_err = true
+		} else {
+			if if_exist {
+				res.CheckUsername = "this one has already been registered"
+				is_err = true
+			}
+		}
+	}
 
-	// return errors.New(MsgBadRequestError)
+	// Check password
+
+	// Check email
+	if base.CheckEmail(req.GetEmail()) != true {
+		res.CheckEmail = "invalid email format"
+		is_err = true
+	}
+
+	// Check phone
+	if base.CheckPhone(req.GetPhone()) != true {
+		res.CheckPhone = "invalid phone number format"
+		is_err = true
+	}
+
+	// Check school
+
+	// Check motto
+
+	if is_err {
+		return errors.New("invalid parameters")
+	}
 	return nil
 }
 
@@ -32,7 +72,7 @@ func (this *Handler) Register(response *api.RegisterResponse, req *api.RegisterR
 	um := models.NewUserModel()
 	user := &models.User{
 		Username:     req.GetUsername(),
-		Password:     req.GetPassword(),
+		Password:     []byte(req.GetPassword()),
 		Email:        req.GetEmail(),
 		Phone:        req.GetPhone(),
 		School:       req.GetSchool(),
@@ -51,4 +91,5 @@ func (this *Handler) Register(response *api.RegisterResponse, req *api.RegisterR
 
 	// Make response
 	response.UserId = user_id
+	response.Username = req.GetUsername()
 }

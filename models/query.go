@@ -49,6 +49,22 @@ func Query_MetaProblem_By_OJName_OJPid(
 	return mp, nil
 }
 
+func Query_If_User_Exists(
+	tx *sqlx.Tx,
+	name string,
+) (bool, error) {
+
+	/*-- Func start --*/
+	var count int
+	if err := tx.Get(&count, "SELECT COUNT(*) FROM Users WHERE username=?", name); err != nil {
+		return false, err
+	}
+	if count > 0 {
+		return true, nil
+	}
+	return false, nil
+}
+
 func Query_User_By_Username(
 	tx *sqlx.Tx,
 	name string,
