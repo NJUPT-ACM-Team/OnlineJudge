@@ -28,6 +28,7 @@ message ListProblemsRequest {
         ProblemStatus p_status = 2;
     }
     Filter filter = 6;
+    bool need_ojs_list = 7;
 }
 
 message ListProblemsResponse {
@@ -44,5 +45,6 @@ message ListProblemsResponse {
     int32 total_lines = 2;
     int32 total_pages = 3;
     int32 current_page = 4;
-    Error error = 5;
+    repeated string ojs_list = 5;
+    Error error = 6;
 }

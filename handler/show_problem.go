@@ -69,7 +69,7 @@ func (this *Handler) ShowProblem(response *api.ShowProblemResponse, req *api.Sho
 		temp := &api.Language{
 			Compiler:   lang.Compiler,
 			Language:   lang.Language,
-			LanguageId: int32(lang.LangId),
+			LanguageId: lang.LangId,
 		}
 		languages = append(languages, temp)
 	}

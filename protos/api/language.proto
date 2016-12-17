@@ -5,5 +5,7 @@ package api;
 message Language {
     string compiler = 1;
     string language = 2;
-    int32 language_id = 3;
+    // lang_id
+    int64 language_id = 3;
+    string oj_name = 4;
 }

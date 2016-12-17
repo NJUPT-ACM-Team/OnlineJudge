@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package api;
+
+import "api/common.proto";
+import "api/language.proto";
+
+message ListSubmissionsRequest {
+    int32 per_page = 1;
+    int32 current_page = 2;
+
+    message Filter {
+        string username = 1;
+        string oj = 2;
+        string pid = 3;
+        string result = 4;
+        int64 language_id = 5;
+    }
+    Filter filter = 3;
+    bool need_languages_list = 4;
+    bool need_ojs_list = 5;
+}
+
+message ListSubmissionResponse {
+    message PerLine {
+        string sid = 1;
+        string run_id = 2;
+        string username = 3;
+        string status = 4;
+        string status_code = 5;
+        Language language = 6;
+        int32 time_used = 7;
+        int32 memory_used = 8;
+        int32 testcases = 9;
+        int32 testcases_passed = 10;
+        int32 code_length = 11;
+        string submit_time = 12;
+        string code = 13;
+    }
+
+    repeated PerLine lines = 1;
+    int32 total_lines = 2;
+    int32 total_pages = 3;
+    int32 current_page = 4;
+    repeated Language languages_list = 5;
+    repeated string ojs_list = 6;
+    Error error = 7;
+}

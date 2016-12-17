@@ -26,6 +26,17 @@ func Query_MetaProblem_By_MetaPid(
 	return mp, nil
 }
 
+func Query_All_OJNames(tx *sqlx.Tx) ([]string, error) {
+	ojs := []string{}
+	sql := `
+	SELECT oj_name FROM OJInfo
+	`
+	if err := tx.Select(&ojs, sql); err != nil {
+		return nil, err
+	}
+	return ojs, nil
+}
+
 func Query_MetaProblem_By_OJName_OJPid(
 	tx *sqlx.Tx,
 	oj_name string,
