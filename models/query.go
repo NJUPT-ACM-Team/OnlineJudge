@@ -5,7 +5,12 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func Query_MetaProblem_By_MetaPid(tx *sqlx.Tx, meta_pid int64, required []string, excepts []string) (*MetaProblem, error) {
+func Query_MetaProblem_By_MetaPid(
+	tx *sqlx.Tx, meta_pid int64,
+	required []string,
+	excepts []string) (*MetaProblem, error) {
+
+	/*-- Func start --*/
 	mp := &MetaProblem{}
 	str_fields, err := GenerateSelectSQL(mp, required, excepts)
 	if err != nil {
@@ -21,7 +26,14 @@ func Query_MetaProblem_By_MetaPid(tx *sqlx.Tx, meta_pid int64, required []string
 	return mp, nil
 }
 
-func Query_MetaProblem_By_OJName_OJPid(tx *sqlx.Tx, oj_name string, oj_pid string, required []string, excepts []string) (*MetaProblem, error) {
+func Query_MetaProblem_By_OJName_OJPid(
+	tx *sqlx.Tx,
+	oj_name string,
+	oj_pid string,
+	required []string,
+	excepts []string) (*MetaProblem, error) {
+
+	/*-- Func start --*/
 	mp := &MetaProblem{}
 	str_fields, err := GenerateSelectSQL(mp, required, excepts)
 	if err != nil {
@@ -37,7 +49,13 @@ func Query_MetaProblem_By_OJName_OJPid(tx *sqlx.Tx, oj_name string, oj_pid strin
 	return mp, nil
 }
 
-func Query_User_By_Username(tx *sqlx.Tx, name string, required []string, excepts []string) (*User, error) {
+func Query_User_By_Username(
+	tx *sqlx.Tx,
+	name string,
+	required []string,
+	excepts []string) (*User, error) {
+
+	/*-- Func start --*/
 	user := &User{}
 	str_fields, err := GenerateSelectSQL(user, required, excepts)
 	if err != nil {
@@ -53,7 +71,13 @@ func Query_User_By_Username(tx *sqlx.Tx, name string, required []string, excepts
 	return user, nil
 }
 
-func Query_Language_By_LangId(tx *sqlx.Tx, lang_id int64, required []string, excepts []string) (*Language, error) {
+func Query_Language_By_LangId(
+	tx *sqlx.Tx,
+	lang_id int64,
+	required []string,
+	excepts []string) (*Language, error) {
+
+	/*-- Func start --*/
 	lang := &Language{}
 	str_fields, err := GenerateSelectSQL(lang, required, excepts)
 	if err != nil {
@@ -69,7 +93,13 @@ func Query_Language_By_LangId(tx *sqlx.Tx, lang_id int64, required []string, exc
 	return lang, nil
 }
 
-func Query_Languages_By_OJIdFK(tx *sqlx.Tx, oj_id_fk int64, required []string, excepts []string) ([]Language, error) {
+func Query_Languages_By_OJIdFK(
+	tx *sqlx.Tx,
+	oj_id_fk int64,
+	required []string,
+	excepts []string) ([]Language, error) {
+
+	/*-- Func start --*/
 	lang := Language{}
 	langs := []Language{}
 	str_fields, err := GenerateSelectSQL(&lang, required, excepts)
@@ -86,7 +116,13 @@ func Query_Languages_By_OJIdFK(tx *sqlx.Tx, oj_id_fk int64, required []string, e
 	return langs, nil
 }
 
-func Query_Submission_By_RunId(tx *sqlx.Tx, run_id int64, required []string, excepts []string) (*Submission, error) {
+func Query_Submission_By_RunId(
+	tx *sqlx.Tx,
+	run_id int64,
+	required []string,
+	excepts []string) (*Submission, error) {
+
+	/*-- Func start --*/
 	sub := &Submission{}
 	str_fields, err := GenerateSelectSQL(sub, required, excepts)
 	if err != nil {
@@ -102,7 +138,13 @@ func Query_Submission_By_RunId(tx *sqlx.Tx, run_id int64, required []string, exc
 	return sub, nil
 }
 
-func Query_TestCases_By_MetaPid(tx *sqlx.Tx, meta_pid int64, required []string, excepts []string) ([]TestCase, error) {
+func Query_TestCases_By_MetaPid(
+	tx *sqlx.Tx,
+	meta_pid int64,
+	required []string,
+	excepts []string) ([]TestCase, error) {
+
+	/*-- Func start --*/
 	tc := TestCase{}
 	tcs := []TestCase{}
 	str_fields, err := GenerateSelectSQL(&tc, required, excepts)
@@ -117,4 +159,100 @@ func Query_TestCases_By_MetaPid(tx *sqlx.Tx, meta_pid int64, required []string, 
 		return nil, err
 	}
 	return tcs, nil
+}
+
+// Some more complex methods to query data
+
+/* Problem pages
+ 	@params
+ 		filter_status: 0 all, 1 accepted, 2 unsolved, 3 attempted
+		orderby_element: 0 pid, 1 title, 2 ac_rate,
+	TODO: filter_status
+	TODO: hidden problems
+*/
+type Pagination struct {
+	TotalLines  int
+	TotalPages  int
+	CurrentPage int
+	Lines       []MetaProblem
+}
+
+func XQuery_List_Problems_With_Filter(
+	tx *sqlx.Tx,
+	filter_oj string,
+	filter_status int,
+	orderby_element int,
+	is_desc bool,
+	offset int,
+	per_page int,
+	current_page int,
+	required []string,
+	excepts []string) (*Pagination, error) {
+
+	/*-- Func start --*/
+	ret := &Pagination{}
+	mp := MetaProblem{}
+	mps := []MetaProblem{}
+	str_fields, err := GenerateSelectSQL(&mp, required, excepts)
+	if err != nil {
+		return nil, err
+	}
+
+	// Get count of lines
+	count_sql := `
+	SELECT COUNT(*) FROM MetaProblems
+	WHERE oj_name=?
+	`
+	var count int
+	if err := tx.Get(&count, count_sql, filter_oj); err != nil {
+		return nil, err
+	}
+	ret.TotalLines = count
+	if per_page == 0 {
+		ret.TotalPages = 1
+		per_page = ret.TotalLines
+	} else {
+		ret.TotalPages = ret.TotalLines / per_page
+		if ret.TotalLines%per_page != 0 {
+			ret.TotalPages += 1
+		}
+		if ret.TotalPages == 0 {
+			ret.TotalPages = 1
+		}
+	}
+	if current_page == 0 {
+		current_page = 1
+	}
+	if current_page > ret.TotalPages {
+		current_page = ret.TotalPages
+	}
+	ret.CurrentPage = current_page
+
+	// Get lines
+	// TODO: problem status
+	sql := `
+	SELECT %s FROM MetaProblems
+	WHERE oj_name=?
+	ORDER BY %s
+	LIMIT %d, %d
+	`
+	var orderby string
+	switch orderby_element {
+	case 0:
+		orderby = "oj_pid "
+	case 1:
+		orderby = "title "
+		// TODO: Case 2, ac_rate
+	}
+	if is_desc == true {
+		orderby += "DESC"
+	}
+	offset = (ret.CurrentPage-1)*per_page + offset
+	full_sql := fmt.Sprintf(sql, str_fields, orderby, offset, per_page)
+
+	if err := tx.Select(&mps, full_sql, filter_oj); err != nil {
+		return nil, err
+	}
+	ret.Lines = mps
+	return ret, nil
 }
