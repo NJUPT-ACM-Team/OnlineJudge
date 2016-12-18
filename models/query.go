@@ -250,6 +250,10 @@ func XQuery_List_Problems_With_Filter(
 		return nil, err
 	}
 
+	if filter_oj == "" {
+		filter_oj = "%"
+	}
+
 	// Build from_sql
 	var from_sql string
 	switch filter_status {
@@ -298,11 +302,11 @@ func XQuery_List_Problems_With_Filter(
 	var where_sql string
 	if show_hidden {
 		where_sql = `
-		WHERE oj_name=?
+		WHERE oj_name like ?
 		`
 	} else {
 		where_sql = `
-		WHERE oj_name=? AND hide=0
+		WHERE oj_name like ? AND hide=0
 		`
 	}
 
@@ -373,7 +377,7 @@ type ListSubmissionsPagination struct {
 					  if false, show only public submissions and shared code.
 */
 
-func Query_List_Submissions_By_Filter(
+func XQuery_List_Submissions_By_Filter(
 	tx *sqlx.Tx,
 	username string,
 	show_private bool,

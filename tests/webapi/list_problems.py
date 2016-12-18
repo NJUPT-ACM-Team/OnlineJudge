@@ -7,7 +7,7 @@ def Login():
         "username" : "kevince",
         "password": "abc",
     }
-    r = session.post("http://127.0.0.1:8000/api/inline/login/auth", json=data)
+    r = session.post("http://127.0.0.1:8000/api/inline/login/auth", json={"login_auth_request":data})
     print(r.json())
 
 def List():
@@ -21,6 +21,9 @@ def List():
             "p_status": 0,
         },
     }
+    send = {
+            "list_problems_request": data
+            }
 
     r = session.get("http://127.0.0.1:8000/api/inline/problems", json=data)
     print(r.status_code)

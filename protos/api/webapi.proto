@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package api;
+
+import "api/common.proto";
+
+import "api/list_problems.proto";
+import "api/list_submissions.proto";
+import "api/login.proto";
+import "api/register.proto";
+import "api/show_problem.proto";
+import "api/submit.proto";
+
+message WebRequest {
+    string csrf_token = 1;
+    string captcha = 2;
+    ListProblemsRequest list_problems_request = 3;
+    ListSubmissionsRequest list_submissions_request = 4;
+    LoginInitRequest login_init_request = 5;
+    LoginAuthRequest login_auth_request = 6;
+    RegisterRequest register_request = 7;
+    ShowProblemRequest show_problem_request = 8;
+    SubmitRequest submit_request = 9;
+
+}
+
+message WebResponse {
+    string set_csrf_token = 1;
+    string captcha_url = 2;
+    ListProblemsResponse list_problems_response = 3;
+    ListSubmissionsResponse list_submissions_response = 4;
+    LoginInitResponse login_init_response = 5;
+    LoginAuthResponse login_auth_response = 6;
+    RegisterResponse register_response = 7;
+    ShowProblemResponse show_problem_response = 8;
+    SubmitResponse submit_response = 9;
+
+    Error error = 10;
+}

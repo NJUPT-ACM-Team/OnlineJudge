@@ -65,6 +65,18 @@ func NewController(dbg bool) *Controller {
 	}
 }
 
+func SetWebResponse(
+	w http.ResponseWriter,
+	response Response,
+	webresponse *api.WebResponse) {
+
+	if webresponse.GetError() == nil {
+		webresponse.Error = response.GetError()
+	}
+
+	SetResponse(w, webresponse)
+}
+
 func SetResponse(w http.ResponseWriter, response Response) {
 	err := response.GetError()
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")

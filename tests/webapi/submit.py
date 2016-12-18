@@ -4,14 +4,18 @@ session = requests.session()
 
 def Login():
     data = {
+        "login_auth_request":
+        {
         "username" : "kevince",
         "password": "abc",
+        }
     }
     r = session.post("http://127.0.0.1:8000/api/inline/login/auth", json=data)
     print(r.json())
 
 def Submit():
     data = {
+            "submit_request": {
         "problem_sid" : "zoj#1000",
         "code":"""
     #include <iostream>
@@ -25,6 +29,7 @@ def Submit():
         """,
         "language_id": 1,
         "is_shared" : False,
+        }
 
     }
 

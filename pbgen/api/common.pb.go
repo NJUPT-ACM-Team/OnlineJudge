@@ -16,6 +16,7 @@ It is generated from these files:
 	api/show_problem.proto
 	api/submit.proto
 	api/upload_problem.proto
+	api/webapi.proto
 
 It has these top-level messages:
 	Error
@@ -39,6 +40,8 @@ It has these top-level messages:
 	SubmitResponse
 	UploadProblemRequest
 	UploadProblemResponse
+	WebRequest
+	WebResponse
 */
 package api
 

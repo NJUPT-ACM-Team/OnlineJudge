@@ -8,16 +8,22 @@ import (
 )
 
 func (this *Controller) ShowProblem(w http.ResponseWriter, r *http.Request) {
-	var response = &api.ShowProblemResponse{}
-	var request = &api.ShowProblemRequest{}
-	defer SetResponse(w, response)
+	var webresponse = &api.WebResponse{}
+	var webrequest = &api.WebRequest{}
 
-	session, err := this.Prepare(response, request, w, r)
+	var response = &api.ShowProblemResponse{}
+	defer SetWebResponse(w, response, webresponse)
+
+	session, err := this.Prepare(webresponse, webrequest, w, r)
 	if err != nil {
 		return
 	}
 	defer session.Save(r, w)
 
+	request := webrequest.GetShowProblemRequest()
+
 	handler := handler.NewHandler(session, this.debug)
 	handler.ShowProblem(response, request)
+
+	webresponse.ShowProblemResponse = response
 }

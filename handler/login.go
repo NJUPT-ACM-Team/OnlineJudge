@@ -32,7 +32,7 @@ func (this *Handler) LoginAuth(response *api.LoginAuthResponse, req *api.LoginAu
 	um := models.NewUserModel()
 	is_login, err := um.Auth(this.tx, req.GetUsername(), []byte(req.GetPassword()))
 	if err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
+		MakeResponseError(response, this.debug, PBAuthFailure, err)
 		return
 	}
 	if is_login == false {
