@@ -42,10 +42,13 @@ func (this *Handler) ListSubmissions(response *api.ListSubmissionsResponse, req 
 
 	filter := req.GetFilter()
 	var show_private bool
+	var show_all_code bool
 	if this.session.GetPrivilege() == "root" {
 		show_private = true
+		show_all_code = true
 	} else {
 		show_private = false
+		show_all_code = false
 	}
 	page, err := models.XQuery_List_Submissions_With_Filter(
 		this.tx,
@@ -87,6 +90,9 @@ func (this *Handler) ListSubmissions(response *api.ListSubmissionsResponse, req 
 			SubmitTime:      submission.SubmitTime.String(),
 			IsSpj:           submission.IsSpj,
 			// Code,
+		}
+		if show_all_code || submission.IsShared {
+			line.Code = submission.Code
 		}
 		lines = append(lines, line)
 	}
