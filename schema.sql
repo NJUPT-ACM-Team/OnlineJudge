@@ -22,7 +22,7 @@ CREATE TABLE Users (
 
     register_time DATETIME NOT NULL,
     last_login_time DATETIME NOT NULL,
-    ip_addr VARCHAR(255) NOT NULL,
+    login_ip_addr VARCHAR(255) NOT NULL,
     privilege VARCHAR(64) NOT NULL DEFAULT '' COMMENT 'ENUM(root)',
     lock_status BOOLEAN NOT NULL DEFAULT 0,
 
@@ -176,7 +176,7 @@ CREATE TABLE Submissions (
     code TEXT NOT NULL,
     lang_id_fk INTEGER UNSIGNED DEFAULT NULL,
     ce_info TEXT NOT NULL,
-    ip_addr VARCHAR(255) NOT NULL DEFAULT '',
+    submit_ip_addr VARCHAR(255) NOT NULL DEFAULT '',
     is_shared BOOLEAN NOT NULL,
     is_private BOOLEAN NOT NULL,
 	is_spj BOOLEAN NOT NULL DEFAULT false,

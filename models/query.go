@@ -319,7 +319,7 @@ func XQuery_List_Problems_With_Filter(
 		return nil, err
 	}
 	ret.TotalLines = count
-	if per_page == 0 {
+	if per_page <= 0 {
 		ret.TotalPages = 1
 		per_page = ret.TotalLines
 	} else {
@@ -363,11 +363,18 @@ func XQuery_List_Problems_With_Filter(
 	return ret, nil
 }
 
+type SubmissionExt struct {
+	Username          string
+	NumberOfTestcases int `db:"number_of_testcases"`
+	Submission
+	Language
+}
+
 type ListSubmissionsPagination struct {
 	TotalLines  int
 	TotalPages  int
 	CurrentPage int
-	Submissions []Submission
+	Submissions []SubmissionExt
 }
 
 /*
@@ -377,7 +384,7 @@ type ListSubmissionsPagination struct {
 					  if false, show only public submissions and shared code.
 */
 
-func XQuery_List_Submissions_By_Filter(
+func XQuery_List_Submissions_With_Filter(
 	tx *sqlx.Tx,
 	username string,
 	show_private bool,
@@ -462,7 +469,7 @@ func XQuery_List_Submissions_By_Filter(
 	}
 	ret.TotalLines = count
 
-	if per_page == 0 {
+	if per_page <= 0 {
 		ret.TotalPages = 1
 		per_page = ret.TotalLines
 	} else {
@@ -483,15 +490,19 @@ func XQuery_List_Submissions_By_Filter(
 	ret.CurrentPage = current_page
 
 	// Get lines
-	sub := &Submission{}
-	subs := []Submission{}
-	str_fields, err := GenerateSelectSQL(sub, required, excepts)
+	sub := &SubmissionExt{}
+	subs := []SubmissionExt{}
+	str_fields, err := GenerateSelectSQL(sub, required, []string{"submission", "language"})
 	if err != nil {
 		return nil, err
 	}
 
 	offset := (current_page - 1) * per_page
-	sql := `SELECT %s FROM Submissions ` + where_sql + ` LIMIT %d, %d`
+	sql := `SELECT %s FROM Submissions 
+		LEFT JOIN Users ON user_id_fk=user_id 
+		LEFT JOIN Languages ON lang_id_fk=lang_id
+		LEFT JOIN (SELECT meta_pid, number_of_testcases FROM MetaProblems) AS TP ON meta_pid_fk=meta_pid ` + where_sql + ` LIMIT %d, %d`
+
 	real_sql := fmt.Sprintf(sql, str_fields, offset, per_page)
 
 	if need_filter {

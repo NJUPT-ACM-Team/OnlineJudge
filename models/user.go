@@ -26,7 +26,7 @@ type User struct {
 
 	RegisterTime  time.Time `db:"register_time"`
 	LastLoginTime time.Time `db:"last_login_time"`
-	IPAddr        string    `db:"ip_addr"`
+	LoginIPAddr   string    `db:"login_ip_addr"`
 	Privilege     string
 	LockStatus    int `db:"lock_status"`
 }
@@ -135,10 +135,10 @@ func (this *UserModel) UpdatePassword(tx *sqlx.Tx, name string, passwd []byte) e
 
 func (this *UserModel) UpdateIPAddr(tx *sqlx.Tx, name string, ip string) error {
 	user := &User{
-		Username: name,
-		IPAddr:   ip,
+		Username:    name,
+		LoginIPAddr: ip,
 	}
-	return this.Update(tx, user, "username", []string{"ip_addr"}, nil)
+	return this.Update(tx, user, "username", []string{"login_ip_addr"}, nil)
 }
 
 func (this *UserModel) UpdateLastLoginTime(tx *sqlx.Tx, name string, t time.Time) error {

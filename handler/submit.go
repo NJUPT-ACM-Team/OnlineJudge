@@ -52,12 +52,12 @@ func (this *Handler) Submit(response *api.SubmitResponse, req *api.SubmitRequest
 	subm := models.NewSubmissionModel()
 	user_id := this.session.GetUserId()
 	sub := &models.Submission{
-		Status:     "Pending",
-		StatusCode: "wt",
-		SubmitTime: time.Now(),
-		Code:       req.GetCode(),
-		IPAddr:     this.session.GetIPAddr(),
-		IsShared:   req.GetIsShared(),
+		Status:       "Pending",
+		StatusCode:   "wt",
+		SubmitTime:   time.Now(),
+		Code:         req.GetCode(),
+		SubmitIPAddr: this.session.GetIPAddr(),
+		IsShared:     req.GetIsShared(),
 
 		IsContest: false,
 		IsSpj:     mp.IsSpj,

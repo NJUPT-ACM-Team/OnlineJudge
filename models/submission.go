@@ -11,14 +11,14 @@ type Submission struct {
 	RunId           int64 `db:"run_id"`
 	Status          string
 	StatusCode      string    `db:"status_code"`
-	TestCasesPassed int       `db:"testcases_passed"`
+	TestcasesPassed int       `db:"testcases_passed"`
 	SubmitTime      time.Time `db:"submit_time"`
 	TimeUsed        int       `db:"time_used"`
 	MemoryUsed      int       `db:"memory_used"`
 	Code            string
 	LangIdFK        int64  `db:"lang_id_fk"`
 	CEInfo          string `db:"ce_info"`
-	IPAddr          string `db:"ip_addr"`
+	SubmitIPAddr    string `db:"submit_ip_addr"`
 	IsShared        bool   `db:"is_shared"`
 	IsPrivate       bool   `db:"is_private"`
 	IsSpj           bool   `db:"is_spj"`
@@ -92,7 +92,7 @@ func (this *SubmissionModel) SetSystemError(tx *sqlx.Tx, run_id int64) error {
 		RunId:           run_id,
 		Status:          "System Error",
 		StatusCode:      "se",
-		TestCasesPassed: 0,
+		TestcasesPassed: 0,
 	}
 	if err := this.UpdateStatus(tx, sub); err != nil {
 		return err

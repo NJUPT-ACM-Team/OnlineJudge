@@ -30,12 +30,12 @@ func TestXQuery_List_Problems_With_Filter(t *testing.T) {
 	t.Log(paging)
 }
 
-func TestXQuery_List_Submissions_By_Filter(t *testing.T) {
+func TestXQuery_List_Submissions_With_Filter(t *testing.T) {
 	db.Init()
 	DB := db.New()
 	tx := DB.MustBegin()
 
-	paging, err := XQuery_List_Submissions_By_Filter(
+	paging, err := XQuery_List_Submissions_With_Filter(
 		tx,
 		"kevince",
 		true,

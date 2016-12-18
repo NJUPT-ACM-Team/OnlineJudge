@@ -25,18 +25,20 @@ message ListSubmissionsRequest {
 message ListSubmissionsResponse {
     message PerLine {
         string sid = 1;
-        string run_id = 2;
+        int64 run_id = 2;
         string username = 3;
         string status = 4;
         string status_code = 5;
-        Language language = 6;
-        int32 time_used = 7;
-        int32 memory_used = 8;
-        int32 testcases = 9;
-        int32 testcases_passed = 10;
-        int32 code_length = 11;
-        string submit_time = 12;
-        string code = 13;
+        string ce_info = 6;
+        Language language = 7;
+        int32 time_used = 8;
+        int32 memory_used = 9;
+        int32 testcases = 10;
+        int32 testcases_passed = 11;
+        int32 code_length = 12;
+        string submit_time = 13;
+        string code = 14;
+        bool is_spj = 15;
     }
 
     repeated PerLine lines = 1;
