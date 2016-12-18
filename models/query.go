@@ -437,7 +437,7 @@ func XQuery_List_Submissions_By_Filter(
 		meta_pid_fk IN 
 			(SELECT meta_pid FROM MetaProblems 
 			 WHERE oj_name LIKE ? AND oj_pid LIKE ?) AND
-		statuc_code like ? AND
+		status_code like ? AND
 		lang_id_fk IN
 			(SELECT lang_id FROM Languages
 			 WHERE language like ? AND compiler like ?)`
@@ -448,8 +448,17 @@ func XQuery_List_Submissions_By_Filter(
 	// Get count
 	count_sql := "SELECT COUNT(*) FROM Submissions " + where_sql
 	var count int
-	if err := tx.Get(&count, count_sql, filter_oj); err != nil {
-		return nil, err
+	if need_filter {
+		if err := tx.Get(&count, count_sql,
+			username, filter_oj, filter_pid,
+			filter_status_code, filter_language, filter_compiler); err != nil {
+
+			return nil, err
+		}
+	} else {
+		if err := tx.Get(&count, count_sql); err != nil {
+			return nil, err
+		}
 	}
 	ret.TotalLines = count
 
@@ -482,14 +491,14 @@ func XQuery_List_Submissions_By_Filter(
 	}
 
 	offset := (current_page - 1) * per_page
-	sql := `SELECT %s FROM Submission ` + where_sql + ` LIMIT %d, %d`
+	sql := `SELECT %s FROM Submissions ` + where_sql + ` LIMIT %d, %d`
 	real_sql := fmt.Sprintf(sql, str_fields, offset, per_page)
 
 	if need_filter {
 		if err := tx.Select(
-			&subs, real_sql, username,
-			filter_oj, filter_pid, filter_status_code,
-			filter_language, filter_compiler); err != nil {
+			&subs, real_sql,
+			username, filter_oj, filter_pid,
+			filter_status_code, filter_language, filter_compiler); err != nil {
 
 			return nil, err
 		}
