@@ -12,7 +12,7 @@ message AboutRequest {
 }
 
 message AboutResponse {
-	repeated OJInfo ojs = 1;
-	repeated Languages languages = 2;
-	Error error;	
+	repeated OJInfo ojs_list = 1;
+	repeated Language languages_list = 2;
+	Error error = 3;
 }

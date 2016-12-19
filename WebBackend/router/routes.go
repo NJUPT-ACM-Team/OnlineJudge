@@ -62,6 +62,12 @@ var api_routes = Routes{
 		HandlerFunc: ctler.HelloWorld,
 	},
 	Route{
+		Name:        "About",
+		Method:      "GET",
+		Pattern:     "/about",
+		HandlerFunc: ctler.About,
+	},
+	Route{
 		Name:        "Register",
 		Method:      "POST",
 		Pattern:     "/register",

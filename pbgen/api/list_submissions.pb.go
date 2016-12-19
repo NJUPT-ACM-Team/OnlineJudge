@@ -24,7 +24,7 @@ type ListSubmissionsRequest struct {
 func (m *ListSubmissionsRequest) Reset()                    { *m = ListSubmissionsRequest{} }
 func (m *ListSubmissionsRequest) String() string            { return proto.CompactTextString(m) }
 func (*ListSubmissionsRequest) ProtoMessage()               {}
-func (*ListSubmissionsRequest) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{0} }
+func (*ListSubmissionsRequest) Descriptor() ([]byte, []int) { return fileDescriptor5, []int{0} }
 
 func (m *ListSubmissionsRequest) GetPerPage() int32 {
 	if m != nil {
@@ -74,7 +74,7 @@ func (m *ListSubmissionsRequest_Filter) Reset()         { *m = ListSubmissionsRe
 func (m *ListSubmissionsRequest_Filter) String() string { return proto.CompactTextString(m) }
 func (*ListSubmissionsRequest_Filter) ProtoMessage()    {}
 func (*ListSubmissionsRequest_Filter) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{0, 0}
+	return fileDescriptor5, []int{0, 0}
 }
 
 func (m *ListSubmissionsRequest_Filter) GetUsername() string {
@@ -132,7 +132,7 @@ type ListSubmissionsResponse struct {
 func (m *ListSubmissionsResponse) Reset()                    { *m = ListSubmissionsResponse{} }
 func (m *ListSubmissionsResponse) String() string            { return proto.CompactTextString(m) }
 func (*ListSubmissionsResponse) ProtoMessage()               {}
-func (*ListSubmissionsResponse) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{1} }
+func (*ListSubmissionsResponse) Descriptor() ([]byte, []int) { return fileDescriptor5, []int{1} }
 
 func (m *ListSubmissionsResponse) GetLines() []*ListSubmissionsResponse_PerLine {
 	if m != nil {
@@ -205,7 +205,7 @@ func (m *ListSubmissionsResponse_PerLine) Reset()         { *m = ListSubmissions
 func (m *ListSubmissionsResponse_PerLine) String() string { return proto.CompactTextString(m) }
 func (*ListSubmissionsResponse_PerLine) ProtoMessage()    {}
 func (*ListSubmissionsResponse_PerLine) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{1, 0}
+	return fileDescriptor5, []int{1, 0}
 }
 
 func (m *ListSubmissionsResponse_PerLine) GetSid() string {
@@ -320,9 +320,9 @@ func init() {
 	proto.RegisterType((*ListSubmissionsResponse_PerLine)(nil), "api.ListSubmissionsResponse.PerLine")
 }
 
-func init() { proto.RegisterFile("api/list_submissions.proto", fileDescriptor4) }
+func init() { proto.RegisterFile("api/list_submissions.proto", fileDescriptor5) }
 
-var fileDescriptor4 = []byte{
+var fileDescriptor5 = []byte{
 	// 622 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x6c, 0x54, 0xc1, 0x6e, 0xd3, 0x4c,
 	0x10, 0x56, 0xea, 0xda, 0x89, 0x27, 0x4d, 0xdb, 0x7f, 0x7f, 0xd1, 0xba, 0x01, 0x89, 0x10, 0x71,

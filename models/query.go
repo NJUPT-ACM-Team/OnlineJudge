@@ -26,6 +26,26 @@ func Query_MetaProblem_By_MetaPid(
 	return mp, nil
 }
 
+func Query_All_OJs(
+	tx *sqlx.Tx,
+	required []string,
+	excepts []string) ([]OJInfo, error) {
+
+	oj := &OJInfo{}
+	ojs := []OJInfo{}
+	str_fields, err := GenerateSelectSQL(oj, required, excepts)
+	if err != nil {
+		return nil, err
+	}
+	sql := `
+	SELECT %s FROM OJInfo
+	`
+	if err := tx.Select(&ojs, fmt.Sprintf(sql, str_fields)); err != nil {
+		return nil, err
+	}
+	return ojs, nil
+}
+
 // Need to be tested
 func Query_All_OJNames(tx *sqlx.Tx) ([]string, error) {
 	ojs := []string{}
