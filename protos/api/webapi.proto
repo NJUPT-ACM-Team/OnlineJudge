@@ -10,6 +10,7 @@ import "api/login.proto";
 import "api/register.proto";
 import "api/show_problem.proto";
 import "api/submit.proto";
+import "api/about.proto";
 
 message WebRequest {
     string csrf_token = 1;
@@ -34,7 +35,7 @@ message WebResponse {
     RegisterResponse register_response = 7;
     ShowProblemResponse show_problem_response = 8;
     SubmitResponse submit_response = 9;
-	AboutResponse abount_response = 10;
+	AboutResponse about_response = 10;
 
-    Error error = 10;
+    Error error = 11;
 }

@@ -28,5 +28,16 @@ func TestQuery_All_OJNames(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Log(ojs)
+}
 
+func TestQuery_All_OJs(t *testing.T) {
+	db.Init()
+	DB := db.New()
+	tx := DB.MustBegin()
+
+	ojs, err := Query_All_OJs(tx, nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(ojs)
 }

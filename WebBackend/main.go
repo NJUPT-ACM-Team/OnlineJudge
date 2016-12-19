@@ -18,5 +18,5 @@ func init() {
 func main() {
 	router := router.Init()
 	// http.Handle("/", router)
-	http.ListenAndServe(":8000", context.ClearHandler(router))
+	panic(http.ListenAndServe(":8000", context.ClearHandler(router)))
 }
