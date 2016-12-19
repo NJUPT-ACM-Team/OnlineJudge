@@ -21,7 +21,7 @@ message WebRequest {
     RegisterRequest register_request = 7;
     ShowProblemRequest show_problem_request = 8;
     SubmitRequest submit_request = 9;
-
+	AboutRequest about_request = 10;
 }
 
 message WebResponse {
@@ -34,6 +34,7 @@ message WebResponse {
     RegisterResponse register_response = 7;
     ShowProblemResponse show_problem_response = 8;
     SubmitResponse submit_response = 9;
+	AboutResponse abount_response = 10;
 
     Error error = 10;
 }
