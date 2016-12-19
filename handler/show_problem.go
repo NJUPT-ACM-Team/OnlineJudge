@@ -36,14 +36,9 @@ func (this *Handler) ShowProblem(response *api.ShowProblemResponse, req *api.Sho
 
 	// Judge if authorized
 	if mp.Hide != false {
-		if this.session.IsLogin() == false {
+		if this.session.IsLogin() == false || this.session.GetPrivilege() != "root" {
 			MakeResponseError(response, this.debug, PBProblemNotFound, nil)
 			return
-		} else {
-			if this.session.GetPrivilege() != "root" {
-				MakeResponseError(response, this.debug, PBProblemNotFound, nil)
-				return
-			}
 		}
 	}
 
