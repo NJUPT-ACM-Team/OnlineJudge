@@ -158,7 +158,10 @@ func XQuery_List_Problems_With_Filter(
 
 type SubmissionExt struct {
 	Username          string
-	NumberOfTestcases int `db:"number_of_testcases"`
+	NumberOfTestcases int    `db:"number_of_testcases"`
+	OJName            string `db:"oj_name"`
+	OJPid             string `db:"oj_pid"`
+
 	Submission
 	Language
 }
@@ -295,7 +298,7 @@ func XQuery_List_Submissions_With_Filter(
 	sql := `SELECT %s FROM Submissions 
 		LEFT JOIN Users ON user_id_fk=user_id 
 		LEFT JOIN Languages ON lang_id_fk=lang_id
-		LEFT JOIN (SELECT meta_pid, number_of_testcases FROM MetaProblems) AS TP ON meta_pid_fk=meta_pid ` + where_sql + ` LIMIT %d, %d`
+		LEFT JOIN (SELECT meta_pid, number_of_testcases, oj_name, oj_pid FROM MetaProblems) AS TP ON meta_pid_fk=meta_pid ` + where_sql + ` LIMIT %d, %d`
 
 	real_sql := fmt.Sprintf(sql, str_fields, offset, per_page)
 

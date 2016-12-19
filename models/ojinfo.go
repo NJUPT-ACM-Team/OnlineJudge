@@ -8,8 +8,8 @@ import (
 )
 
 type OJInfo struct {
-	OJId         int64 `db:"oj_id"`
-	Name         string
+	OJId         int64  `db:"oj_id"`
+	OJName       string `db:"oj_name"`
 	Version      string
 	Int64IO      string
 	JavaClass    string
@@ -42,7 +42,7 @@ func (this *OJInfoModel) QueryByName(tx *sqlx.Tx, name string, required []string
 	if err != nil {
 		return nil, err
 	}
-	if err := tx.Get(&ojinfo, fmt.Sprintf("SELECT %s FROM %s WHERE name=?", str_fields, this.Table), name); err != nil {
+	if err := tx.Get(&ojinfo, fmt.Sprintf("SELECT %s FROM %s WHERE oj_name=?", str_fields, this.Table), name); err != nil {
 		return nil, err
 	}
 	return &ojinfo, nil

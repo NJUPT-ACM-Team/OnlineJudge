@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"OnlineJudge/base"
 	"OnlineJudge/models"
 	"OnlineJudge/pbgen/api"
 )
@@ -21,9 +22,9 @@ func (this *Handler) ListSubmissions(response *api.ListSubmissionsResponse, req 
 		}
 		for _, lang := range all {
 			temp := &api.Language{
-				Compiler:   lang.Compiler,
-				Language:   lang.Language,
-				LanguageId: lang.LangId,
+				Compiler:   lang.Language.Compiler,
+				Language:   lang.Language.Language,
+				LanguageId: lang.Language.LangId,
 				OjName:     lang.OJName,
 			}
 			languages = append(languages, temp)
@@ -73,7 +74,7 @@ func (this *Handler) ListSubmissions(response *api.ListSubmissionsResponse, req 
 	lines := []*api.ListSubmissionsResponse_PerLine{}
 	for _, submission := range page.Submissions {
 		line := &api.ListSubmissionsResponse_PerLine{
-			Sid:        "",
+			Sid:        base.GenSid(&base.Pid{OJName: submission.OJName, OJPid: submission.OJPid}),
 			RunId:      submission.RunId,
 			Username:   submission.Username,
 			Status:     submission.Status,

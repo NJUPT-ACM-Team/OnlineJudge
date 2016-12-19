@@ -15,22 +15,21 @@ def Login():
 
 def Submit():
     data = {
-            "submit_request": {
-        "problem_sid" : "zoj#1000",
-        "code":"""
-    #include <iostream>
-    using namespace std;
-    int main() {
-        int a, b;
-        cin >> a >> b;
-        cout << a + b << endl;
-        return 0;
-    }
-        """,
-        "language_id": 1,
-        "is_shared" : False,
-        }
-
+        "submit_request": {
+            "problem_sid" : "zoj#1000",
+            "code":"""
+#include <iostream>
+using namespace std;
+int main() {
+    int a, b;
+    cin >> a >> b;
+    cout << a + b << endl;
+    return 0;
+}
+                """,
+            "language_id": 1,
+            "is_shared" : True,
+        },
     }
 
     r = session.post("http://127.0.0.1:8000/api/inline/submit", json=data)

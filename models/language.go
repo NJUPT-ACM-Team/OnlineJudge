@@ -10,8 +10,7 @@ type Language struct {
 	Language    string
 	OptionValue string `db:"option_value"`
 	Compiler    string
-	OJName      string `db:"oj_name"`
-	OJIdFK      int64  `db:"oj_id_fk"`
+	OJIdFK      int64 `db:"oj_id_fk"`
 }
 
 type LanguageModel struct {

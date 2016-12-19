@@ -22,10 +22,10 @@ def List():
         },
     }
     send = {
-            "list_problems_request": data
-            }
+        "list_problems_request": data
+    }
 
-    r = session.get("http://127.0.0.1:8000/api/inline/problems", json=data)
+    r = session.get("http://127.0.0.1:8000/api/inline/problems", json=send)
     print(r.status_code)
     print(r.content)
 

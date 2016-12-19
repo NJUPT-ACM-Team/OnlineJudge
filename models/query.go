@@ -39,20 +39,25 @@ func Query_All_OJNames(tx *sqlx.Tx) ([]string, error) {
 }
 
 //
+type LanguageExt struct {
+	OJName string `db:"oj_name"`
+	Language
+}
+
 func Query_All_Languages(
 	tx *sqlx.Tx,
 	required []string,
-	excepts []string) ([]Language, error) {
+	excepts []string) ([]LanguageExt, error) {
 
 	/*-- Func start --*/
-	lang := Language{}
-	langs := []Language{}
+	lang := LanguageExt{}
+	langs := []LanguageExt{}
 	str_fields, err := GenerateSelectSQL(&lang, required, excepts)
 	if err != nil {
 		return nil, err
 	}
 	sql := `
-	SELECT %s FROM Languages
+	SELECT %s FROM Languages LEFT JOIN OJInfo ON oj_id_fk=oj_id
 	`
 	if err := tx.Select(&langs, fmt.Sprintf(sql, str_fields)); err != nil {
 		return nil, err
@@ -158,7 +163,7 @@ func Query_Languages_By_OJIdFK(
 		return nil, err
 	}
 	sql := `
-	SELECT %s FROM Languages
+	SELECT %s FROM Languages 
 	WHERE oj_id_fk=?
 	`
 	if err := tx.Select(&langs, fmt.Sprintf(sql, str_fields), oj_id_fk); err != nil {
