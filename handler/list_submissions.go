@@ -52,8 +52,9 @@ func (this *Handler) ListSubmissions(response *api.ListSubmissionsResponse, req 
 	}
 	page, err := models.XQuery_List_Submissions_With_Filter(
 		this.tx,
-		filter.GetUsername(),
+		this.session.GetUsername(),
 		show_private,
+		filter.GetUsername(),
 		filter.GetOj(),
 		filter.GetPid(),
 		filter.GetStatusCode(),
