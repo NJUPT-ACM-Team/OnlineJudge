@@ -18,8 +18,6 @@ message ListSubmissionsRequest {
         string compiler = 6;
     }
     Filter filter = 3;
-    bool need_languages_list = 4;
-    bool need_ojs_list = 5;
 }
 
 message ListSubmissionsResponse {
@@ -45,7 +43,5 @@ message ListSubmissionsResponse {
     int32 total_lines = 2;
     int32 total_pages = 3;
     int32 current_page = 4;
-    repeated Language languages_list = 5;
-    repeated string ojs_list = 6;
-    Error error = 7;
+    Error error = 5;
 }

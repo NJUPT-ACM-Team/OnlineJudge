@@ -46,15 +46,6 @@ func (this *Handler) ListProblems(response *api.ListProblemsResponse, req *api.L
 		return
 	}
 
-	if req.GetNeedOjsList() == true {
-		ojs, err := models.Query_All_OJNames(this.tx)
-		if err != nil {
-			MakeResponseError(response, this.debug, PBInternalError, err)
-			return
-		}
-		response.OjsList = ojs
-	}
-
 	// Build response
 	lines := []*api.ListProblemsResponse_PerLine{}
 	for _, problem := range page.Problems {
