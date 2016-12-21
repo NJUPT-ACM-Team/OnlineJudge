@@ -27,7 +27,7 @@ type OJInfo struct {
 func (m *OJInfo) Reset()                    { *m = OJInfo{} }
 func (m *OJInfo) String() string            { return proto.CompactTextString(m) }
 func (*OJInfo) ProtoMessage()               {}
-func (*OJInfo) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{0} }
+func (*OJInfo) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{0} }
 
 func (m *OJInfo) GetOjId() int64 {
 	if m != nil {
@@ -89,9 +89,9 @@ func init() {
 	proto.RegisterType((*OJInfo)(nil), "api.OJInfo")
 }
 
-func init() { proto.RegisterFile("api/ojinfo.proto", fileDescriptor7) }
+func init() { proto.RegisterFile("api/ojinfo.proto", fileDescriptor8) }
 
-var fileDescriptor7 = []byte{
+var fileDescriptor8 = []byte{
 	// 205 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x44, 0x8f, 0x41, 0x4e, 0x85, 0x30,
 	0x10, 0x86, 0x53, 0x79, 0xaf, 0xc8, 0xb8, 0x31, 0x35, 0xd1, 0x59, 0x90, 0x48, 0x5c, 0xb1, 0xd2,

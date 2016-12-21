@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package api;
+
+import "api/common.proto";
+
+message LogoutRequest {
+    string goodbye = 1;
+}
+
+message LogoutResponse {
+    Error error = 1;
+}

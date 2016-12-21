@@ -13,6 +13,7 @@ It is generated from these files:
 	api/list_problems.proto
 	api/list_submissions.proto
 	api/login.proto
+	api/logout.proto
 	api/ojinfo.proto
 	api/register.proto
 	api/show_problem.proto
@@ -35,6 +36,8 @@ It has these top-level messages:
 	LoginInitResponse
 	LoginAuthRequest
 	LoginAuthResponse
+	LogoutRequest
+	LogoutResponse
 	OJInfo
 	RegisterRequest
 	RegisterResponse
