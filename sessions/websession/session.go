@@ -34,6 +34,15 @@ func (this *WebSession) IsLogin() bool {
 	return false
 }
 
+func (this *WebSession) IsRoot() bool {
+	if privilege, ok := this.session.Values[KeyPrivilege].(string); ok {
+		if privilege == "root" {
+			return true
+		}
+	}
+	return false
+}
+
 func (this *WebSession) GetUsername() string {
 	username, ok := this.session.Values[KeyUsername].(string)
 	if !ok {

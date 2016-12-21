@@ -4,7 +4,25 @@ import (
 	"OnlineJudge/base"
 	"OnlineJudge/models"
 	"OnlineJudge/pbgen/api"
+
+	"github.com/jmoiron/sqlx"
 )
+
+func (this *Handler) AdminListSubmissions(response *api.ListSubmissionsResponse, req *api.ListSubmissionsRequest) {
+	if !this.session.IsRoot() {
+		MakeResponseError(response, this.debug, PBUnauthorized, nil)
+		return
+	}
+
+	if err := this.OpenDB(); err != nil {
+		MakeResponseError(response, this.debug, PBInternalError, err)
+		return
+	}
+	defer this.CloseDB()
+
+	ListSubmissions_BuildResponse(
+		this.tx, response, req, this.session.GetUsername(), true, true, this.debug)
+}
 
 func (this *Handler) ListSubmissions(response *api.ListSubmissionsResponse, req *api.ListSubmissionsRequest) {
 	if err := this.OpenDB(); err != nil {
@@ -13,19 +31,23 @@ func (this *Handler) ListSubmissions(response *api.ListSubmissionsResponse, req 
 	}
 	defer this.CloseDB()
 
+	ListSubmissions_BuildResponse(
+		this.tx, response, req, this.session.GetUsername(), false, false, this.debug)
+}
+
+func ListSubmissions_BuildResponse(
+	tx *sqlx.Tx,
+	response *api.ListSubmissionsResponse,
+	req *api.ListSubmissionsRequest,
+	username string,
+	show_private bool,
+	show_all_code bool,
+	debug bool) {
+
 	filter := req.GetFilter()
-	var show_private bool
-	var show_all_code bool
-	if this.session.GetPrivilege() == "root" {
-		show_private = true
-		show_all_code = true
-	} else {
-		show_private = false
-		show_all_code = false
-	}
 	page, err := models.XQuery_List_Submissions_With_Filter(
-		this.tx,
-		this.session.GetUsername(),
+		tx,
+		username,
 		show_private,
 		filter.GetUsername(),
 		filter.GetOj(),
@@ -39,7 +61,7 @@ func (this *Handler) ListSubmissions(response *api.ListSubmissionsResponse, req 
 		nil,
 	)
 	if err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
+		MakeResponseError(response, debug, PBInternalError, err)
 		return
 	}
 

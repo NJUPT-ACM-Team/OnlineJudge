@@ -4,7 +4,24 @@ import (
 	"OnlineJudge/base"
 	"OnlineJudge/models"
 	"OnlineJudge/pbgen/api"
+
+	"github.com/jmoiron/sqlx"
 )
+
+func (this *Handler) AdminShowProblem(response *api.ShowProblemResponse, req *api.ShowProblemRequest) {
+	if !this.session.IsRoot() {
+		MakeResponseError(response, this.debug, PBUnauthorized, nil)
+		return
+	}
+
+	if err := this.OpenDB(); err != nil {
+		MakeResponseError(response, this.debug, PBInternalError, err)
+		return
+	}
+	defer this.CloseDB()
+
+	ShowProblem_BuildResponse(this.tx, response, req, true, this.debug)
+}
 
 func (this *Handler) ShowProblem(response *api.ShowProblemResponse, req *api.ShowProblemRequest) {
 	if err := this.OpenDB(); err != nil {
@@ -12,34 +29,41 @@ func (this *Handler) ShowProblem(response *api.ShowProblemResponse, req *api.Sho
 		return
 	}
 	defer this.CloseDB()
+	ShowProblem_BuildResponse(this.tx, response, req, false, this.debug)
+}
+
+func ShowProblem_BuildResponse(
+	tx *sqlx.Tx,
+	response *api.ShowProblemResponse,
+	req *api.ShowProblemRequest,
+	access_hide bool,
+	debug bool) {
 
 	// Get Sid
 	pid, err := base.ParseSid(req.GetProblemSid())
 	if err != nil {
-		MakeResponseError(response, this.debug, PBBadRequest, err)
+		MakeResponseError(response, debug, PBBadRequest, err)
 		return
 	}
 
 	// Query problem
-	mp, err := models.Query_MetaProblem_By_OJName_OJPid(this.tx, pid.OJName, pid.OJPid, nil, nil)
+	mp, err := models.Query_MetaProblem_By_OJName_OJPid(tx, pid.OJName, pid.OJPid, nil, nil)
 	if err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
+		MakeResponseError(response, debug, PBInternalError, err)
 		return
 	}
 
 	// QueryLanguages
-	langs, err := models.Query_Languages_By_OJIdFK(this.tx, mp.OJIdFK, nil, nil)
+	langs, err := models.Query_Languages_By_OJIdFK(tx, mp.OJIdFK, nil, nil)
 	if err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
+		MakeResponseError(response, debug, PBInternalError, err)
 		return
 	}
 
 	// Judge if authorized
-	if mp.Hide != false {
-		if this.session.IsLogin() == false || this.session.GetPrivilege() != "root" {
-			MakeResponseError(response, this.debug, PBProblemNotFound, nil)
-			return
-		}
+	if mp.Hide == true && !access_hide {
+		MakeResponseError(response, debug, PBProblemNotFound, nil)
+		return
 	}
 
 	// Make response
@@ -69,5 +93,4 @@ func (this *Handler) ShowProblem(response *api.ShowProblemResponse, req *api.Sho
 		languages = append(languages, temp)
 	}
 	response.Languages = languages
-
 }

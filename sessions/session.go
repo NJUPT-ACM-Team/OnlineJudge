@@ -4,6 +4,7 @@ import ()
 
 type Session interface {
 	IsLogin() bool
+	IsRoot() bool
 
 	GetUsername() string
 	GetUserId() int64

@@ -4,7 +4,25 @@ import (
 	"OnlineJudge/base"
 	"OnlineJudge/models"
 	"OnlineJudge/pbgen/api"
+
+	"github.com/jmoiron/sqlx"
 )
+
+func (this *Handler) AdminListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
+	if !this.session.IsRoot() {
+		MakeResponseError(response, this.debug, PBUnauthorized, nil)
+		return
+	}
+
+	if err := this.OpenDB(); err != nil {
+		MakeResponseError(response, this.debug, PBInternalError, err)
+		return
+	}
+	defer this.CloseDB()
+
+	ListProblems_BuildResponse(
+		this.tx, response, req, this.session.GetUsername(), true, this.debug)
+}
 
 func (this *Handler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
 	if err := this.OpenDB(); err != nil {
@@ -13,13 +31,6 @@ func (this *Handler) ListProblems(response *api.ListProblemsResponse, req *api.L
 	}
 	defer this.CloseDB()
 
-	var show_hidden bool
-	if this.session.GetPrivilege() == "root" {
-		show_hidden = true
-	} else {
-		show_hidden = false
-	}
-
 	filter := req.GetFilter()
 	if filter.GetPStatus() != 0 {
 		if this.session.IsLogin() == false {
@@ -27,9 +38,23 @@ func (this *Handler) ListProblems(response *api.ListProblemsResponse, req *api.L
 			return
 		}
 	}
+
+	ListProblems_BuildResponse(
+		this.tx, response, req, this.session.GetUsername(), false, this.debug)
+}
+
+func ListProblems_BuildResponse(
+	tx *sqlx.Tx,
+	response *api.ListProblemsResponse,
+	req *api.ListProblemsRequest,
+	username string,
+	show_hidden bool,
+	debug bool) {
+
+	filter := req.GetFilter()
 	page, err := models.XQuery_List_Problems_With_Filter(
-		this.tx,
-		this.session.GetUsername(),
+		tx,
+		username,
 		show_hidden,
 		filter.GetOj(),
 		int(filter.GetPStatus()),
@@ -42,7 +67,7 @@ func (this *Handler) ListProblems(response *api.ListProblemsResponse, req *api.L
 		nil,
 	)
 	if err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
+		MakeResponseError(response, debug, PBInternalError, err)
 		return
 	}
 
@@ -66,5 +91,4 @@ func (this *Handler) ListProblems(response *api.ListProblemsResponse, req *api.L
 	response.TotalLines = int32(page.TotalLines)
 	response.TotalPages = int32(page.TotalPages)
 	response.CurrentPage = int32(page.CurrentPage)
-
 }
