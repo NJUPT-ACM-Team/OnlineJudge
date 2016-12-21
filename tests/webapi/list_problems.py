@@ -1,4 +1,5 @@
 import requests
+import json
 
 session = requests.session()
 
@@ -27,7 +28,7 @@ def List():
 
     r = session.get("http://127.0.0.1:8000/api/inline/problems", json=send)
     print(r.status_code)
-    print(r.content)
+    print(json.dumps(r.json(), indent=4))
 
 if __name__ == '__main__':
     Login()

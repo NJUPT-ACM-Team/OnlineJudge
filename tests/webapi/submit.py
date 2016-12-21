@@ -1,6 +1,10 @@
 import requests
+import json
 
 session = requests.session()
+
+def dump(js):
+    print json.dumps(js, indent=4)
 
 def Login():
     data = {
@@ -11,7 +15,7 @@ def Login():
         }
     }
     r = session.post("http://127.0.0.1:8000/api/inline/login/auth", json=data)
-    print(r.json())
+    dump(r.json())
 
 def Submit():
     data = {
@@ -34,8 +38,18 @@ int main() {
 
     r = session.post("http://127.0.0.1:8000/api/inline/submit", json=data)
     print(r.status_code)
-    print(r.json())
+    dump(r.json())
+
+def Logout():
+    data = {
+            "logout_request": {}
+    }
+    r = session.post("http://127.0.0.1:8000/api/inline/logout", json=data)
+    print r.status_code
+    dump(r.json())
+
 
 if __name__ == '__main__':
     Login()
+    Logout() 
     Submit()

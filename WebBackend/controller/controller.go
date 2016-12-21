@@ -70,7 +70,7 @@ func SetWebResponse(
 	response Response,
 	webresponse *api.WebResponse) {
 
-	if webresponse.GetError() == nil {
+	if webresponse.GetError() == nil && response != nil {
 		webresponse.Error = response.GetError()
 	}
 

@@ -11,8 +11,6 @@ def List():
             "filter": {
 
             },
-            "need_languages_list" : True,
-            "need_ojs_list": True,
         }        
     }
     r = session.get("http://127.0.0.1:8000/api/inline/status", json=data)

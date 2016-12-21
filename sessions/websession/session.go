@@ -26,8 +26,10 @@ type WebSession struct {
 }
 
 func (this *WebSession) IsLogin() bool {
-	if _, ok := this.session.Values[KeyUsername].(string); ok {
-		return true
+	if name, ok := this.session.Values[KeyUsername].(string); ok {
+		if name != "" {
+			return true
+		}
 	}
 	return false
 }
@@ -109,6 +111,12 @@ func (this *WebSession) AddFlash(value interface{}, vars ...string) {
 
 func (this *WebSession) Save(h *http.Request, w http.ResponseWriter) {
 	this.session.Save(h, w)
+}
+
+func (this *WebSession) Logout() {
+	for k, _ := range this.session.Values {
+		delete(this.session.Values, k)
+	}
 }
 
 func NewSession(sess *sessions.Session) locals.Session {

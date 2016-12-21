@@ -17,6 +17,8 @@ type Session interface {
 	SetIPAddr(ip string)
 	Set(key interface{}, val interface{}) error
 
+	Logout()
+
 	Flashes(vars ...string) []interface{}
 	AddFlash(value interface{}, vars ...string)
 }

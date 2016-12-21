@@ -86,6 +86,12 @@ var api_routes = Routes{
 		HandlerFunc: ctler.LoginAuth,
 	},
 	Route{
+		Name:        "Logout",
+		Method:      "POST",
+		Pattern:     "/logout",
+		HandlerFunc: ctler.Logout,
+	},
+	Route{
 		Name:        "ListProblems",
 		Method:      "GET",
 		Pattern:     "/problems",

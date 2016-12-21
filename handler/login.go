@@ -41,7 +41,10 @@ func (this *Handler) LoginAuth(response *api.LoginAuthResponse, req *api.LoginAu
 	}
 
 	// Query necessary information: username, user_id, privilege
-	user, err := models.Query_User_By_Username(this.tx, req.GetUsername(), []string{"username", "user_id", "privilege"}, nil)
+	user, err := models.Query_User_By_Username(
+		this.tx, req.GetUsername(),
+		[]string{"username", "user_id", "privilege"},
+		nil)
 	if err != nil {
 		MakeResponseError(response, this.debug, PBInternalError, err)
 		return

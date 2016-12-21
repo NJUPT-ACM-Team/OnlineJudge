@@ -1,0 +1,12 @@
+import requests
+
+data = {
+        "login_auth_request": {
+    "username" : "kevince",
+    "password": "abc",
+    }
+}
+
+r = requests.post("http://127.0.0.1:8000/api/inline/logout")
+print(r.status_code)
+print(r.json())
