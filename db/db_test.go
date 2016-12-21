@@ -4,9 +4,9 @@ import "testing"
 
 func TestUseConfig(t *testing.T) {
 	mysql_config := MySQLConfig{
-		drivername: "mysql",
-		username:   "kevince",
-		dbname:     "testdb",
+		Drivername: "mysql",
+		Username:   "kevince",
+		DBname:     "testdb",
 	}
 	var cfg Config
 	cfg = &mysql_config

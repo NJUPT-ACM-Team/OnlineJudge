@@ -2,12 +2,26 @@ package mq
 
 import (
 	"github.com/streadway/amqp"
+
+	"fmt"
 )
 
 const (
 	LJQueueName = "local"
 	VJQueueName = "virtual"
 )
+
+type MQConfig struct {
+	Username string
+	Password string
+	Address  string
+}
+
+func (this *MQConfig) GetDSN() string {
+	dsn := fmt.Sprintf("amqp://%s:%s@%s/",
+		this.Username, this.Password, this.Address)
+	return dsn
+}
 
 type MQ struct {
 	DSN  string

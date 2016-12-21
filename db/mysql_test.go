@@ -7,7 +7,7 @@ func TestGetDriverName(t *testing.T) {
 	var mysql_config MySQLConfig
 
 	t.Log("Use \"hello\" (expected \"hello\")")
-	mysql_config = MySQLConfig{drivername: "hello"}
+	mysql_config = MySQLConfig{Drivername: "hello"}
 	if dn := mysql_config.GetDriverName(); dn != "hello" {
 		t.Errorf(`Expected "hello", but it was "%s" instead.`, dn)
 	}
@@ -24,22 +24,22 @@ func TestGetDataSourceName(t *testing.T) {
 	var mysql_config MySQLConfig
 
 	t.Log("Empty username (expected error)")
-	mysql_config = MySQLConfig{dbname: "testdb"}
+	mysql_config = MySQLConfig{DBname: "testdb"}
 	if _, err := mysql_config.GetDataSourceName(); err == nil {
 		t.Errorf("Expected errors, but there is no error.")
 	}
 
 	t.Log("Empty dbname (expected error)")
-	mysql_config = MySQLConfig{username: "user"}
+	mysql_config = MySQLConfig{Username: "user"}
 	if _, err := mysql_config.GetDataSourceName(); err == nil {
 		t.Errorf("Expected errors, but there is no error.")
 	}
 
 	t.Log(`With password "123456", (expected "user:123456@/testdb")`)
 	mysql_config = MySQLConfig{
-		username: "user",
-		password: "123456",
-		dbname:   "testdb",
+		Username: "user",
+		Password: "123456",
+		DBname:   "testdb",
 	}
 	if dsn, _ := mysql_config.GetDataSourceName(); dsn != "user:123456@/testdb" {
 		t.Errorf(`expected "user:123456@/testdb", but it was "%s" instead`, dsn)
@@ -47,10 +47,10 @@ func TestGetDataSourceName(t *testing.T) {
 
 	t.Log(`With protocol "tcp", (expected "user:123456@tcp/testdb")`)
 	mysql_config = MySQLConfig{
-		username: "user",
-		password: "123456",
-		dbname:   "testdb",
-		protocol: "tcp",
+		Username: "user",
+		Password: "123456",
+		DBname:   "testdb",
+		Protocol: "tcp",
 	}
 	if dsn, _ := mysql_config.GetDataSourceName(); dsn != "user:123456@tcp/testdb" {
 		t.Errorf(`expected "user:123456@tcp/testdb", but it was "%s" instead`, dsn)
@@ -58,11 +58,11 @@ func TestGetDataSourceName(t *testing.T) {
 
 	t.Log(`With address "10.10.23.12", (expected "user:123456@tcp(10.10.23.12)/testdb")`)
 	mysql_config = MySQLConfig{
-		username: "user",
-		password: "123456",
-		dbname:   "testdb",
-		protocol: "tcp",
-		address:  "10.10.23.12",
+		Username: "user",
+		Password: "123456",
+		DBname:   "testdb",
+		Protocol: "tcp",
+		Address:  "10.10.23.12",
 	}
 	if dsn, _ := mysql_config.GetDataSourceName(); dsn != "user:123456@tcp(10.10.23.12)/testdb" {
 		t.Errorf(`expected "user:123456@tcp(10.10.23.12)/testdb", but it was "%s" instead`, dsn)
@@ -70,10 +70,10 @@ func TestGetDataSourceName(t *testing.T) {
 
 	t.Log(`With only address "10.10.23.12", without protocol, (expected "user:123456@/testdb")`)
 	mysql_config = MySQLConfig{
-		username: "user",
-		password: "123456",
-		dbname:   "testdb",
-		address:  "10.10.23.12",
+		Username: "user",
+		Password: "123456",
+		DBname:   "testdb",
+		Address:  "10.10.23.12",
 	}
 	if dsn, _ := mysql_config.GetDataSourceName(); dsn != "user:123456@/testdb" {
 		t.Errorf(`expected "user:123456@/testdb", but it was "%s" instead`, dsn)
@@ -83,12 +83,12 @@ func TestGetDataSourceName(t *testing.T) {
 	params := make(map[string]string)
 	params["charset"] = "utf8"
 	mysql_config = MySQLConfig{
-		username: "user",
-		password: "123456",
-		dbname:   "testdb",
-		protocol: "tcp",
-		address:  "10.10.23.12",
-		params:   params,
+		Username: "user",
+		Password: "123456",
+		DBname:   "testdb",
+		Protocol: "tcp",
+		Address:  "10.10.23.12",
+		Params:   params,
 	}
 	if dsn, _ := mysql_config.GetDataSourceName(); dsn != "user:123456@tcp(10.10.23.12)/testdb?charset=utf8" {
 		t.Errorf(`expected "user:123456@tcp(10.10.23.12)/testdb?charset=utf8", but it was "%s" instead`, dsn)

@@ -5,50 +5,50 @@ import (
 )
 
 type MySQLConfig struct {
-	drivername string
-	username   string
-	password   string
-	dbname     string
-	address    string
-	protocol   string
-	params     map[string]string
+	Drivername string
+	Username   string
+	Password   string
+	DBname     string
+	Address    string
+	Protocol   string
+	Params     map[string]string
 }
 
 func (this *MySQLConfig) GetDriverName() string {
-	if this.drivername == "" {
+	if this.Drivername == "" {
 		return "mysql"
 	}
-	return this.drivername
+	return this.Drivername
 }
 
 func (this *MySQLConfig) GetDataSourceName() (string, error) {
-	if this.username == "" {
+	if this.Username == "" {
 		return "", errors.New("username not provided.")
 	}
-	if this.dbname == "" {
+	if this.DBname == "" {
 		return "", errors.New("dbname not provided.")
 	}
 
-	dsn := this.username
-	if this.password != "" {
-		dsn += ":" + this.password
+	dsn := this.Username
+	if this.Password != "" {
+		dsn += ":" + this.Password
 	}
 
 	dsn += "@"
 
-	if this.protocol != "" {
-		dsn += this.protocol
-		if this.address != "" {
-			dsn += "(" + this.address + ")"
+	if this.Protocol != "" {
+		dsn += this.Protocol
+		if this.Address != "" {
+			dsn += "(" + this.Address + ")"
 		}
 	}
 
-	dsn += "/" + this.dbname
+	dsn += "/" + this.DBname
 
-	if len(this.params) != 0 {
+	if len(this.Params) != 0 {
 		dsn += "?"
 		first := true
-		for k, v := range this.params {
+		for k, v := range this.Params {
 			if first {
 				first = false
 			} else {
