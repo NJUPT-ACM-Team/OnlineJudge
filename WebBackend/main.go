@@ -3,6 +3,7 @@ package main
 import (
 	"OnlineJudge/Daemon/irpc"
 	"OnlineJudge/WebBackend/router"
+	"OnlineJudge/config"
 	"OnlineJudge/db"
 
 	"github.com/gorilla/context"
@@ -11,7 +12,8 @@ import (
 )
 
 func init() {
-	db.Init()
+	cfg := config.Load("")
+	db.Init(cfg.GetDBConfig())
 	irpc.Init()
 }
 

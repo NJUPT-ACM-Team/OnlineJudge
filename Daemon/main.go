@@ -2,6 +2,7 @@ package main
 
 import (
 	"OnlineJudge/Daemon/irpc"
+	"OnlineJudge/config"
 	"OnlineJudge/db"
 	"OnlineJudge/mq"
 
@@ -9,8 +10,9 @@ import (
 )
 
 func init() {
-	db.Init()
-	mq.Init()
+	cfg := config.Load("")
+	db.Init(cfg.GetDBConfig())
+	mq.Init(cfg.GetMQConfig())
 	irpc.Init()
 }
 

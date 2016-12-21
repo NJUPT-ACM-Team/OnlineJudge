@@ -33,8 +33,8 @@ type MQ struct {
 
 var DSN string
 
-func Init() {
-	DSN = "amqp://guest:guest@localhost:5672/"
+func Init(cfg *MQConfig) {
+	DSN = cfg.GetDSN()
 }
 
 func New() *MQ {

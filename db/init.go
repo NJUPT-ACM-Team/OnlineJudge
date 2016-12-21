@@ -1,6 +1,10 @@
 package db
 
-func Init() {
+func Init(cfg *MySQLConfig) {
+	UseConfig(cfg)
+}
+
+func InitTest() {
 	params := make(map[string]string)
 	params["parseTime"] = "true"
 	mysql_config := MySQLConfig{

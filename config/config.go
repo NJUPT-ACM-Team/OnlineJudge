@@ -5,8 +5,33 @@ import (
 	"OnlineJudge/mq"
 
 	"encoding/json"
+	"io"
+	"log"
 	"os"
+	"strings"
 )
+
+var test_config = `
+{
+	"mysql": {
+		"username": "test",
+		"dbname": "test",
+		"password": "abc123",
+		"address": "localhost",
+		"protocol": "tcp",
+		"params": {"parseTime": "true", "charset": "utf8"}
+	},
+	"rabbitmq": {
+		"username": "guest",
+		"password": "guest",
+		"address": "localhost:5672"
+	},
+	"irpc": {
+		"address": "localhost:9999"
+	}
+
+}
+`
 
 type Config struct {
 	MySQL struct {
@@ -50,13 +75,23 @@ func (this *Config) GetMQConfig() *mq.MQConfig {
 
 // func (this *Config) GetIRPCConfig()
 
-func Load(path string) (*Config, error) {
-	file, _ := os.Open(path)
+func Load(path string) *Config {
+	var file io.Reader
+	if path == "" {
+		log.Println("using test config.")
+		file = strings.NewReader(test_config)
+	} else {
+		var err error
+		file, err = os.Open(path)
+		if err != nil {
+			panic(err)
+		}
+	}
 	decoder := json.NewDecoder(file)
 	config := &Config{}
 	err := decoder.Decode(config)
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
-	return config, nil
+	return config
 }

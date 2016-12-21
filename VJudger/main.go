@@ -2,12 +2,14 @@ package main
 
 import (
 	"OnlineJudge/VJudger/vjudger"
+	"OnlineJudge/config"
 	"OnlineJudge/judger"
 	"OnlineJudge/mq"
 )
 
 func init() {
-	mq.Init()
+	cfg := config.Load("")
+	mq.Init(cfg.GetMQConfig())
 	judger.Init()
 }
 

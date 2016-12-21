@@ -14,7 +14,7 @@ import (
 )
 
 func NewHandlerForTest() (*Handler, *sessions.Session) {
-	db.Init()
+	db.InitTest()
 	var store = sessions.NewCookieStore([]byte("something-very-secret"))
 	req, _ := http.NewRequest("GET", "http://www.example.com", nil)
 	session, _ := store.New(req, "my session")
