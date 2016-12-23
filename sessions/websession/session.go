@@ -123,9 +123,7 @@ func (this *WebSession) Save(h *http.Request, w http.ResponseWriter) {
 }
 
 func (this *WebSession) Logout() {
-	for k, _ := range this.session.Values {
-		delete(this.session.Values, k)
-	}
+	this.session.Options.MaxAge = -1
 }
 
 func NewSession(sess *sessions.Session) locals.Session {
