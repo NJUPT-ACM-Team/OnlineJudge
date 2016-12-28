@@ -25,6 +25,7 @@ type MetaProblem struct {
 	OJName            string `db:"oj_name"`
 	OJIdFK            int64  `db:"oj_id_fk"`
 	OJPid             string `db:"oj_pid"`
+	UploaderName      string `db:"uploader_name"`
 }
 
 type MetaProblemModel struct {

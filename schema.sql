@@ -77,6 +77,7 @@ CREATE TABLE MetaProblems (
     oj_name VARCHAR(64) NOT NULL,
     oj_id_fk INTEGER UNSIGNED DEFAULT NULL,
     oj_pid VARCHAR(64) NOT NULL,
+	uploader_name VARCHAR(64) NOT NULL,
     
     PRIMARY KEY (meta_pid),
     FOREIGN KEY (oj_id_fk) REFERENCES OJInfo(oj_id) ON DELETE SET NULL,
@@ -198,7 +199,14 @@ CREATE TABLE Submissions (
 
 -- For testing purpose
 
-INSERT INTO OJInfo (oj_name, version, int64io, javaclass, status, status_info, lastcheck) VALUES ('zoj', '1', '%lld', 'Main', 'ok', 'OK', '2016-11-17 09:19:16');
-INSERT INTO Languages (language, option_value, compiler, oj_id_fk) VALUES ('c++', '1', 'g++4.9', '1');
-INSERT INTO MetaProblems (spj_code, title, description, input, output, sample_in, sample_out, time_limit, case_time_limit, memory_limit, number_of_testcases, source, hint, hide, oj_name, oj_id_fk, oj_pid) VALUES ('', 'A+B', 'caculate result of a+b', 'Two integers', 'Sum of two integers a+b', '1 1', '2', '1000', '1000', '65536', '0', 'test', 'for test', 0,'zoj', 1, 1000);
-INSERT INTO MetaProblems (spj_code, title, description, input, output, sample_in, sample_out, time_limit, case_time_limit, memory_limit, number_of_testcases, source, hint, hide, oj_name, oj_id_fk, oj_pid) VALUES ('', 'C+D', 'caculate result of a+b', 'Two integers', 'Sum of two integers c+d', '3 3', '6', '1000', '1000', '65536', '0', 'test', 'for test', 0,'zoj', 1, 1001);
+INSERT INTO OJInfo (oj_name, version, int64io, javaclass, status, status_info, lastcheck) 
+VALUES ('zoj', '1', '%lld', 'Main', 'ok', 'OK', '2016-11-17 09:19:16');
+
+INSERT INTO Languages (language, option_value, compiler, oj_id_fk) 
+VALUES ('c++', '1', 'g++4.9', '1');
+
+INSERT INTO MetaProblems (spj_code, title, description, input, output, sample_in, sample_out, time_limit, case_time_limit, memory_limit, number_of_testcases, source, hint, hide, oj_name, oj_id_fk, oj_pid, uploader_name)
+VALUES ('', 'A+B', 'caculate result of a+b', 'Two integers', 'Sum of two integers a+b', '1 1', '2', '1000', '1000', '65536', '0', 'test', 'for test', 0,'zoj', 1, 1000, 'kevince');
+
+INSERT INTO MetaProblems (spj_code, title, description, input, output, sample_in, sample_out, time_limit, case_time_limit, memory_limit, number_of_testcases, source, hint, hide, oj_name, oj_id_fk, oj_pid, uploader_name) 
+VALUES ('', 'C+D', 'caculate result of a+b', 'Two integers', 'Sum of two integers c+d', '3 3', '6', '1000', '1000', '65536', '0', 'test', 'for test', 0,'zoj', 1, 1001, 'kevince');
