@@ -7,7 +7,7 @@ import (
 )
 
 func TestQuery_All_Languages(t *testing.T) {
-	db.Init()
+	db.InitTest()
 	DB := db.New()
 	tx := DB.MustBegin()
 
@@ -19,7 +19,7 @@ func TestQuery_All_Languages(t *testing.T) {
 }
 
 func TestQuery_All_OJNames(t *testing.T) {
-	db.Init()
+	db.InitTest()
 	DB := db.New()
 	tx := DB.MustBegin()
 
@@ -31,7 +31,7 @@ func TestQuery_All_OJNames(t *testing.T) {
 }
 
 func TestQuery_All_OJs(t *testing.T) {
-	db.Init()
+	db.InitTest()
 	DB := db.New()
 	tx := DB.MustBegin()
 

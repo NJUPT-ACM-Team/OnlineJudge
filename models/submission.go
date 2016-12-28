@@ -73,7 +73,7 @@ func (this *SubmissionModel) Update(tx *sqlx.Tx, sub *Submission, pk string, req
 	if pk == "" {
 		pk = "run_id"
 	}
-	if err := this.InlineUpdate(tx, sub, "run_id", required, excepts); err != nil {
+	if err := this.InlineUpdate(tx, sub, pk, required, excepts); err != nil {
 		return err
 	}
 	return nil

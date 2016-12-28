@@ -6,7 +6,7 @@ import (
 )
 
 func TestXQuery_List_Problems_With_Filter(t *testing.T) {
-	db.Init()
+	db.InitTest()
 	DB := db.New()
 	tx := DB.MustBegin()
 	paging, err := XQuery_List_Problems_With_Filter(
@@ -31,7 +31,7 @@ func TestXQuery_List_Problems_With_Filter(t *testing.T) {
 }
 
 func TestXQuery_List_Submissions_With_Filter(t *testing.T) {
-	db.Init()
+	db.InitTest()
 	DB := db.New()
 	tx := DB.MustBegin()
 

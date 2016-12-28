@@ -126,27 +126,29 @@ CREATE TABLE Contests (
     title VARCHAR(255) NOT NULL,
     description TEXT,
     is_virtual BOOLEAN NOT NULL,
-    contest_type ENUM('icpc', 'oi', 'cf') NOT NULL,
+	contest_type VARCHAR(10) NOT NULL COMMENT "icpc, oi, cf",
+	create_time DATETIME NOT NULL,
     start_time DATETIME NOT NULL,
     end_time DATETIME NOT NULL,
     lock_board_time DATETIME NOT NULL,
     hide_others_status BOOLEAN NOT NULL,
 
-    PRIMARY KEY (contest_id)
+    PRIMARY KEY (contest_id),
+	UNIQUE KEY (title)
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
 
-CREATE TABLE ContestsUsers (
+CREATE TABLE ContestUsers (
     cu_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     user_id_fk INTEGER UNSIGNED DEFAULT NULL,
     contest_id_fk INTEGER UNSIGNED DEFAULT NULL,
-    motto VARCHAR(1024) NOT NULL DEFAULT '',
+    contest_motto VARCHAR(1024) NOT NULL DEFAULT '',
 
     PRIMARY KEY (cu_id),
     FOREIGN KEY (user_id_fk) REFERENCES Users(user_id) ON DELETE SET NULL,
     FOREIGN KEY (contest_id_fk) REFERENCES Contests(contest_id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
 
-CREATE TABLE ContestsProblems (
+CREATE TABLE ContestProblems (
     cp_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     meta_pid_fk INTEGER UNSIGNED DEFAULT NULL,
     contest_id_fk INTEGER UNSIGNED DEFAULT NULL,
