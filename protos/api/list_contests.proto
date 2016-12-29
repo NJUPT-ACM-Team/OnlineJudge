@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package api;
+
+import "api/common.proto";
+
+message ListContestsRequest {
+	int32 per_page = 1;
+	int32 current_page = 2;
+
+	enum Element {
+		CID = 0;
+		TITLE = 1;
+		STARTTIME = 2;
+		ENDTIME = 3;
+		STATUS = 4;
+	}
+	Element order_by = 3;
+	bool is_desc = 4;
+
+	message Filter {
+		enum CType {
+			ICPC = 0;
+			OI = 1;
+			CF = 2;	
+		}
+		CType ctype = 1;
+		bool is_public = 2;
+		bool is_virtual = 3;
+	}
+	Filter filter = 5;
+}
+
+message ListContestsResponse {
+	message PerLine {
+		int64 contest_id = 1;
+		string title = 2;
+		string start_time = 3;
+		string end_time = 4;
+		string status = 5;
+		string access = 6;
+	}
+	repeated PerLine lines = 1;
+	int32 total_lines = 2;
+	int32 total_pages = 3;
+	int32 current_page = 4;
+	Error error = 5;
+}
