@@ -30,7 +30,7 @@ type WebRequest struct {
 func (m *WebRequest) Reset()                    { *m = WebRequest{} }
 func (m *WebRequest) String() string            { return proto.CompactTextString(m) }
 func (*WebRequest) ProtoMessage()               {}
-func (*WebRequest) Descriptor() ([]byte, []int) { return fileDescriptor13, []int{0} }
+func (*WebRequest) Descriptor() ([]byte, []int) { return fileDescriptor14, []int{0} }
 
 func (m *WebRequest) GetCsrfToken() string {
 	if m != nil {
@@ -127,7 +127,7 @@ type WebResponse struct {
 func (m *WebResponse) Reset()                    { *m = WebResponse{} }
 func (m *WebResponse) String() string            { return proto.CompactTextString(m) }
 func (*WebResponse) ProtoMessage()               {}
-func (*WebResponse) Descriptor() ([]byte, []int) { return fileDescriptor13, []int{1} }
+func (*WebResponse) Descriptor() ([]byte, []int) { return fileDescriptor14, []int{1} }
 
 func (m *WebResponse) GetSetCsrfToken() string {
 	if m != nil {
@@ -218,9 +218,9 @@ func init() {
 	proto.RegisterType((*WebResponse)(nil), "api.WebResponse")
 }
 
-func init() { proto.RegisterFile("api/webapi.proto", fileDescriptor13) }
+func init() { proto.RegisterFile("api/webapi.proto", fileDescriptor14) }
 
-var fileDescriptor13 = []byte{
+var fileDescriptor14 = []byte{
 	// 602 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x6c, 0x94, 0x5d, 0x8b, 0x13, 0x31,
 	0x14, 0x86, 0x59, 0xd7, 0xee, 0xc7, 0xe9, 0x7e, 0x74, 0xd3, 0xdd, 0x76, 0xb6, 0x2a, 0x96, 0xc5,

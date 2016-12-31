@@ -10,6 +10,7 @@ It is generated from these files:
 	api/common.proto
 	api/edit_problem.proto
 	api/language.proto
+	api/list_contests.proto
 	api/list_problems.proto
 	api/list_submissions.proto
 	api/login.proto
@@ -28,6 +29,8 @@ It has these top-level messages:
 	EditProblemRequest
 	EditProblemResponse
 	Language
+	ListContestsRequest
+	ListContestsResponse
 	ListProblemsRequest
 	ListProblemsResponse
 	ListSubmissionsRequest
