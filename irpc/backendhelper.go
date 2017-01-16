@@ -1,9 +1,9 @@
 package irpc
 
 import (
-	"OnlineJudge/Daemon/utils"
 	"OnlineJudge/mq"
 	"OnlineJudge/pbgen/rpc"
+	"OnlineJudge/utils"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"

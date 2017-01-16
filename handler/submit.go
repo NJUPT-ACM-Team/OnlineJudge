@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"OnlineJudge/Daemon/irpc"
 	"OnlineJudge/base"
+	"OnlineJudge/irpc"
 	"OnlineJudge/models"
 	"OnlineJudge/pbgen/api"
 

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"OnlineJudge/Daemon/irpc"
 	"OnlineJudge/config"
 	"OnlineJudge/db"
+	"OnlineJudge/irpc"
 	"OnlineJudge/mq"
 
 	"fmt"
