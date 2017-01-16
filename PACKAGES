@@ -8,3 +8,4 @@ github.com/scalingdata/gcfg
 github.com/streadway/amqp
 golang.org/x/net/context
 google.golang.org/grpc
+github.com/op/go-logging
