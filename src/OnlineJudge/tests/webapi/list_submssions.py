@@ -6,7 +6,7 @@ session = requests.session()
 def List():
     data = {
         "list_submissions_request": {
-            "per_page": 1,
+            "per_page": 10,
             "current_page": 1,
             "filter": {
 

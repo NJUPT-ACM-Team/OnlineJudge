@@ -6,15 +6,18 @@ import (
 )
 
 func (this *BasicHandler) About(response *api.AboutResponse, req *api.AboutRequest) {
-	if err := this.OpenDB(); err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
-		return
-	}
-	defer this.CloseDB()
+	defer func() {
+		if err := recover(); err != nil {
+			MakeResponseError(response, this.debug, PBInternalError, err.(error))
+		}
+	}()
+	this.OpenDBU()
+	defer this.CloseDBU()
+	tx := this.dbu.MustBegin()
 
 	if req.GetNeedOjsList() == true {
 		var ojs []*api.OJInfo
-		all, err := models.Query_All_OJs(this.tx, nil, nil)
+		all, err := models.Query_All_OJs(tx, nil, nil)
 		if err != nil {
 			MakeResponseError(response, this.debug, PBInternalError, err)
 			return
@@ -37,7 +40,7 @@ func (this *BasicHandler) About(response *api.AboutResponse, req *api.AboutReque
 
 	if req.GetNeedLanguagesList() == true {
 		var languages []*api.Language
-		all, err := models.Query_All_Languages(this.tx, nil, nil)
+		all, err := models.Query_All_Languages(tx, nil, nil)
 		if err != nil {
 			MakeResponseError(response, this.debug, PBInternalError, err)
 			return
