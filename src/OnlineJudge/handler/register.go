@@ -55,7 +55,7 @@ func CheckRegisterRequest(tx *sqlx.Tx, req *api.RegisterRequest, res *api.Regist
 	return nil
 }
 
-func (this *Handler) Register(response *api.RegisterResponse, req *api.RegisterRequest) {
+func (this *BasicHandler) Register(response *api.RegisterResponse, req *api.RegisterRequest) {
 	if err := this.OpenDB(); err != nil {
 		MakeResponseError(response, this.debug, PBInternalError, err)
 		return

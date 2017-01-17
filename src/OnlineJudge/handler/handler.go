@@ -14,18 +14,19 @@ import (
 	"net/http"
 )
 
-func NewHandlerForTest() (*Handler, *sessions.Session) {
+func NewHandlerForTest() (*UserHandler, *sessions.Session) {
 	db.InitTest()
 	var store = sessions.NewCookieStore([]byte("something-very-secret"))
 	req, _ := http.NewRequest("GET", "http://www.example.com", nil)
 	session, _ := store.New(req, "my session")
 	sess := websession.NewSession(session)
-	return NewHandler(sess, true), session
+	return &UserHandler{BasicHandler{session: sess, debug: true}}, session
 }
 
 //
 
-type HandlerInterface interface {
+type Handler interface {
+	About(*api.AboutResponse, *api.AboutRequest)
 	ListProblems(*api.ListProblemsResponse, *api.ListProblemsRequest)
 	ListContests(*api.ListContestsResponse, *api.ListContestsRequest)
 	ListSubmissions(*api.ListSubmissionsResponse, *api.ListSubmissionsRequest)
@@ -37,30 +38,49 @@ type HandlerInterface interface {
 	Submit(*api.SubmitResponse, *api.SubmitRequest)
 }
 
-type Handler struct {
+type BasicHandler struct {
 	session locals.Session
 	db      *sqlx.DB
 	tx      *sqlx.Tx
 	debug   bool
 }
 
+type UserHandler struct {
+	BasicHandler
+}
+
 type AdminHandler struct {
-	Handler
+	UserHandler
 }
 
-func (this *AdminHandler) Check() bool {
-	return this.session.IsRoot()
+func CheckAdmin(sess locals.Session) bool {
+	return sess.IsRoot()
 }
 
-func NewHandler(sess locals.Session, dbg bool) *Handler {
-	handler := &Handler{
+func CheckLogin(sess locals.Session) bool {
+	return sess.IsLogin()
+}
+
+func NewHandler(sess locals.Session, dbg bool) Handler {
+	basic := &BasicHandler{
 		session: sess,
 		debug:   dbg,
 	}
-	return handler
+	if !CheckLogin(sess) {
+		return basic
+	}
+	user := &UserHandler{
+		BasicHandler: *basic,
+	}
+	if !CheckAdmin(sess) {
+		return user
+	}
+	return &AdminHandler{
+		UserHandler: *user,
+	}
 }
 
-func (this *Handler) OpenDB() error {
+func (this *BasicHandler) OpenDB() error {
 	var err error
 	this.db, err = db.NewDB()
 	if err != nil {
@@ -74,7 +94,7 @@ func (this *Handler) OpenDB() error {
 }
 
 // Commit a transaction and start a new one
-func (this *Handler) Commit() error {
+func (this *BasicHandler) Commit() error {
 	err := this.tx.Commit()
 	if err != nil {
 		return err
@@ -86,7 +106,7 @@ func (this *Handler) Commit() error {
 	return nil
 }
 
-func (this *Handler) CloseDB() {
+func (this *BasicHandler) CloseDB() {
 	this.tx.Rollback()
 	this.db.Close()
 }

@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func (this *Handler) LoginInit(response *api.LoginInitResponse, req *api.LoginInitRequest) {
+func (this *UserHandler) LoginInit(response *api.LoginInitResponse, req *api.LoginInitRequest) {
 	if err := this.OpenDB(); err != nil {
 		MakeResponseError(response, this.debug, PBInternalError, err)
 		return
@@ -21,7 +21,10 @@ func (this *Handler) LoginInit(response *api.LoginInitResponse, req *api.LoginIn
 	}
 }
 
-func (this *Handler) LoginAuth(response *api.LoginAuthResponse, req *api.LoginAuthRequest) {
+func (this *BasicHandler) LoginInit(response *api.LoginInitResponse, req *api.LoginInitRequest) {
+}
+
+func (this *BasicHandler) LoginAuth(response *api.LoginAuthResponse, req *api.LoginAuthRequest) {
 	if err := this.OpenDB(); err != nil {
 		MakeResponseError(response, this.debug, PBInternalError, err)
 		return

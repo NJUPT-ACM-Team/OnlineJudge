@@ -9,11 +9,6 @@ import (
 )
 
 func (this *AdminHandler) ListSubmissions(response *api.ListSubmissionsResponse, req *api.ListSubmissionsRequest) {
-	if !this.session.IsRoot() {
-		MakeResponseError(response, this.debug, PBUnauthorized, nil)
-		return
-	}
-
 	if err := this.OpenDB(); err != nil {
 		MakeResponseError(response, this.debug, PBInternalError, err)
 		return
@@ -24,7 +19,10 @@ func (this *AdminHandler) ListSubmissions(response *api.ListSubmissionsResponse,
 		this.tx, response, req, this.session.GetUsername(), true, true, this.debug)
 }
 
-func (this *Handler) ListSubmissions(response *api.ListSubmissionsResponse, req *api.ListSubmissionsRequest) {
+func (this *BasicHandler) ListSubmissions(response *api.ListSubmissionsResponse, req *api.ListSubmissionsRequest) {
+}
+
+func (this *UserHandler) ListSubmissions(response *api.ListSubmissionsResponse, req *api.ListSubmissionsRequest) {
 	if err := this.OpenDB(); err != nil {
 		MakeResponseError(response, this.debug, PBInternalError, err)
 		return

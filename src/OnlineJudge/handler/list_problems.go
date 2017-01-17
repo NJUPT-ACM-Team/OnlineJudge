@@ -9,11 +9,6 @@ import (
 )
 
 func (this *AdminHandler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
-	if !this.session.IsRoot() {
-		MakeResponseError(response, this.debug, PBUnauthorized, nil)
-		return
-	}
-
 	if err := this.OpenDB(); err != nil {
 		MakeResponseError(response, this.debug, PBInternalError, err)
 		return
@@ -24,7 +19,10 @@ func (this *AdminHandler) ListProblems(response *api.ListProblemsResponse, req *
 		this.tx, response, req, this.session.GetUsername(), true, this.debug)
 }
 
-func (this *Handler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
+func (this *BasicHandler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
+}
+
+func (this *UserHandler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
 	if err := this.OpenDB(); err != nil {
 		MakeResponseError(response, this.debug, PBInternalError, err)
 		return

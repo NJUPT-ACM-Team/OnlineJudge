@@ -6,7 +6,7 @@ import (
 	"OnlineJudge/pbgen/api"
 )
 
-func (this *Handler) EditProblem(response *api.EditProblemResponse, req *api.EditProblemRequest) {
+func (this *UserHandler) EditProblem(response *api.EditProblemResponse, req *api.EditProblemRequest) {
 	if err := this.OpenDB(); err != nil {
 		MakeResponseError(response, this.debug, PBInternalError, err)
 		return

@@ -10,9 +10,20 @@ import (
 	"time"
 )
 
+func (this *AdminHandler) Submit(response *api.SubmitResponse, req *api.SubmitRequest) {
+	if err := this.OpenDB(); err != nil {
+		MakeResponseError(response, this.debug, PBInternalError, err)
+		return
+	}
+	defer this.CloseDB()
+}
+
+func (this *BasicHandler) Submit(response *api.SubmitResponse, req *api.SubmitRequest) {
+}
+
 // Need to be tested
 // Depend on MetaProblems, OJInfo,
-func (this *Handler) Submit(response *api.SubmitResponse, req *api.SubmitRequest) {
+func (this *UserHandler) Submit(response *api.SubmitResponse, req *api.SubmitRequest) {
 	if err := this.OpenDB(); err != nil {
 		MakeResponseError(response, this.debug, PBInternalError, err)
 		return

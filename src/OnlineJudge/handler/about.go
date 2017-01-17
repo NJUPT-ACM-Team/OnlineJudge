@@ -5,7 +5,7 @@ import (
 	"OnlineJudge/pbgen/api"
 )
 
-func (this *Handler) About(response *api.AboutResponse, req *api.AboutRequest) {
+func (this *BasicHandler) About(response *api.AboutResponse, req *api.AboutRequest) {
 	if err := this.OpenDB(); err != nil {
 		MakeResponseError(response, this.debug, PBInternalError, err)
 		return
