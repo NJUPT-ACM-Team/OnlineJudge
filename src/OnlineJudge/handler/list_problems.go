@@ -8,7 +8,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func (this *Handler) AdminListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
+func (this *AdminHandler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
 	if !this.session.IsRoot() {
 		MakeResponseError(response, this.debug, PBUnauthorized, nil)
 		return

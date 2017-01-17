@@ -2,14 +2,17 @@ package router
 
 import (
 	"OnlineJudge/base"
+	"OnlineJudge/logger"
 	"WebBackend/controller"
 
 	"github.com/gorilla/mux"
 
-	"log"
+	// "log"
 	"net/http"
 	"time"
 )
+
+var log = logger.GetWebBackendLogger()
 
 type Route struct {
 	Name        string
@@ -26,8 +29,8 @@ func Logger(inner http.Handler, name string) http.Handler {
 
 		inner.ServeHTTP(w, r)
 
-		log.Printf(
-			"%s\t%s\t%s\t%s\t%s",
+		log.Infof(
+			"%s %s %s %s %s",
 			base.GetIPAddress(r),
 			r.Method,
 			r.RequestURI,

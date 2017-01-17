@@ -2,6 +2,7 @@ package handler
 
 import (
 	"OnlineJudge/db"
+	"OnlineJudge/pbgen/api"
 	locals "OnlineJudge/sessions"
 	"github.com/jmoiron/sqlx"
 )
@@ -24,11 +25,31 @@ func NewHandlerForTest() (*Handler, *sessions.Session) {
 
 //
 
+type HandlerInterface interface {
+	ListProblems(*api.ListProblemsResponse, *api.ListProblemsRequest)
+	ListContests(*api.ListContestsResponse, *api.ListContestsRequest)
+	ListSubmissions(*api.ListSubmissionsResponse, *api.ListSubmissionsRequest)
+	LoginInit(*api.LoginInitResponse, *api.LoginInitRequest)
+	LoginAuth(*api.LoginAuthResponse, *api.LoginAuthRequest)
+	Logout(*api.LogoutResponse, *api.LogoutRequest)
+	Register(*api.RegisterResponse, *api.RegisterRequest)
+	ShowProblem(*api.ShowProblemResponse, *api.ShowProblemRequest)
+	Submit(*api.SubmitResponse, *api.SubmitRequest)
+}
+
 type Handler struct {
 	session locals.Session
 	db      *sqlx.DB
 	tx      *sqlx.Tx
 	debug   bool
+}
+
+type AdminHandler struct {
+	Handler
+}
+
+func (this *AdminHandler) Check() bool {
+	return this.session.IsRoot()
 }
 
 func NewHandler(sess locals.Session, dbg bool) *Handler {
