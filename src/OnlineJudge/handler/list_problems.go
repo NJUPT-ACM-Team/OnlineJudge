@@ -9,36 +9,50 @@ import (
 )
 
 func (this *AdminHandler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
-	if err := this.OpenDB(); err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
-		return
-	}
-	defer this.CloseDB()
+	defer func() {
+		if err := recover(); err != nil {
+			MakeResponseError(response, this.debug, PBInternalError, err.(error))
+		}
+	}()
+	this.OpenDBU()
+	defer this.CloseDBU()
+	tx := this.dbu.MustBegin()
 
 	ListProblems_BuildResponse(
-		this.tx, response, req, this.session.GetUsername(), true, this.debug)
+		tx, response, req, this.session.GetUsername(), true, this.debug)
 }
 
 func (this *BasicHandler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
-}
-
-func (this *UserHandler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
-	if err := this.OpenDB(); err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
-		return
-	}
-	defer this.CloseDB()
+	defer func() {
+		if err := recover(); err != nil {
+			MakeResponseError(response, this.debug, PBInternalError, err.(error))
+		}
+	}()
+	this.OpenDBU()
+	defer this.CloseDBU()
+	tx := this.dbu.MustBegin()
 
 	filter := req.GetFilter()
 	if filter.GetPStatus() != 0 {
-		if this.session.IsLogin() == false {
-			MakeResponseError(response, this.debug, PBLoginRequired, nil)
-			return
-		}
+		MakeResponseError(response, this.debug, PBLoginRequired, nil)
+		return
 	}
+	ListProblems_BuildResponse(
+		tx, response, req, "", false, this.debug)
+}
+
+func (this *UserHandler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
+	defer func() {
+		if err := recover(); err != nil {
+			MakeResponseError(response, this.debug, PBInternalError, err.(error))
+		}
+	}()
+	this.OpenDBU()
+	defer this.CloseDBU()
+	tx := this.dbu.MustBegin()
 
 	ListProblems_BuildResponse(
-		this.tx, response, req, this.session.GetUsername(), false, this.debug)
+		tx, response, req, this.session.GetUsername(), false, this.debug)
 }
 
 func ListProblems_BuildResponse(

@@ -23,7 +23,7 @@ func TestUseConfig(t *testing.T) {
 
 func TestNewDB(t *testing.T) {
 	t.Log("Init database, and trying to connect to db.")
-	Init()
+	// Init()
 
 	if _, err := NewDB(); err != nil {
 		t.Errorf("Failed to connect to db, because %s", err)

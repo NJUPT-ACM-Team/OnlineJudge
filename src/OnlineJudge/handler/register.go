@@ -56,14 +56,17 @@ func CheckRegisterRequest(tx *sqlx.Tx, req *api.RegisterRequest, res *api.Regist
 }
 
 func (this *BasicHandler) Register(response *api.RegisterResponse, req *api.RegisterRequest) {
-	if err := this.OpenDB(); err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
-		return
-	}
-	defer this.CloseDB()
+	defer func() {
+		if err := recover(); err != nil {
+			MakeResponseError(response, this.debug, PBInternalError, err.(error))
+		}
+	}()
+	this.OpenDBU()
+	defer this.CloseDBU()
+	tx := this.dbu.MustBegin()
 
 	// Check Request
-	if err := CheckRegisterRequest(this.tx, req, response); err != nil {
+	if err := CheckRegisterRequest(tx, req, response); err != nil {
 		MakeResponseError(response, this.debug, PBBadRequest, err)
 		return
 	}
@@ -79,15 +82,12 @@ func (this *BasicHandler) Register(response *api.RegisterResponse, req *api.Regi
 		Motto:        req.GetMotto(),
 		RegisterTime: time.Now(),
 	}
-	user_id, err := um.Insert(this.tx, user)
+	user_id, err := um.Insert(tx, user)
 	if err != nil {
 		MakeResponseError(response, this.debug, PBInternalError, err)
 		return
 	}
-	if err := this.Commit(); err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
-		return
-	}
+	this.dbu.MustCommit()
 
 	// Make response
 	response.UserId = user_id

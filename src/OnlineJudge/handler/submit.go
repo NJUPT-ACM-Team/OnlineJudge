@@ -11,14 +11,18 @@ import (
 )
 
 func (this *AdminHandler) Submit(response *api.SubmitResponse, req *api.SubmitRequest) {
-	if err := this.OpenDB(); err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
-		return
-	}
-	defer this.CloseDB()
+	defer func() {
+		if err := recover(); err != nil {
+			MakeResponseError(response, this.debug, PBInternalError, err.(error))
+		}
+	}()
+	this.OpenDBU()
+	defer this.CloseDBU()
+	//	tx := this.dbu.MustBegin()
 }
 
 func (this *BasicHandler) Submit(response *api.SubmitResponse, req *api.SubmitRequest) {
+	MakeResponseError(response, this.debug, PBLoginRequired, nil)
 }
 
 // Need to be tested

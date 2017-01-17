@@ -24,6 +24,30 @@ func New() *sqlx.DB {
 	return db
 }
 
+type DBUtil struct {
+	db *sqlx.DB
+	Tx *sqlx.Tx
+}
+
+func NewDBU(d *sqlx.DB) *DBUtil {
+	return &DBUtil{db: d}
+}
+
+func (this *DBUtil) MustCommit() {
+	if err := this.Tx.Commit(); err != nil {
+		panic(err)
+	}
+}
+
+func (this *DBUtil) MustBegin() *sqlx.Tx {
+	this.Tx = this.db.MustBegin()
+	return this.Tx
+}
+
+func (this *DBUtil) Close() {
+	this.db.Close()
+}
+
 func NewDB() (*sqlx.DB, error) {
 	InitTest()
 	dn := config.GetDriverName()

@@ -7,13 +7,7 @@ import (
 	"time"
 )
 
-func (this *UserHandler) LoginInit(response *api.LoginInitResponse, req *api.LoginInitRequest) {
-	if err := this.OpenDB(); err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
-		return
-	}
-	defer this.CloseDB()
-
+func (this *BasicHandler) LoginInit(response *api.LoginInitResponse, req *api.LoginInitRequest) {
 	if this.session.IsLogin() == true {
 		response.Version = "login" + req.GetVersion()
 	} else {
@@ -21,19 +15,19 @@ func (this *UserHandler) LoginInit(response *api.LoginInitResponse, req *api.Log
 	}
 }
 
-func (this *BasicHandler) LoginInit(response *api.LoginInitResponse, req *api.LoginInitRequest) {
-}
-
 func (this *BasicHandler) LoginAuth(response *api.LoginAuthResponse, req *api.LoginAuthRequest) {
-	if err := this.OpenDB(); err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
-		return
-	}
-	defer this.CloseDB()
+	defer func() {
+		if err := recover(); err != nil {
+			MakeResponseError(response, this.debug, PBInternalError, err.(error))
+		}
+	}()
+	this.OpenDBU()
+	defer this.CloseDBU()
+	tx := this.dbu.MustBegin()
 
 	// Authentic the login information
 	um := models.NewUserModel()
-	is_login, err := um.Auth(this.tx, req.GetUsername(), []byte(req.GetPassword()))
+	is_login, err := um.Auth(tx, req.GetUsername(), []byte(req.GetPassword()))
 	if err != nil {
 		MakeResponseError(response, this.debug, PBAuthFailure, err)
 		return
@@ -45,7 +39,7 @@ func (this *BasicHandler) LoginAuth(response *api.LoginAuthResponse, req *api.Lo
 
 	// Query necessary information: username, user_id, privilege
 	user, err := models.Query_User_By_Username(
-		this.tx, req.GetUsername(),
+		tx, req.GetUsername(),
 		[]string{"username", "user_id", "privilege"},
 		nil)
 	if err != nil {
@@ -55,22 +49,19 @@ func (this *BasicHandler) LoginAuth(response *api.LoginAuthResponse, req *api.Lo
 
 	// Save IPAddr into database
 	ip_addr := this.session.GetIPAddr()
-	if err := um.UpdateIPAddr(this.tx, user.Username, ip_addr); err != nil {
+	if err := um.UpdateIPAddr(tx, user.Username, ip_addr); err != nil {
 		MakeResponseError(response, this.debug, PBInternalError, err)
 		return
 	}
 
 	// Save last login time
-	if err := um.UpdateLastLoginTime(this.tx, user.Username, time.Now()); err != nil {
+	if err := um.UpdateLastLoginTime(tx, user.Username, time.Now()); err != nil {
 		MakeResponseError(response, this.debug, PBInternalError, err)
 		return
 	}
 
 	// Commit change
-	if err := this.Commit(); err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
-		return
-	}
+	this.dbu.MustCommit()
 
 	// Set session
 	this.session.SetUsername(user.Username)

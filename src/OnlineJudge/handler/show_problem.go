@@ -9,25 +9,29 @@ import (
 )
 
 func (this *AdminHandler) ShowProblem(response *api.ShowProblemResponse, req *api.ShowProblemRequest) {
-	if err := this.OpenDB(); err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
-		return
-	}
-	defer this.CloseDB()
+	defer func() {
+		if err := recover(); err != nil {
+			MakeResponseError(response, this.debug, PBInternalError, err.(error))
+		}
+	}()
+	this.OpenDBU()
+	defer this.CloseDBU()
+	tx := this.dbu.MustBegin()
 
-	ShowProblem_BuildResponse(this.tx, response, req, true, this.debug)
+	ShowProblem_BuildResponse(tx, response, req, true, this.debug)
 }
 
 func (this *BasicHandler) ShowProblem(response *api.ShowProblemResponse, req *api.ShowProblemRequest) {
-}
+	defer func() {
+		if err := recover(); err != nil {
+			MakeResponseError(response, this.debug, PBInternalError, err.(error))
+		}
+	}()
+	this.OpenDBU()
+	defer this.CloseDBU()
+	tx := this.dbu.MustBegin()
 
-func (this *UserHandler) ShowProblem(response *api.ShowProblemResponse, req *api.ShowProblemRequest) {
-	if err := this.OpenDB(); err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
-		return
-	}
-	defer this.CloseDB()
-	ShowProblem_BuildResponse(this.tx, response, req, false, this.debug)
+	ShowProblem_BuildResponse(tx, response, req, false, this.debug)
 }
 
 func ShowProblem_BuildResponse(

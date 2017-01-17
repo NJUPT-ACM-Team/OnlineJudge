@@ -9,28 +9,31 @@ import (
 )
 
 func (this *AdminHandler) ListSubmissions(response *api.ListSubmissionsResponse, req *api.ListSubmissionsRequest) {
-	if err := this.OpenDB(); err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
-		return
-	}
-	defer this.CloseDB()
+	defer func() {
+		if err := recover(); err != nil {
+			MakeResponseError(response, this.debug, PBInternalError, err.(error))
+		}
+	}()
+	this.OpenDBU()
+	defer this.CloseDBU()
+	tx := this.dbu.MustBegin()
 
 	ListSubmissions_BuildResponse(
-		this.tx, response, req, this.session.GetUsername(), true, true, this.debug)
+		tx, response, req, this.session.GetUsername(), true, true, this.debug)
 }
 
 func (this *BasicHandler) ListSubmissions(response *api.ListSubmissionsResponse, req *api.ListSubmissionsRequest) {
-}
-
-func (this *UserHandler) ListSubmissions(response *api.ListSubmissionsResponse, req *api.ListSubmissionsRequest) {
-	if err := this.OpenDB(); err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
-		return
-	}
-	defer this.CloseDB()
+	defer func() {
+		if err := recover(); err != nil {
+			MakeResponseError(response, this.debug, PBInternalError, err.(error))
+		}
+	}()
+	this.OpenDBU()
+	defer this.CloseDBU()
+	tx := this.dbu.MustBegin()
 
 	ListSubmissions_BuildResponse(
-		this.tx, response, req, this.session.GetUsername(), false, false, this.debug)
+		tx, response, req, this.session.GetUsername(), false, false, this.debug)
 }
 
 func ListSubmissions_BuildResponse(

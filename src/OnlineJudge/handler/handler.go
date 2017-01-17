@@ -26,21 +26,22 @@ func NewHandlerForTest() (*UserHandler, *sessions.Session) {
 //
 
 type Handler interface {
-	About(*api.AboutResponse, *api.AboutRequest)
-	ListProblems(*api.ListProblemsResponse, *api.ListProblemsRequest)
+	About(*api.AboutResponse, *api.AboutRequest)                      // OK
+	ListProblems(*api.ListProblemsResponse, *api.ListProblemsRequest) // OK
 	ListContests(*api.ListContestsResponse, *api.ListContestsRequest)
-	ListSubmissions(*api.ListSubmissionsResponse, *api.ListSubmissionsRequest)
+	ListSubmissions(*api.ListSubmissionsResponse, *api.ListSubmissionsRequest) // OK
 	LoginInit(*api.LoginInitResponse, *api.LoginInitRequest)
-	LoginAuth(*api.LoginAuthResponse, *api.LoginAuthRequest)
-	Logout(*api.LogoutResponse, *api.LogoutRequest)
-	Register(*api.RegisterResponse, *api.RegisterRequest)
-	ShowProblem(*api.ShowProblemResponse, *api.ShowProblemRequest)
+	LoginAuth(*api.LoginAuthResponse, *api.LoginAuthRequest)       // OK
+	Logout(*api.LogoutResponse, *api.LogoutRequest)                // OK
+	Register(*api.RegisterResponse, *api.RegisterRequest)          // OK
+	ShowProblem(*api.ShowProblemResponse, *api.ShowProblemRequest) // OK
 	Submit(*api.SubmitResponse, *api.SubmitRequest)
 }
 
 type BasicHandler struct {
 	session locals.Session
 	db      *sqlx.DB
+	dbu     *db.DBUtil
 	tx      *sqlx.Tx
 	debug   bool
 }
@@ -78,6 +79,18 @@ func NewHandler(sess locals.Session, dbg bool) Handler {
 	return &AdminHandler{
 		UserHandler: *user,
 	}
+}
+
+func (this *BasicHandler) OpenDBU() {
+	d, err := db.NewDB()
+	if err != nil {
+		panic(err)
+	}
+	this.dbu = db.NewDBU(d)
+}
+
+func (this *BasicHandler) CloseDBU() {
+	this.dbu.Close()
 }
 
 func (this *BasicHandler) OpenDB() error {
