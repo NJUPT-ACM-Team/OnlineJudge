@@ -1,10 +1,10 @@
 package main
 
 import (
-	"OnlineJudge/WebBackend/router"
 	"OnlineJudge/config"
 	"OnlineJudge/db"
 	"OnlineJudge/irpc"
+	"WebBackend/router"
 
 	"github.com/gorilla/context"
 

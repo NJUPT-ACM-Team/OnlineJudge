@@ -1,8 +1,8 @@
 package router
 
 import (
-	"OnlineJudge/WebBackend/controller"
 	"OnlineJudge/base"
+	"WebBackend/controller"
 
 	"github.com/gorilla/mux"
 

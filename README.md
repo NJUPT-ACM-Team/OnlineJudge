@@ -8,13 +8,11 @@ $GOPATH
   |- pkg/
   └- src/
      |- OnlineJudge/
-     |  |- <some common libraries>
-     |  |- <config files etc.>
-     |  |- WebBackend/
-     |  |- Daemon/
-     |  └- <other parts>
-     |- LocalJudger/
-     |- VirtualJudger/
+     |  └- <some common libraries>
+     |- WebBackend/
+     |- Daemon/
+     |- LJudger/
+     |- VJudger/
      |- ...
      |- github.com/
      |  └- ...

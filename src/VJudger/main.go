@@ -1,10 +1,10 @@
 package main
 
 import (
-	"OnlineJudge/VJudger/vjudger"
 	"OnlineJudge/config"
 	"OnlineJudge/judger"
 	"OnlineJudge/mq"
+	"VJudger/vjudger"
 )
 
 func init() {
