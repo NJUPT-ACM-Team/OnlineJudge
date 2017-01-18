@@ -39,7 +39,8 @@ func SubmitToMQ(jmq *mq.MQ, req *rpc.SubmitCodeRequest) {
 	}
 
 	// Get Info of meta problem
-	mp, err := models.Query_MetaProblem_By_MetaPid(tx, sub.MetaPidFK, []string{"oj_name", "oj_pid", "is_spj"}, nil)
+	mp, err := models.Query_MetaProblem_By_MetaPid(
+		tx, sub.MetaPidFK, []string{"oj_name", "oj_pid", "is_spj"}, nil)
 	if err != nil {
 		log.Println(err)
 		MustSetSystemError(tx, sub.RunId)
