@@ -56,11 +56,7 @@ func CheckRegisterRequest(tx *sqlx.Tx, req *api.RegisterRequest, res *api.Regist
 }
 
 func (this *BasicHandler) Register(response *api.RegisterResponse, req *api.RegisterRequest) {
-	defer func() {
-		if err := recover(); err != nil {
-			MakeResponseError(response, this.debug, PBInternalError, err.(error))
-		}
-	}()
+	defer PanicHandler(response, this.debug)
 	this.OpenDBU()
 	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
@@ -83,10 +79,7 @@ func (this *BasicHandler) Register(response *api.RegisterResponse, req *api.Regi
 		RegisterTime: time.Now(),
 	}
 	user_id, err := um.Insert(tx, user)
-	if err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
-		return
-	}
+	PanicOnError(err)
 	this.dbu.MustCommit()
 
 	// Make response

@@ -9,11 +9,7 @@ import (
 )
 
 func (this *AdminHandler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
-	defer func() {
-		if err := recover(); err != nil {
-			MakeResponseError(response, this.debug, PBInternalError, err.(error))
-		}
-	}()
+	defer PanicHandler(response, this.debug)
 	this.OpenDBU()
 	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
@@ -23,11 +19,7 @@ func (this *AdminHandler) ListProblems(response *api.ListProblemsResponse, req *
 }
 
 func (this *BasicHandler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
-	defer func() {
-		if err := recover(); err != nil {
-			MakeResponseError(response, this.debug, PBInternalError, err.(error))
-		}
-	}()
+	defer PanicHandler(response, this.debug)
 	this.OpenDBU()
 	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
@@ -42,11 +34,7 @@ func (this *BasicHandler) ListProblems(response *api.ListProblemsResponse, req *
 }
 
 func (this *UserHandler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
-	defer func() {
-		if err := recover(); err != nil {
-			MakeResponseError(response, this.debug, PBInternalError, err.(error))
-		}
-	}()
+	defer PanicHandler(response, this.debug)
 	this.OpenDBU()
 	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
@@ -78,10 +66,7 @@ func ListProblems_BuildResponse(
 		nil,
 		nil,
 	)
-	if err != nil {
-		MakeResponseError(response, debug, PBInternalError, err)
-		return
-	}
+	PanicOnError(err)
 
 	// Build response
 	lines := []*api.ListProblemsResponse_PerLine{}

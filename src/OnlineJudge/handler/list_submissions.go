@@ -9,11 +9,7 @@ import (
 )
 
 func (this *AdminHandler) ListSubmissions(response *api.ListSubmissionsResponse, req *api.ListSubmissionsRequest) {
-	defer func() {
-		if err := recover(); err != nil {
-			MakeResponseError(response, this.debug, PBInternalError, err.(error))
-		}
-	}()
+	defer PanicHandler(response, this.debug)
 	this.OpenDBU()
 	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
@@ -23,11 +19,7 @@ func (this *AdminHandler) ListSubmissions(response *api.ListSubmissionsResponse,
 }
 
 func (this *BasicHandler) ListSubmissions(response *api.ListSubmissionsResponse, req *api.ListSubmissionsRequest) {
-	defer func() {
-		if err := recover(); err != nil {
-			MakeResponseError(response, this.debug, PBInternalError, err.(error))
-		}
-	}()
+	defer PanicHandler(response, this.debug)
 	this.OpenDBU()
 	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
@@ -61,10 +53,7 @@ func ListSubmissions_BuildResponse(
 		nil,
 		nil,
 	)
-	if err != nil {
-		MakeResponseError(response, debug, PBInternalError, err)
-		return
-	}
+	PanicOnError(err)
 
 	lines := []*api.ListSubmissionsResponse_PerLine{}
 	for _, submission := range page.Submissions {

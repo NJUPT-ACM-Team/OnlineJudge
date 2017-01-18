@@ -9,11 +9,7 @@ import (
 )
 
 func (this *AdminHandler) ShowProblem(response *api.ShowProblemResponse, req *api.ShowProblemRequest) {
-	defer func() {
-		if err := recover(); err != nil {
-			MakeResponseError(response, this.debug, PBInternalError, err.(error))
-		}
-	}()
+	defer PanicHandler(response, this.debug)
 	this.OpenDBU()
 	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
@@ -22,11 +18,7 @@ func (this *AdminHandler) ShowProblem(response *api.ShowProblemResponse, req *ap
 }
 
 func (this *BasicHandler) ShowProblem(response *api.ShowProblemResponse, req *api.ShowProblemRequest) {
-	defer func() {
-		if err := recover(); err != nil {
-			MakeResponseError(response, this.debug, PBInternalError, err.(error))
-		}
-	}()
+	defer PanicHandler(response, this.debug)
 	this.OpenDBU()
 	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
@@ -50,17 +42,11 @@ func ShowProblem_BuildResponse(
 
 	// Query problem
 	mp, err := models.Query_MetaProblem_By_OJName_OJPid(tx, pid.OJName, pid.OJPid, nil, nil)
-	if err != nil {
-		MakeResponseError(response, debug, PBInternalError, err)
-		return
-	}
+	PanicOnError(err)
 
 	// QueryLanguages
 	langs, err := models.Query_Languages_By_OJIdFK(tx, mp.OJIdFK, nil, nil)
-	if err != nil {
-		MakeResponseError(response, debug, PBInternalError, err)
-		return
-	}
+	PanicOnError(err)
 
 	// Judge if authorized
 	if mp.Hide == true && !access_hide {

@@ -6,11 +6,7 @@ import (
 )
 
 func (this *BasicHandler) About(response *api.AboutResponse, req *api.AboutRequest) {
-	defer func() {
-		if err := recover(); err != nil {
-			MakeResponseError(response, this.debug, PBInternalError, err.(error))
-		}
-	}()
+	defer PanicHandler(response, this.debug)
 	this.OpenDBU()
 	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
@@ -18,10 +14,7 @@ func (this *BasicHandler) About(response *api.AboutResponse, req *api.AboutReque
 	if req.GetNeedOjsList() == true {
 		var ojs []*api.OJInfo
 		all, err := models.Query_All_OJs(tx, nil, nil)
-		if err != nil {
-			MakeResponseError(response, this.debug, PBInternalError, err)
-			return
-		}
+		PanicOnError(err)
 		for _, oj := range all {
 			temp := &api.OJInfo{
 				OjId:       oj.OJId,
@@ -41,10 +34,7 @@ func (this *BasicHandler) About(response *api.AboutResponse, req *api.AboutReque
 	if req.GetNeedLanguagesList() == true {
 		var languages []*api.Language
 		all, err := models.Query_All_Languages(tx, nil, nil)
-		if err != nil {
-			MakeResponseError(response, this.debug, PBInternalError, err)
-			return
-		}
+		PanicOnError(err)
 		for _, lang := range all {
 			temp := &api.Language{
 				Compiler:   lang.Language.Compiler,

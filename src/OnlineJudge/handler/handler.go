@@ -93,6 +93,18 @@ func (this *BasicHandler) CloseDBU() {
 	this.dbu.Close()
 }
 
+func PanicOnError(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
+func PanicHandler(response interface{}, dbg bool) {
+	if err := recover(); err != nil {
+		MakeResponseError(response, dbg, PBInternalError, err.(error))
+	}
+}
+
 func (this *BasicHandler) OpenDB() error {
 	var err error
 	this.db, err = db.NewDB()

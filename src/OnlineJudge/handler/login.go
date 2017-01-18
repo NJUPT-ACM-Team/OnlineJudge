@@ -16,11 +16,7 @@ func (this *BasicHandler) LoginInit(response *api.LoginInitResponse, req *api.Lo
 }
 
 func (this *BasicHandler) LoginAuth(response *api.LoginAuthResponse, req *api.LoginAuthRequest) {
-	defer func() {
-		if err := recover(); err != nil {
-			MakeResponseError(response, this.debug, PBInternalError, err.(error))
-		}
-	}()
+	defer PanicHandler(response, this.debug)
 	this.OpenDBU()
 	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
@@ -42,23 +38,16 @@ func (this *BasicHandler) LoginAuth(response *api.LoginAuthResponse, req *api.Lo
 		tx, req.GetUsername(),
 		[]string{"username", "user_id", "privilege"},
 		nil)
-	if err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
-		return
-	}
+	PanicOnError(err)
 
 	// Save IPAddr into database
 	ip_addr := this.session.GetIPAddr()
-	if err := um.UpdateIPAddr(tx, user.Username, ip_addr); err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
-		return
-	}
+	err = um.UpdateIPAddr(tx, user.Username, ip_addr)
+	PanicOnError(err)
 
 	// Save last login time
-	if err := um.UpdateLastLoginTime(tx, user.Username, time.Now()); err != nil {
-		MakeResponseError(response, this.debug, PBInternalError, err)
-		return
-	}
+	err = um.UpdateLastLoginTime(tx, user.Username, time.Now())
+	PanicOnError(err)
 
 	// Commit change
 	this.dbu.MustCommit()

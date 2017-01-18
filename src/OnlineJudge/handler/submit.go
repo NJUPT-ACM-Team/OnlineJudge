@@ -12,11 +12,7 @@ import (
 )
 
 func (this *AdminHandler) Submit(response *api.SubmitResponse, req *api.SubmitRequest) {
-	defer func() {
-		if err := recover(); err != nil {
-			MakeResponseError(response, this.debug, PBInternalError, err.(error))
-		}
-	}()
+	defer PanicHandler(response, this.debug)
 	this.OpenDBU()
 	defer this.CloseDBU()
 	Submit_BuildResponse(this.dbu, response, req,
@@ -30,11 +26,7 @@ func (this *BasicHandler) Submit(response *api.SubmitResponse, req *api.SubmitRe
 // Need to be tested
 // Depend on MetaProblems, OJInfo,
 func (this *UserHandler) Submit(response *api.SubmitResponse, req *api.SubmitRequest) {
-	defer func() {
-		if err := recover(); err != nil {
-			MakeResponseError(response, this.debug, PBInternalError, err.(error))
-		}
-	}()
+	defer PanicHandler(response, this.debug)
 	this.OpenDBU()
 	defer this.CloseDBU()
 	Submit_BuildResponse(this.dbu, response, req,
@@ -57,11 +49,9 @@ func Submit_BuildResponse(
 		return
 	}
 	tx := dbu.MustBegin()
-	mp, err := models.Query_MetaProblem_By_OJName_OJPid(tx, pid.OJName, pid.OJPid, []string{"meta_pid", "hide", "is_spj"}, nil)
-	if err != nil {
-		MakeResponseError(response, debug, PBInternalError, err)
-		return
-	}
+	mp, err := models.Query_MetaProblem_By_OJName_OJPid(tx, pid.OJName,
+		pid.OJPid, []string{"meta_pid", "hide", "is_spj"}, nil)
+	PanicOnError(err)
 
 	if mp.MetaPid == 0 {
 		MakeResponseError(response, debug, PBProblemNotFound, nil)
@@ -91,10 +81,8 @@ func Submit_BuildResponse(
 		LangIdFK:  req.GetLanguageId(),
 	}
 	run_id, err := subm.Insert(tx, sub)
-	if err != nil {
-		MakeResponseError(response, debug, PBInternalError, err)
-		return
-	}
+	PanicOnError(err)
+
 	dbu.MustCommit()
 	tx = dbu.MustBegin()
 	response.RunId = run_id
@@ -107,7 +95,7 @@ func Submit_BuildResponse(
 		// Log the error
 		log.Println(err)
 		if err := subm.SetSystemError(tx, run_id); err != nil {
-			MakeResponseError(response, debug, PBInternalError, err)
+			PanicOnError(err)
 		}
 		dbu.MustCommit()
 		return
@@ -121,7 +109,7 @@ func Submit_BuildResponse(
 		// Log the error
 		log.Println(err)
 		if err := subm.SetSystemError(tx, run_id); err != nil {
-			MakeResponseError(response, debug, PBInternalError, err)
+			PanicOnError(err)
 		}
 		dbu.MustCommit()
 		return
