@@ -51,31 +51,31 @@ func XQuery_List_Problems_With_Filter(
 	var from_sql string
 	switch filter_status {
 	case 0:
-		from_sql = " MetaProblems "
+		from_sql = "MetaProblems"
 	case 1:
 		// Accepted
 		from_sql = fmt.Sprintf(
-			` (SELECT %s FROM MetaProblems 
+			`(SELECT %s FROM MetaProblems 
 			   WHERE meta_pid IN 
 			     (SELECT meta_pid_fk FROM Submissions
 				  WHERE status_code="ac" AND
 			  		user_id_fk=(
 						SELECT user_id FROM Users
-						WHERE username="%s"))) AS ACCEPTED `, str_fields, username)
+						WHERE username="%s"))) AS ACCEPTED`, str_fields, username)
 	case 2:
 		// Unsolved
 		from_sql = fmt.Sprintf(
-			` (SELECT %s FROM MetaProblems 
+			`(SELECT %s FROM MetaProblems 
 			   WHERE meta_pid NOT IN 
 			     (SELECT meta_pid_fk FROM Submissions
 				  WHERE status_code="ac" AND
 			  		user_id_fk=(
 						SELECT user_id FROM Users
-						WHERE username="%s"))) AS UNSOLVED `, str_fields, username)
+						WHERE username="%s"))) AS UNSOLVED`, str_fields, username)
 	case 3:
 		// Attempted
 		from_sql = fmt.Sprintf(
-			` (SELECT %s FROM MetaProblems 
+			`(SELECT %s FROM MetaProblems 
 			   WHERE meta_pid NOT IN 
 			     (SELECT meta_pid_fk FROM Submissions
 				  WHERE status_code="ac" AND
@@ -88,25 +88,19 @@ func XQuery_List_Problems_With_Filter(
 						SELECT user_id FROM Users
 						WHERE username="%s")
 				  GROUP BY meta_pid_fk
-				  HAVING COUNT(run_id) > 0)) AS ATTEMPTED `, str_fields, username, username)
+				  HAVING COUNT(run_id) > 0)) AS ATTEMPTED`, str_fields, username, username)
 	}
 
 	// Build where_sql
 	var where_sql string
 	if show_hidden {
-		where_sql = `
-		WHERE oj_name like ?
-		`
+		where_sql = `WHERE oj_name like ?`
 	} else {
-		where_sql = `
-		WHERE oj_name like ? AND hide=0
-		`
+		where_sql = `WHERE oj_name like ? AND hide=0`
 	}
 
 	// Get count of lines
-	count_sql := `
-	SELECT COUNT(*) FROM 
-	` + from_sql + where_sql
+	count_sql := JoinSQL("SELECT COUNT(*) FROM", from_sql, where_sql)
 	var count int
 	if err := tx.Get(&count, count_sql, filter_oj); err != nil {
 		return nil, err
@@ -133,23 +127,23 @@ func XQuery_List_Problems_With_Filter(
 	ret.CurrentPage = current_page
 
 	// Get lines
-	sql :=
-		"SELECT %s FROM " +
-			from_sql + where_sql + " ORDER BY %s LIMIT %d, %d"
 	var orderby string
 	switch orderby_element {
 	case 0:
-		orderby = "oj_pid "
+		orderby = "oj_pid"
 	case 1:
-		orderby = "title "
+		orderby = "title"
 		// TODO: Case 2, ac_rate
 	}
 	if is_desc == true {
-		orderby += "DESC"
+		orderby = JoinSQL(orderby, "DESC")
 	}
 	offset = (ret.CurrentPage-1)*per_page + offset
-	full_sql := fmt.Sprintf(sql, str_fields, orderby, offset, per_page)
-	if err := tx.Select(&mps, full_sql, filter_oj); err != nil {
+	// full_sql := fmt.Sprintf(sql, orderby, offset, per_page)
+	sql := JoinSQL(
+		"SELECT", str_fields, "FROM", from_sql, where_sql,
+		"ORDER BY", orderby, fmt.Sprintf("LIMIT %d, %d", offset, per_page))
+	if err := tx.Select(&mps, sql, filter_oj); err != nil {
 		return nil, err
 	}
 	ret.Problems = mps
@@ -171,6 +165,18 @@ type ListSubmissionsPagination struct {
 	TotalPages  int
 	CurrentPage int
 	Submissions []SubmissionExt
+}
+
+func initFilters(vars ...*string) bool {
+	ret := false
+	for _, v := range vars {
+		if *v == "" {
+			*v = "%"
+		} else {
+			ret = true
+		}
+	}
+	return ret
 }
 
 /*
@@ -196,47 +202,23 @@ func XQuery_List_Submissions_With_Filter(
 	excepts []string) (*ListSubmissionsPagination, error) {
 
 	/*-- Func start --*/
-	need_filter := false
-	if filter_username == "" {
-		filter_username = "%"
-	} else {
-		need_filter = true
-	}
-	if filter_oj == "" {
-		filter_oj = "%"
-	} else {
-		need_filter = true
-	}
-	if filter_pid == "" {
-		filter_pid = "%"
-	} else {
-		need_filter = true
-	}
-	if filter_status_code == "" {
-		filter_status_code = "%"
-	} else {
-		need_filter = true
-	}
-	if filter_language == "" {
-		filter_language = "%"
-	} else {
-		need_filter = true
-	}
-	if filter_compiler == "" {
-		filter_compiler = "%"
-	} else {
-		need_filter = true
-	}
+	need_filter := initFilters(
+		&filter_username,
+		&filter_oj,
+		&filter_pid,
+		&filter_status_code,
+		&filter_language,
+		&filter_compiler)
 
-	where_sql := ` WHERE 1 `
+	where_sql := `WHERE 1`
 
 	if show_private == false {
-		where_sql += `AND is_private = 0 `
+		where_sql = JoinSQL(where_sql, "AND is_private=0")
 	}
 
 	if need_filter {
-		where_sql += `
-		AND
+		where_sql = JoinSQL(where_sql,
+			`AND
 		user_id_fk IN (SELECT user_id FROM Users WHERE username LIKE ?) AND
 		meta_pid_fk IN 
 			(SELECT meta_pid FROM MetaProblems 
@@ -244,13 +226,13 @@ func XQuery_List_Submissions_With_Filter(
 		status_code like ? AND
 		lang_id_fk IN
 			(SELECT lang_id FROM Languages
-			 WHERE language like ? AND compiler like ?)`
+			 WHERE language like ? AND compiler like ?)`)
 	}
 
 	ret := &ListSubmissionsPagination{}
 
 	// Get count
-	count_sql := "SELECT COUNT(*) FROM Submissions " + where_sql
+	count_sql := JoinSQL("SELECT COUNT(*) FROM Submissions", where_sql)
 	var count int
 	if need_filter {
 		if err := tx.Get(&count, count_sql,
@@ -295,23 +277,24 @@ func XQuery_List_Submissions_With_Filter(
 	}
 
 	offset := (current_page - 1) * per_page
-	sql := `SELECT %s FROM Submissions 
-		LEFT JOIN Users ON user_id_fk=user_id 
-		LEFT JOIN Languages ON lang_id_fk=lang_id
-		LEFT JOIN (SELECT meta_pid, number_of_testcases, oj_name, oj_pid FROM MetaProblems) AS TP ON meta_pid_fk=meta_pid ` + where_sql + ` LIMIT %d, %d`
-
-	real_sql := fmt.Sprintf(sql, str_fields, offset, per_page)
+	sql := JoinSQL(
+		`SELECT`, str_fields, `FROM Submissions`,
+		`LEFT JOIN Users ON user_id_fk=user_id `,
+		`LEFT JOIN Languages ON lang_id_fk=lang_id`,
+		`LEFT JOIN (SELECT meta_pid, number_of_testcases, oj_name, oj_pid FROM MetaProblems) AS TP ON meta_pid_fk=meta_pid`,
+		where_sql,
+		fmt.Sprintf(`LIMIT %d, %d`, offset, per_page))
 
 	if need_filter {
 		if err := tx.Select(
-			&subs, real_sql,
+			&subs, sql,
 			filter_username, filter_oj, filter_pid,
 			filter_status_code, filter_language, filter_compiler); err != nil {
 
 			return nil, err
 		}
 	} else {
-		if err := tx.Select(&subs, real_sql); err != nil {
+		if err := tx.Select(&subs, sql); err != nil {
 			return nil, err
 		}
 	}

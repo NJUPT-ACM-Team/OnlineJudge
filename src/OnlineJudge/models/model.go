@@ -163,3 +163,7 @@ func (this *Model) InlineUpdate(tx *sqlx.Tx, st interface{}, pk string, required
 	}
 	return nil
 }
+
+func JoinSQL(sqls ...string) string {
+	return strings.Join(sqls, " ")
+}

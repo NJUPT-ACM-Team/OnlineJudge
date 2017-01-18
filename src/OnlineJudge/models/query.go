@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -16,11 +15,9 @@ func Query_MetaProblem_By_MetaPid(
 	if err != nil {
 		return nil, err
 	}
-	sql := `
-	SELECT %s FROM MetaProblems
-	WHERE meta_pid=?
-	`
-	if err := tx.Get(mp, fmt.Sprintf(sql, str_fields), meta_pid); err != nil {
+	sql := JoinSQL("SELECT", str_fields, "FROM MetaProblems",
+		"WHERE meta_pid=?")
+	if err := tx.Get(mp, sql, meta_pid); err != nil {
 		return nil, err
 	}
 	return mp, nil
@@ -37,10 +34,8 @@ func Query_All_OJs(
 	if err != nil {
 		return nil, err
 	}
-	sql := `
-	SELECT %s FROM OJInfo
-	`
-	if err := tx.Select(&ojs, fmt.Sprintf(sql, str_fields)); err != nil {
+	sql := JoinSQL("SELECT", str_fields, "FROM OJInfo")
+	if err := tx.Select(&ojs, sql); err != nil {
 		return nil, err
 	}
 	return ojs, nil
@@ -49,9 +44,7 @@ func Query_All_OJs(
 // Need to be tested
 func Query_All_OJNames(tx *sqlx.Tx) ([]string, error) {
 	ojs := []string{}
-	sql := `
-	SELECT oj_name FROM OJInfo
-	`
+	sql := `SELECT oj_name FROM OJInfo`
 	if err := tx.Select(&ojs, sql); err != nil {
 		return nil, err
 	}
@@ -76,10 +69,10 @@ func Query_All_Languages(
 	if err != nil {
 		return nil, err
 	}
-	sql := `
-	SELECT %s FROM Languages LEFT JOIN OJInfo ON oj_id_fk=oj_id
-	`
-	if err := tx.Select(&langs, fmt.Sprintf(sql, str_fields)); err != nil {
+	sql := JoinSQL(
+		"SELECT", str_fields,
+		"FROM Languages LEFT JOIN OJInfo ON oj_id_fk=oj_id")
+	if err := tx.Select(&langs, sql); err != nil {
 		return nil, err
 	}
 	return langs, nil
@@ -99,11 +92,10 @@ func Query_MetaProblem_By_OJName_OJPid(
 	if err != nil {
 		return nil, err
 	}
-	sql := `
-	SELECT %s FROM MetaProblems
-	WHERE oj_pid=? AND oj_name=?
-	`
-	if err := tx.Get(mp, fmt.Sprintf(sql, str_fields), oj_pid, oj_name); err != nil {
+	sql := JoinSQL(
+		"SELECT", str_fields,
+		"FROM MetaProblems WHERE oj_pid=? AND oj_name=?")
+	if err := tx.Get(mp, sql, oj_pid, oj_name); err != nil {
 		return nil, err
 	}
 	return mp, nil
@@ -137,11 +129,8 @@ func Query_User_By_Username(
 	if err != nil {
 		return nil, err
 	}
-	sql := `
-	SELECT %s FROM Users
-	WHERE username=?
-	`
-	if err := tx.Get(user, fmt.Sprintf(sql, str_fields), name); err != nil {
+	sql := JoinSQL("SELECT", str_fields, "FROM Users", "WHERE username=?")
+	if err := tx.Get(user, sql, name); err != nil {
 		return nil, err
 	}
 	return user, nil
@@ -159,11 +148,10 @@ func Query_Language_By_LangId(
 	if err != nil {
 		return nil, err
 	}
-	sql := `
-	SELECT %s FROM Languages
-	WHERE lang_id=?
-	`
-	if err := tx.Get(lang, fmt.Sprintf(sql, str_fields), lang_id); err != nil {
+	sql := JoinSQL(
+		"SELECT", str_fields, "FROM Languages",
+		"WHERE lang_id=?")
+	if err := tx.Get(lang, sql, lang_id); err != nil {
 		return nil, err
 	}
 	return lang, nil
@@ -182,11 +170,9 @@ func Query_Languages_By_OJIdFK(
 	if err != nil {
 		return nil, err
 	}
-	sql := `
-	SELECT %s FROM Languages 
-	WHERE oj_id_fk=?
-	`
-	if err := tx.Select(&langs, fmt.Sprintf(sql, str_fields), oj_id_fk); err != nil {
+	sql := JoinSQL("SELECT", str_fields,
+		"FROM Languages", "WHERE oj_id_fk=?")
+	if err := tx.Select(&langs, sql, oj_id_fk); err != nil {
 		return nil, err
 	}
 	return langs, nil
@@ -204,11 +190,8 @@ func Query_Submission_By_RunId(
 	if err != nil {
 		return nil, err
 	}
-	sql := `
-	SELECT %s FROM Submissions
-	WHERE run_id=?
-	`
-	if err := tx.Get(sub, fmt.Sprintf(sql, str_fields), run_id); err != nil {
+	sql := JoinSQL("SELECT", str_fields, "FROM Submissions", "WHERE run_id=?")
+	if err := tx.Get(sub, sql, run_id); err != nil {
 		return nil, err
 	}
 	return sub, nil
@@ -227,11 +210,8 @@ func Query_TestCases_By_MetaPid(
 	if err != nil {
 		return nil, err
 	}
-	sql := `
-	SELECT %s FROM TestCases
-	WHERE meta_pid_fk=?
-	`
-	if err := tx.Select(&tcs, fmt.Sprintf(sql, str_fields), meta_pid); err != nil {
+	sql := JoinSQL("SELECT", str_fields, "FROM TestCases", "WHERE meta_pid_fk=?")
+	if err := tx.Select(&tcs, sql, meta_pid); err != nil {
 		return nil, err
 	}
 	return tcs, nil
