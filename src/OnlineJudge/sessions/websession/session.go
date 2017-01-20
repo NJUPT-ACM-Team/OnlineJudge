@@ -17,7 +17,6 @@ var (
 	KeyFlash     = ".flash"
 	KeyIPAddr    = ".ipaddr"
 
-	ErrNotFound   = errors.New("Key not in the session")
 	ErrKeyInvalid = errors.New("Key invalid")
 )
 
@@ -75,14 +74,14 @@ func (this *WebSession) GetIPAddr() string {
 	return ip
 }
 
-func (this *WebSession) Get(key interface{}) (interface{}, error) {
+func (this *WebSession) Get(key interface{}) (interface{}, bool) {
 	if _, ok := this.session.Values[key]; !ok {
-		return nil, ErrNotFound
+		return nil, false
 	}
-	return this.session.Values[key], nil
+	return this.session.Values[key], true
 }
 
-func (this *WebSession) Set(key interface{}, val interface{}) error {
+func (this *WebSession) Set(key interface{}, v interface{}) error {
 	if val, ok := key.(string); ok {
 		if !base.IsNilOrZero(val) {
 			if val[0] == '.' {
@@ -90,7 +89,7 @@ func (this *WebSession) Set(key interface{}, val interface{}) error {
 			}
 		}
 	}
-	this.session.Values[key] = val
+	this.session.Values[key] = v
 	return nil
 }
 

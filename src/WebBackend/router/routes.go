@@ -65,6 +65,12 @@ var api_routes = Routes{
 		HandlerFunc: ctler.HelloWorld,
 	},
 	Route{
+		Name:        "Captcha",
+		Method:      "GET",
+		Pattern:     "/captcha",
+		HandlerFunc: ctler.Captcha,
+	},
+	Route{
 		Name:        "About",
 		Method:      "GET",
 		Pattern:     "/about",

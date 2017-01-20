@@ -29,7 +29,8 @@ def List():
     r = session.get("http://127.0.0.1:8000/api/inline/problems", json=send)
     print(r.status_code)
     print(json.dumps(r.json(), indent=4))
+    print(r.headers)
 
 if __name__ == '__main__':
-    Login()
+    # Login()
     List()

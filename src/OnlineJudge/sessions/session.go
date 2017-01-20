@@ -10,7 +10,7 @@ type Session interface {
 	GetUserId() int64
 	GetPrivilege() string
 	GetIPAddr() string
-	Get(key interface{}) (interface{}, error)
+	Get(key interface{}) (interface{}, bool)
 
 	SetUsername(username string)
 	SetUserId(user_id int64)

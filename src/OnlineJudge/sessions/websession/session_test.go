@@ -31,8 +31,8 @@ func TestNewSession(t *testing.T) {
 	if err := mysess.Set("test", "this is a test"); err != nil {
 		t.Fatal(err)
 	}
-	if val, err := mysess.Get("test"); err != nil || val != "this is a test" {
-		t.Fatal(err)
+	if val, ok := mysess.Get("test"); !ok || val != "this is a test" {
+		t.Fatal("not ok")
 	}
 	err = session.Save(req, w)
 	if err != nil {
