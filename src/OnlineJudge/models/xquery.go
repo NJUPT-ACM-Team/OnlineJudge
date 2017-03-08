@@ -25,8 +25,8 @@ func XQuery_List_Problems_With_Filter(
 	username string,
 	show_hidden bool,
 	filter_oj string,
-	filter_status int,
-	orderby_element int,
+	filter_status string,
+	orderby_element string,
 	is_desc bool,
 	offset int,
 	per_page int,
@@ -50,9 +50,9 @@ func XQuery_List_Problems_With_Filter(
 	// Build from_sql
 	var from_sql string
 	switch filter_status {
-	case 0:
+	case "ALL":
 		from_sql = "MetaProblems"
-	case 1:
+	case "ACCEPTED":
 		// Accepted
 		from_sql = fmt.Sprintf(
 			`(SELECT %s FROM MetaProblems 
@@ -62,7 +62,7 @@ func XQuery_List_Problems_With_Filter(
 			  		user_id_fk=(
 						SELECT user_id FROM Users
 						WHERE username="%s"))) AS ACCEPTED`, str_fields, username)
-	case 2:
+	case "UNSOLVED":
 		// Unsolved
 		from_sql = fmt.Sprintf(
 			`(SELECT %s FROM MetaProblems 
@@ -72,7 +72,7 @@ func XQuery_List_Problems_With_Filter(
 			  		user_id_fk=(
 						SELECT user_id FROM Users
 						WHERE username="%s"))) AS UNSOLVED`, str_fields, username)
-	case 3:
+	case "ATTEMPTED":
 		// Attempted
 		from_sql = fmt.Sprintf(
 			`(SELECT %s FROM MetaProblems 
@@ -129,9 +129,9 @@ func XQuery_List_Problems_With_Filter(
 	// Get lines
 	var orderby string
 	switch orderby_element {
-	case 0:
+	case "PID":
 		orderby = "oj_pid"
-	case 1:
+	case "TITLE":
 		orderby = "title"
 		// TODO: Case 2, ac_rate
 	}
