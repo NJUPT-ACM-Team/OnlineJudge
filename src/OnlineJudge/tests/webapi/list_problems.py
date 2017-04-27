@@ -16,17 +16,12 @@ def List():
         "per_page": 2,
         "current_page": 1,
         "order_by": 0,
-        "isDesc": True,
-        "filter": {
-            "oj": "zoj",
-            "p_status": 0,
-        },
-    }
-    send = {
-        "list_problems_request": data
+        "is_desc": True,
+        "filter_oj": "xoj",
+        "filter_p_status": 0,
     }
 
-    r = session.get("http://127.0.0.1:8000/api/inline/problems", json=send)
+    r = session.get("http://127.0.0.1:8000/api/inline/problems", params=data)
     print(r.status_code)
     print(json.dumps(r.json(), indent=4))
     print(r.headers)

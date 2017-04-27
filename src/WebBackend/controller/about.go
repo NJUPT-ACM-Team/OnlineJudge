@@ -9,18 +9,16 @@ import (
 
 func (this *Controller) About(w http.ResponseWriter, r *http.Request) {
 	var webresponse = &api.WebResponse{}
-	var webrequest = &api.WebRequest{}
 
 	var response = &api.AboutResponse{}
+	var request = &api.AboutRequest{}
 	defer SetWebResponse(w, response, webresponse)
 
-	session, err := this.Prepare(webresponse, webrequest, w, r)
+	session, err := this.Prepare(webresponse, request, w, r)
 	if err != nil {
 		return
 	}
 	defer session.Save(r, w)
-
-	request := webrequest.GetAboutRequest()
 
 	handler := handler.NewHandler(session, this.debug)
 	handler.About(response, request)

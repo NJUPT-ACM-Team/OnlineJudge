@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"OnlineJudge/base"
 	"OnlineJudge/handler"
 	"OnlineJudge/pbgen/api"
 	"OnlineJudge/sessions/websession"
@@ -8,8 +9,13 @@ import (
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/golang/protobuf/proto"
 
+	"encoding/json"
+	"errors"
+	// "fmt"
 	"io"
 	"net/http"
+	"reflect"
+	"strconv"
 	"strings"
 )
 
@@ -42,11 +48,66 @@ func (this *Controller) GetSession(r *http.Request) (*websession.WebSession, err
 	return websession.NewWebSession(sess), nil
 }
 
-func (this *Controller) Prepare(response Response, request proto.Message, w http.ResponseWriter, r *http.Request) (*websession.WebSession, error) {
+func makeParamTypeRight(request interface{}, key string, val string) (interface{}, error) {
+	key = base.PBTagToFieldName(key)
+	r := reflect.ValueOf(request)
+	f := reflect.Indirect(r).FieldByName(key)
+	// fmt.Println(f)
+	if f.IsValid() {
+		switch f.Interface().(type) {
+		case int32:
+			i, err := strconv.Atoi(val)
+			if err != nil {
+				return nil, err
+			}
+			return int32(i), nil
+		case string:
+			return val, nil
+		case bool:
+			switch strings.ToLower(val) {
+			case "true", "1":
+				return true, nil
+			case "false", "0":
+				return false, nil
+			}
+			return nil, errors.New("unknown boolean type")
+		}
+		return nil, errors.New("unknown type")
+	}
+	return nil, errors.New("zero value")
+}
+
+func (this *Controller) Prepare(response Response, request interface{}, w http.ResponseWriter, r *http.Request) (*websession.WebSession, error) {
 	// Decode json to pb
-	if err := DecodePBFromJsonStream(io.LimitReader(r.Body, this.MaxSize), request); err != nil {
-		handler.MakeResponseError(response, this.debug, handler.PBBadRequest, err)
-		return nil, err
+	switch r.Method {
+	case "POST":
+		if err := DecodePBFromJsonStream(io.LimitReader(r.Body, this.MaxSize), request.(proto.Message)); err != nil {
+			handler.MakeResponseError(response, this.debug, handler.PBBadRequest, err)
+			return nil, err
+		}
+	case "GET":
+		// TODO: improvement
+		// vars := r.URL.Query()
+		vars := make(map[string]interface{})
+		for k, _ := range r.URL.Query() {
+			v, err := makeParamTypeRight(request, k, r.FormValue(k))
+			if err != nil {
+				continue
+			}
+			// fmt.Println(request.MessageType(k))
+			vars[k] = v
+		}
+		// fmt.Println(vars)
+		js, err := json.Marshal(vars)
+		if err != nil {
+			handler.MakeResponseError(response, this.debug, handler.PBBadRequest, err)
+			return nil, err
+		}
+		// fmt.Println(string(js))
+		if err := DecodePBFromJson(string(js), request.(proto.Message)); err != nil {
+			handler.MakeResponseError(response, this.debug, handler.PBBadRequest, err)
+			return nil, err
+		}
 	}
 
 	session, err := this.GetSession(r)

@@ -11,7 +11,7 @@ import (
 
 func (this *Controller) Submit(w http.ResponseWriter, r *http.Request) {
 	var webresponse = &api.WebResponse{}
-	var webrequest = &api.WebRequest{}
+	var webrequest = &api.WebPostRequest{}
 
 	var response = &api.SubmitResponse{}
 	defer SetWebResponse(w, response, webresponse)

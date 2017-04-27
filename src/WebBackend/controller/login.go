@@ -12,7 +12,7 @@ import (
 // TODO: Set CSRF Token here
 func (this *Controller) LoginInit(w http.ResponseWriter, r *http.Request) {
 	var webresponse = &api.WebResponse{}
-	var webrequest = &api.WebRequest{}
+	var webrequest = &api.WebPostRequest{}
 
 	var response = &api.LoginInitResponse{}
 	defer SetWebResponse(w, response, webresponse)
@@ -33,7 +33,7 @@ func (this *Controller) LoginInit(w http.ResponseWriter, r *http.Request) {
 
 func (this *Controller) LoginAuth(w http.ResponseWriter, r *http.Request) {
 	var webresponse = &api.WebResponse{}
-	var webrequest = &api.WebRequest{}
+	var webrequest = &api.WebPostRequest{}
 
 	var response = &api.LoginAuthResponse{}
 	defer SetWebResponse(w, response, webresponse)

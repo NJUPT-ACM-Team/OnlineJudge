@@ -9,7 +9,7 @@ import (
 
 func (this *Controller) Logout(w http.ResponseWriter, r *http.Request) {
 	var webresponse = &api.WebResponse{}
-	var webrequest = &api.WebRequest{}
+	var webrequest = &api.WebPostRequest{}
 
 	var response = &api.LogoutResponse{}
 

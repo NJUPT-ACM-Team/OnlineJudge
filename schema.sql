@@ -133,6 +133,7 @@ CREATE TABLE Contests (
     end_time DATETIME NOT NULL,
     lock_board_time DATETIME NOT NULL,
     hide_others_status BOOLEAN NOT NULL,
+    is_hidden BOOLEAN NOT NULL,
 
     PRIMARY KEY (contest_id),
 	UNIQUE KEY (title)

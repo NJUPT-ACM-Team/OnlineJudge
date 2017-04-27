@@ -24,8 +24,9 @@ func (this *BasicHandler) ListProblems(response *api.ListProblemsResponse, req *
 	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
 
-	filter := req.GetFilter()
-	if filter.GetPStatus() != 0 {
+	// filter := req.GetFilter()
+	if req.GetFilterPStatus() != 0 {
+		// if filter.GetPStatus() != 0 {
 		MakeResponseError(response, this.debug, PBLoginRequired, nil)
 		return
 	}
@@ -51,13 +52,15 @@ func ListProblems_BuildResponse(
 	show_hidden bool,
 	debug bool) {
 
-	filter := req.GetFilter()
+	// filter := req.GetFilter()
 	page, err := models.XQuery_List_Problems_With_Filter(
 		tx,
 		username,
 		show_hidden,
-		filter.GetOj(),
-		filter.GetPStatus().String(),
+		// filter.GetOj(),
+		req.GetFilterOj(),
+		// filter.GetPStatus().String(),
+		req.GetFilterPStatus().String(),
 		req.GetOrderBy().String(),
 		req.GetIsDesc(),
 		int(req.GetOffset()),

@@ -12,14 +12,12 @@ func TestListProblems(t *testing.T) {
 	session.Values[".username"] = "kevince"
 	// session.Values[".privilege"] = "root"
 	req := &api.ListProblemsRequest{
-		PerPage:     1,
-		CurrentPage: 2,
-		OrderBy:     0,
-		IsDesc:      false,
-		Filter: &api.ListProblemsRequest_Filter{
-			Oj:      "zoj",
-			PStatus: 0,
-		},
+		PerPage:       1,
+		CurrentPage:   2,
+		OrderBy:       0,
+		IsDesc:        false,
+		FilterOj:      "zoj",
+		FilterPStatus: 0,
 	}
 	handler.ListProblems(res, req)
 	t.Log(res)

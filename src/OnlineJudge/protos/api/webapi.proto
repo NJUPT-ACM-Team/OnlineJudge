@@ -13,18 +13,29 @@ import "api/submit.proto";
 import "api/about.proto";
 import "api/logout.proto";
 
-message WebRequest {
+
+// ListProblemsRequest
+// ListSubmissionsRequest
+// ShowProblemRequest
+// AboutRequest
+
+message WebGetRequest {
+    ListProblemsRequest list_problems_request = 1;
+    ListSubmissionsRequest list_submissions_request = 2;
+    ShowProblemRequest show_problem_request = 3;
+	AboutRequest about_request = 4;
+}
+
+
+// WebRequest are all POST requests
+message WebPostRequest {
     string csrf_token = 1;
     string captcha = 2;
-    ListProblemsRequest list_problems_request = 3;
-    ListSubmissionsRequest list_submissions_request = 4;
-    LoginInitRequest login_init_request = 5;
-    LoginAuthRequest login_auth_request = 6;
-    RegisterRequest register_request = 7;
-    ShowProblemRequest show_problem_request = 8;
-    SubmitRequest submit_request = 9;
-	AboutRequest about_request = 10;
-    LogoutRequest logout_request = 11;
+    LoginInitRequest login_init_request = 3;
+    LoginAuthRequest login_auth_request = 4;
+    RegisterRequest register_request = 5;
+    SubmitRequest submit_request = 6;
+    LogoutRequest logout_request = 7;
 }
 
 message WebResponse {

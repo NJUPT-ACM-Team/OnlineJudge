@@ -5,29 +5,27 @@ package api;
 import "api/common.proto";
 
 message ListProblemsRequest {
-    int32 offset = 1;
-    int32 per_page = 2;
-    int32 current_page = 3;
-
     enum Element {
         PID = 0;
         TITLE = 1;
         AC_RATE = 2;
     }
+    enum ProblemStatus {
+        ALL = 0;
+        ACCEPTED = 1;
+        UNSOLVED = 2;
+        ATTEMPTED = 3;
+    }
+
+    int32 offset = 1;
+    int32 per_page = 2;
+    int32 current_page = 3;
+
     Element order_by = 4;
     bool is_desc = 5;
 
-    message Filter {
-        string oj = 1;
-        enum ProblemStatus {
-            ALL = 0;
-            ACCEPTED = 1;
-            UNSOLVED = 2;
-            ATTEMPTED = 3;
-        }
-        ProblemStatus p_status = 2;
-    }
-    Filter filter = 6;
+    string filter_oj = 6;
+    ProblemStatus filter_p_status = 7;
 }
 
 message ListProblemsResponse {

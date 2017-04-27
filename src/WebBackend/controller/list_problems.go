@@ -9,18 +9,16 @@ import (
 
 func (this *Controller) ListProblems(w http.ResponseWriter, r *http.Request) {
 	var webresponse = &api.WebResponse{}
-	var webrequest = &api.WebRequest{}
 
 	var response = &api.ListProblemsResponse{}
+	var request = &api.ListProblemsRequest{}
 	defer SetWebResponse(w, response, webresponse)
 
-	session, err := this.Prepare(webresponse, webrequest, w, r)
+	session, err := this.Prepare(webresponse, request, w, r)
 	if err != nil {
 		return
 	}
 	defer session.Save(r, w)
-
-	request := webrequest.GetListProblemsRequest()
 
 	handler := handler.NewHandler(session, this.debug)
 	handler.ListProblems(response, request)

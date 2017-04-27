@@ -301,3 +301,33 @@ func XQuery_List_Submissions_With_Filter(
 	ret.Submissions = subs
 	return ret, nil
 }
+
+type ListContestsPagination struct {
+	TotalLines  int
+	TotalPages  int
+	CurrentPage int
+	Contests    []Contest
+}
+
+/*
+func XQuery_List_Contests_With_Filter(
+	tx *sqlx.Tx,
+	show_hidden bool,
+	filter_ctype string,
+	filter_status string,
+	orderby_element string,
+	is_desc bool,
+	offset int,
+	per_page int,
+	current_page int,
+	required []string,
+	excepts []string) (*ListProblemsPagination, error) {
+
+	mp := MetaProblem{}
+	mps := []MetaProblem{}
+	str_fields, err := GenerateSelectSQL(&mp, required, excepts)
+	if err != nil {
+		return nil, err
+	}
+}
+*/

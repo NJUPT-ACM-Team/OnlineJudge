@@ -7,6 +7,7 @@ import (
 	"WebBackend/router"
 
 	"github.com/gorilla/context"
+	"github.com/rs/cors"
 
 	"net/http"
 )
@@ -20,5 +21,6 @@ func init() {
 func main() {
 	router := router.Init()
 	// http.Handle("/", router)
-	panic(http.ListenAndServe(":8000", context.ClearHandler(router)))
+	handler := cors.Default().Handler(context.ClearHandler(router))
+	panic(http.ListenAndServe(":8000", handler))
 }

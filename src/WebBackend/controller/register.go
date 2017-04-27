@@ -15,7 +15,7 @@ var (
 // TODO: CAPTCHA
 func (this *Controller) Register(w http.ResponseWriter, r *http.Request) {
 	var webresponse = &api.WebResponse{}
-	var webrequest = &api.WebRequest{}
+	var webrequest = &api.WebPostRequest{}
 
 	var response = &api.RegisterResponse{}
 	defer SetWebResponse(w, response, webresponse)

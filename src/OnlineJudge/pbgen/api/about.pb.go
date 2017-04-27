@@ -51,7 +51,8 @@ It has these top-level messages:
 	SubmitResponse
 	UploadProblemRequest
 	UploadProblemResponse
-	WebRequest
+	WebGetRequest
+	WebPostRequest
 	WebResponse
 */
 package api
