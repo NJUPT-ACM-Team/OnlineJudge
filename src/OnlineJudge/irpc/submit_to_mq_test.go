@@ -1,4 +1,4 @@
-package utils
+package irpc
 
 import (
 	"OnlineJudge/db"
@@ -18,7 +18,7 @@ func TestSubmitCodeToMQ(t *testing.T) {
 	if err := jmq.DeclareVJ(); err != nil {
 		t.Fatal(err)
 	}
-	req := &rpc.SubmitCodeRequest{
+	req := &rpc.StartJudgingRequest{
 		RunId: 1,
 	}
 	SubmitToMQ(jmq, req)

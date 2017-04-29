@@ -20,7 +20,7 @@ def Login():
 def Submit():
     data = {
         "submit_request": {
-            "problem_sid" : "zoj#1000",
+            "problem_sid" : "zoj-1000",
             "code":"""
 #include <iostream>
 using namespace std;

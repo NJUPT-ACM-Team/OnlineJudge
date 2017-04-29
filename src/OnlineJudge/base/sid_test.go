@@ -8,12 +8,12 @@ var ptests = []struct {
 	Res   *Pid
 }{
 	{
-		Str:   "LOCAL#1000",
+		Str:   "LOCAL-1000",
 		Valid: true,
 		Res:   &Pid{OJName: "LOCAL", OJPid: "1000"},
 	},
 	{
-		Str:   "#1000",
+		Str:   "-1000",
 		Valid: false,
 	},
 	{
@@ -21,11 +21,11 @@ var ptests = []struct {
 		Valid: false,
 	},
 	{
-		Str:   "LOCAL#",
+		Str:   "LOCAL-",
 		Valid: false,
 	},
 	{
-		Str:   "#",
+		Str:   "-",
 		Valid: false,
 	},
 }

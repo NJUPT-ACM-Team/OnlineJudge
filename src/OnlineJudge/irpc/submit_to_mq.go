@@ -1,4 +1,4 @@
-package utils
+package irpc
 
 import (
 	"OnlineJudge/db"
@@ -23,7 +23,7 @@ func MustSetSystemError(tx *sqlx.Tx, run_id int64) {
 	}
 }
 
-func SubmitToMQ(jmq *mq.MQ, req *rpc.SubmitCodeRequest) {
+func SubmitToMQ(jmq *mq.MQ, req *rpc.StartJudgingRequest) {
 	log.Println(req)
 	DB := db.New()
 	defer DB.Close()

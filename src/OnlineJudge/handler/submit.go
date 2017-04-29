@@ -89,7 +89,7 @@ func Submit_BuildResponse(
 
 	// Use RPC to call Daemon to judge the submission
 
-	helper := irpc.NewBackendHelper()
+	helper := irpc.NewHelper()
 
 	if err := helper.Connect(); err != nil {
 		// Log the error

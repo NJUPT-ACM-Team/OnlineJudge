@@ -1,20 +1,57 @@
 syntax='proto3';
 
-service Daemon {
-    rpc StartJudging(Submission) returns () {}
-    rpc GetDBInfo() returns (DBInfo) {}
-    rpc Register(RegInfo) returns (RegResult) {}
+package rpc;
+
+service Helper {
+    rpc StartJudging(StartJudgingRequest) returns (StartJudgingResponse) {}
+    rpc GetTestingData(GetTestingDataRequest) returns (GetTestingDataResponse) {}
+    // rpc GetDBInfo() returns (DBInfo) {}
+    rpc Register(RegisterRequest) returns (RegisterResponse) {}
+
+    rpc SaveProblemDescription(SaveProblemDescriptionRequest) (SaveProblemDescriptionResponse) {}
 }
 
 
-message DBInfo {
+// message DBInfo {
+// }
+
+message SaveProblemDescriptionRequest {
+
 }
 
-message Submission {
+message SaveProblemDescriptionResponse {
+
+}
+
+message GetTestingDataRequest {
+    bool only_hash = 1;
+    int64 local_pid = 2;
+}
+
+message GetTestingDataResponse {
+    message Case {
+        bool only_hash = 1;
+        string in_hash = 2;
+        string in = 3;
+        string out_hash = 4;
+        string out = 5;
+    }
+
+    repeated Case cases = 1;
+}
+
+message StartJudgingRequest {
     int64 run_id = 1;
+}
+
+message StartJudgingResponse {
+    bool received = 1;
+}
+
+message RegisterRequest {
 
 }
 
-message Result {
+message RegisterResponse {
 
 }

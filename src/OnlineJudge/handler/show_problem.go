@@ -6,6 +6,8 @@ import (
 	"OnlineJudge/pbgen/api"
 
 	"github.com/jmoiron/sqlx"
+
+	"fmt"
 )
 
 func (this *AdminHandler) ShowProblem(response *api.ShowProblemResponse, req *api.ShowProblemRequest) {
@@ -34,6 +36,7 @@ func ShowProblem_BuildResponse(
 	debug bool) {
 
 	// Get Sid
+	fmt.Println(req.GetProblemSid())
 	pid, err := base.ParseSid(req.GetProblemSid())
 	if err != nil {
 		MakeResponseError(response, debug, PBBadRequest, err)

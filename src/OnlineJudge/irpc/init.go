@@ -20,7 +20,7 @@ func Run() {
 	}
 	server := grpc.NewServer()
 
-	RegisterBackendHelper(server)
+	RegisterHelper(server)
 
 	server.Serve(lis)
 }

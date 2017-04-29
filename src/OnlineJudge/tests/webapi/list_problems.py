@@ -17,7 +17,7 @@ def List():
         "current_page": 1,
         "order_by": 0,
         "is_desc": True,
-        "filter_oj": "xoj",
+        "filter_oj": "zoj",
         "filter_p_status": 0,
     }
 

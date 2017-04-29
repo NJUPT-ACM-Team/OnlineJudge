@@ -84,6 +84,20 @@ CREATE TABLE MetaProblems (
     UNIQUE KEY (oj_id_fk, oj_pid)
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
 
+-- Time/Memory Limit for different languages
+CREATE TABLE TimeMemoryLimits (
+    limit_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    time_limit INTEGER UNSIGNED NOT NULL,
+    case_time_limit INTEGER UNSIGNED NOT NULL,
+    memory_limit INTEGER UNSIGNED NOT NULL,
+    lang_id_fk INTEGER UNSIGNED,
+    meta_pid_fk INTEGER UNSIGNED,
+
+    PRIMARY KEY(limit_id),
+    FOREIGN KEY (lang_id_fk) REFERENCES Languages(lang_id) ON DELETE CASCADE,
+    FOREIGN KEY (meta_pid_fk) REFERENCES MetaProblems(meta_pid) ON DELETE CASCADE
+);
+
 CREATE TABLE LocalProblems (
     local_pid INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     meta_pid_fk INTEGER UNSIGNED DEFAULT NULL,

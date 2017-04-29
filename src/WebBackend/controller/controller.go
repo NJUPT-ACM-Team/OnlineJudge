@@ -70,7 +70,7 @@ func makeParamTypeRight(request interface{}, key string, val string) (interface{
 			case "false", "0":
 				return false, nil
 			}
-			return nil, errors.New("unknown boolean type")
+			return nil, errors.New("unknown boolean value")
 		}
 		return nil, errors.New("unknown type")
 	}

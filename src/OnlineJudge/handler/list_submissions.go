@@ -37,17 +37,23 @@ func ListSubmissions_BuildResponse(
 	show_all_code bool,
 	debug bool) {
 
-	filter := req.GetFilter()
+	// filter := req.GetFilter()
 	page, err := models.XQuery_List_Submissions_With_Filter(
 		tx,
 		username,
 		show_private,
-		filter.GetUsername(),
-		filter.GetOj(),
-		filter.GetPid(),
-		filter.GetStatusCode(),
-		filter.GetLanguage(),
-		filter.GetCompiler(),
+		// filter.GetUsername(),
+		req.GetFilterUsername(),
+		// filter.GetOj(),
+		req.GetFilterOj(),
+		// filter.GetPid(),
+		req.GetFilterPid(),
+		// filter.GetStatusCode(),
+		req.GetFilterStatusCode(),
+		// filter.GetLanguage(),
+		req.GetFilterLanguage(),
+		// filter.GetCompiler(),
+		req.GetFilterCompiler(),
 		int(req.GetPerPage()),
 		int(req.GetCurrentPage()),
 		nil,

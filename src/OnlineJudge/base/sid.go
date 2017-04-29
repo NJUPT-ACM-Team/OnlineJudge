@@ -19,7 +19,7 @@ func (this *Pid) OJPidToInt64() int64 {
 }
 
 func ParseSid(sid string) (*Pid, error) {
-	regex, err := regexp.Compile(`(\w+)#(\w+)`)
+	regex, err := regexp.Compile(`(\w+)-(\w+)`)
 	if err != nil {
 		return nil, err
 	}
@@ -36,5 +36,5 @@ func ParseSid(sid string) (*Pid, error) {
 }
 
 func GenSid(pid *Pid) string {
-	return fmt.Sprintf("%s#%s", pid.OJName, pid.OJPid)
+	return fmt.Sprintf("%s-%s", pid.OJName, pid.OJPid)
 }

@@ -9,15 +9,12 @@ message ListSubmissionsRequest {
     int32 per_page = 1;
     int32 current_page = 2;
 
-    message Filter {
-        string username = 1;
-        string oj = 2;
-        string pid = 3;
-        string status_code = 4;
-        string language = 5;
-        string compiler = 6;
-    }
-    Filter filter = 3;
+    string filter_username = 3;
+    string filter_oj = 4;
+    string filter_pid = 5;
+    string filter_status_code = 6;
+    string filter_language = 7;
+    string filter_compiler = 8;
 }
 
 message ListSubmissionsResponse {
