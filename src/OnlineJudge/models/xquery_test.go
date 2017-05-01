@@ -14,8 +14,8 @@ func TestXQuery_List_Problems_With_Filter(t *testing.T) {
 		"kevince",
 		true,
 		"zoj",
-		3,
-		0,
+		"ACCEPTED",
+		"TITLE",
 		false,
 		0,
 

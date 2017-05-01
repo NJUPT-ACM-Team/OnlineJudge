@@ -90,11 +90,12 @@ CREATE TABLE TimeMemoryLimits (
     time_limit INTEGER UNSIGNED NOT NULL,
     case_time_limit INTEGER UNSIGNED NOT NULL,
     memory_limit INTEGER UNSIGNED NOT NULL,
-    lang_id_fk INTEGER UNSIGNED,
+    -- lang_id_fk INTEGER UNSIGNED,
+    language VARCHAR(64) NOT NULL,
     meta_pid_fk INTEGER UNSIGNED,
 
     PRIMARY KEY(limit_id),
-    FOREIGN KEY (lang_id_fk) REFERENCES Languages(lang_id) ON DELETE CASCADE,
+    -- FOREIGN KEY (lang_id_fk) REFERENCES Languages(lang_id) ON DELETE CASCADE,
     FOREIGN KEY (meta_pid_fk) REFERENCES MetaProblems(meta_pid) ON DELETE CASCADE
 );
 

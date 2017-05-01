@@ -216,3 +216,23 @@ func Query_TestCases_By_MetaPid(
 	}
 	return tcs, nil
 }
+
+func Query_Limits_By_MetaPid(
+	tx *sqlx.Tx,
+	meta_pid int64,
+	required []string,
+	excepts []string) ([]TimeMemoryLimit, error) {
+
+	/* Func start */
+	tm := TimeMemoryLimit{}
+	tms := []TimeMemoryLimit{}
+	str_fields, err := GenerateSelectSQL(&tm, required, excepts)
+	if err != nil {
+		return nil, err
+	}
+	sql := JoinSQL("SELECT", str_fields, "FROM", TimeMemoryLimit_TableName, "WHERE meta_pid_fk=?")
+	if err := tx.Select(&tms, sql, meta_pid); err != nil {
+		return nil, err
+	}
+	return tms, nil
+}

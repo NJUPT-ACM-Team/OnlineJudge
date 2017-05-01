@@ -7,6 +7,7 @@ import (
 
 func EntryPoint(jdi judger.JudgerInterface) {
 	log.Println(jdi.GetRunId())
+	log.Println(jdi.GetCode())
 }
 
 type VJudger interface {

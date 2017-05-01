@@ -1,5 +1,6 @@
 package handler
 
+/*
 import (
 	"OnlineJudge/base"
 	"OnlineJudge/models"
@@ -57,3 +58,4 @@ func (this *UserHandler) EditProblem(response *api.EditProblemResponse, req *api
 	response.Problem = pr
 	response.Sid = req.GetSid()
 }
+*/

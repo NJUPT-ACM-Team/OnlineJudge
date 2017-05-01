@@ -28,6 +28,7 @@ func NewHelperServer() *helperServer {
 	}
 }
 
+/*
 func (this *helperServer) StartJudging(ctx context.Context, req *rpc.StartJudgingRequest) (*rpc.StartJudgingResponse, error) {
 	// Submit the code to MQ
 	go SubmitToMQ(this.jmq, req)
@@ -35,6 +36,7 @@ func (this *helperServer) StartJudging(ctx context.Context, req *rpc.StartJudgin
 		Received: true,
 	}, nil
 }
+*/
 
 func (this *helperServer) GetTestingData(ctx context.Context, req *rpc.GetTestingDataRequest) (*rpc.GetTestingDataResponse, error) {
 	return &rpc.GetTestingDataResponse{}, nil

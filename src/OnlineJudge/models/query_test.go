@@ -41,3 +41,15 @@ func TestQuery_All_OJs(t *testing.T) {
 	}
 	t.Log(ojs)
 }
+
+func TestQuery_Limits_By_MetaPid(t *testing.T) {
+	db.InitTest()
+	DB := db.New()
+	tx := DB.MustBegin()
+
+	tms, err := Query_Limits_By_MetaPid(tx, 1, nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(tms)
+}

@@ -10,18 +10,22 @@ message ShowProblemRequest {
 }
 
 message Problem {
+  message Limit {
+    string language = 1;
+    int32 time_limit = 2;
+    int32 case_time_limit = 3;
+    int32 memory_limit = 4;
+  }
   string title = 1;
-  int32 time_limit = 2;
-  int32 case_time_limit = 3;
-  int32 memory_limit = 4;
-  string description = 5;
-  string input = 6;
-  string output = 7;
-  string sample_input = 8;
-  string sample_output = 9;
-  string source = 10;
-  string hint = 11;
-  bool hide = 12;
+  repeated Limit limits = 2;
+  string description = 3;
+  string input = 4;
+  string output = 5;
+  string sample_input = 6;
+  string sample_output = 7;
+  string source = 8;
+  string hint = 9;
+  bool hide = 10;
 }
 
 // response

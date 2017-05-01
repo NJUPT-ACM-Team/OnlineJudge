@@ -1,5 +1,6 @@
 package irpc
 
+/*
 import (
 	"OnlineJudge/db"
 	"OnlineJudge/mq"
@@ -23,3 +24,4 @@ func TestSubmitCodeToMQ(t *testing.T) {
 	}
 	SubmitToMQ(jmq, req)
 }
+*/

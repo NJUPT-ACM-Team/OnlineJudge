@@ -51,6 +51,20 @@ func ShowProblem_BuildResponse(
 	langs, err := models.Query_Languages_By_OJIdFK(tx, mp.OJIdFK, nil, nil)
 	PanicOnError(err)
 
+	// Query Limits
+	limits, err := models.Query_Limits_By_MetaPid(tx, mp.MetaPid, nil, nil)
+	PanicOnError(err)
+	r_limits := []*api.Problem_Limit{}
+	for _, limit := range limits {
+		temp := &api.Problem_Limit{
+			Language:      limit.Language,
+			TimeLimit:     int32(limit.TimeLimit),
+			CaseTimeLimit: int32(limit.CaseTimeLimit),
+			MemoryLimit:   int32(limit.MemoryLimit),
+		}
+		r_limits = append(r_limits, temp)
+	}
+
 	// Judge if authorized
 	if mp.Hide == true && !access_hide {
 		MakeResponseError(response, debug, PBProblemNotFound, nil)
@@ -60,18 +74,19 @@ func ShowProblem_BuildResponse(
 	// Make response
 	response.ProblemSid = req.GetProblemSid()
 	problem := &api.Problem{
-		Title:         mp.Title,
-		TimeLimit:     int32(mp.TimeLimit),
-		CaseTimeLimit: int32(mp.CaseTimeLimit),
-		MemoryLimit:   int32(mp.MemoryLimit),
-		Description:   mp.Description,
-		Input:         mp.Input,
-		Output:        mp.Output,
-		SampleInput:   mp.SampleIn,
-		SampleOutput:  mp.SampleOut,
-		Source:        mp.Source,
-		Hint:          mp.Hint,
-		Hide:          mp.Hide,
+		Title: mp.Title,
+		// TimeLimit:     int32(mp.TimeLimit),
+		// CaseTimeLimit: int32(mp.CaseTimeLimit),
+		// MemoryLimit:   int32(mp.MemoryLimit),
+		Limits:       r_limits,
+		Description:  mp.Description,
+		Input:        mp.Input,
+		Output:       mp.Output,
+		SampleInput:  mp.SampleIn,
+		SampleOutput: mp.SampleOut,
+		Source:       mp.Source,
+		Hint:         mp.Hint,
+		Hide:         mp.Hide,
 	}
 	response.Problem = problem
 	languages := []*api.Language{}

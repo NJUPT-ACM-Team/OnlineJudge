@@ -10,6 +10,8 @@ import (
 	"github.com/golang/protobuf/proto"
 	"github.com/jmoiron/sqlx"
 
+	"golang.org/x/net/context"
+
 	"log"
 )
 
@@ -108,4 +110,12 @@ func SubmitToMQ(jmq *mq.MQ, req *rpc.StartJudgingRequest) {
 			MustSetSystemError(tx, sub.RunId)
 		}
 	}
+}
+
+func (this *helperServer) StartJudging(ctx context.Context, req *rpc.StartJudgingRequest) (*rpc.StartJudgingResponse, error) {
+	// Submit the code to MQ
+	go SubmitToMQ(this.jmq, req)
+	return &rpc.StartJudgingResponse{
+		Received: true,
+	}, nil
 }
