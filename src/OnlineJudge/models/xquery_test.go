@@ -39,6 +39,7 @@ func TestXQuery_List_Submissions_With_Filter(t *testing.T) {
 		tx,
 		"kevince",
 		true,
+		false,
 		"kevince",
 		"zoj",
 		"1000",

@@ -72,14 +72,6 @@ func (this *Helper) Disconnect() {
 	this.conn.Close()
 }
 
-func (this *Helper) Submit(run_id int64) (*rpc.StartJudgingResponse, error) {
-	req := &rpc.StartJudgingRequest{
-		RunId: run_id,
-	}
-	return this.client.StartJudging(context.Background(), req)
-
-}
-
 func (this *Helper) NewClient() {
 	this.client = rpc.NewHelperClient(this.conn)
 }

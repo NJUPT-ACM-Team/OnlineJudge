@@ -15,6 +15,7 @@ message ListSubmissionsRequest {
     string filter_status_code = 6;
     string filter_language = 7;
     string filter_compiler = 8;
+    bool is_desc = 9;
 }
 
 message ListSubmissionsResponse {

@@ -80,7 +80,27 @@ func (this *SubmissionModel) Update(tx *sqlx.Tx, sub *Submission, pk string, req
 }
 
 func (this *SubmissionModel) UpdateStatus(tx *sqlx.Tx, sub *Submission) error {
-	required := []string{"status", "status_code", "testcases_passed"}
+	required := []string{}
+	if sub.Status != "" {
+		required = append(required, "status")
+	}
+	if sub.StatusCode != "" {
+		required = append(required, "status_code")
+	}
+	if sub.TestcasesPassed != 0 {
+		required = append(required, "testcases_passed")
+	}
+	if sub.TimeUsed != 0 {
+		required = append(required, "time_used")
+	}
+	if sub.MemoryUsed != 0 {
+		required = append(required, "memory_used")
+	}
+	if sub.CEInfo != "" {
+		required = append(required, "ce_info")
+	}
+
+	// required := []string{"status", "status_code", "testcases_passed"}
 	if err := this.Update(tx, sub, "", required, nil); err != nil {
 		return err
 	}

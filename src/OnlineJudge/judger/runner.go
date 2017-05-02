@@ -53,6 +53,10 @@ func RunLJ(fn func(JudgerInterface)) {
 	Run("l", Wrapper(fn))
 }
 
+func RunMJ(fn func(JudgerInterface)) {
+	Run("m", Wrapper(fn))
+}
+
 func Run(oj string, fn func([]byte)) {
 	Init()
 	switch oj {
@@ -68,6 +72,13 @@ func Run(oj string, fn func([]byte)) {
 			panic(err)
 		}
 		if err := jmq.VJReceiver(fn); err != nil {
+			panic(err)
+		}
+	case "m":
+		if err := jmq.DeclareMJ(); err != nil {
+			panic(err)
+		}
+		if err := jmq.MJReceiver(fn); err != nil {
 			panic(err)
 		}
 	}

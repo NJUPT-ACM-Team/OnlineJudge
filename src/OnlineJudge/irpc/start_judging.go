@@ -18,9 +18,11 @@ import (
 func MustSetSystemError(tx *sqlx.Tx, run_id int64) {
 	sbm := models.NewSubmissionModel()
 	if err := sbm.SetSystemError(tx, run_id); err != nil {
+		// TODO: fatal error notification
 		log.Panic(err)
 	}
 	if err := tx.Commit(); err != nil {
+		// TODO: fatal error notification
 		log.Panic(err)
 	}
 }
@@ -118,4 +120,12 @@ func (this *helperServer) StartJudging(ctx context.Context, req *rpc.StartJudgin
 	return &rpc.StartJudgingResponse{
 		Received: true,
 	}, nil
+}
+
+func (this *Helper) StartJudging(run_id int64) (*rpc.StartJudgingResponse, error) {
+	req := &rpc.StartJudgingRequest{
+		RunId: run_id,
+	}
+	return this.client.StartJudging(context.Background(), req)
+
 }

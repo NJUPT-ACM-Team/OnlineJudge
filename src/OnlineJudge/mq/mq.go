@@ -9,6 +9,7 @@ import (
 const (
 	LJQueueName = "local"
 	VJQueueName = "virtual"
+	MJQueueName = "manual"
 )
 
 type MQConfig struct {
@@ -29,6 +30,7 @@ type MQ struct {
 	ch   *amqp.Channel
 	ljq  amqp.Queue
 	vjq  amqp.Queue
+	mjq  amqp.Queue
 }
 
 var DSN string
@@ -96,6 +98,15 @@ func (this *MQ) DeclareVJ() error {
 	return nil
 }
 
+func (this *MQ) DeclareMJ() error {
+	var err error
+	this.mjq, err = this.Declare(MJQueueName)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (this *MQ) Publish(body []byte, qname string) error {
 	err := this.ch.Publish(
 		"",    // exchange
@@ -115,6 +126,10 @@ func (this *MQ) PublishLJ(body []byte) error {
 
 func (this *MQ) PublishVJ(body []byte) error {
 	return this.Publish(body, this.vjq.Name)
+}
+
+func (this *MQ) PublishMJ(body []byte) error {
+	return this.Publish(body, this.mjq.Name)
 }
 
 func (this *MQ) Receiver(qname string, fn func([]byte)) error {
@@ -144,4 +159,8 @@ func (this *MQ) LJReceiver(fn func([]byte)) error {
 
 func (this *MQ) VJReceiver(fn func([]byte)) error {
 	return this.Receiver(this.vjq.Name, fn)
+}
+
+func (this *MQ) MJReceiver(fn func([]byte)) error {
+	return this.Receiver(this.mjq.Name, fn)
 }

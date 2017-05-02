@@ -8,18 +8,34 @@ service Helper {
     // rpc GetDBInfo() returns (DBInfo) {}
     rpc Register(RegisterRequest) returns (RegisterResponse) {}
 
-    rpc SaveProblemDescription(SaveProblemDescriptionRequest) (SaveProblemDescriptionResponse) {}
+    rpc UpdateProblemDescription(UpdateProblemDescriptionRequest) returns (UpdateProblemDescriptionResponse) {}
+
+    rpc UpdateSubmissionStatus(UpdateSubmissionStatusRequest) returns (UpdateSubmissionStatusResponse) {}
 }
 
 
 // message DBInfo {
 // }
 
-message SaveProblemDescriptionRequest {
+message UpdateSubmissionStatusRequest {
+    int64 run_id = 1;
+    string status = 2;
+    string status_code = 3;
+    int32 testcases_passed = 4;
+    int32 time_used = 5;
+    int32 memory_used = 6;
+    string ce_info = 7;
+}
+
+message UpdateSubmissionStatusResponse{
+    bool success = 1;
+}
+
+message UpdateProblemDescriptionRequest {
 
 }
 
-message SaveProblemDescriptionResponse {
+message UpdateProblemDescriptionResponse {
 
 }
 
@@ -37,7 +53,13 @@ message GetTestingDataResponse {
         string out = 5;
     }
 
-    repeated Case cases = 1;
+    message Spj {
+        bool only_hash = 1;
+        string spj_code_hash = 2;
+        string spj_code = 3;
+    }
+    Spj spj = 1;
+    repeated Case cases = 2;
 }
 
 message StartJudgingRequest {

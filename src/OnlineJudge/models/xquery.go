@@ -190,6 +190,7 @@ func XQuery_List_Submissions_With_Filter(
 	tx *sqlx.Tx,
 	username string,
 	show_private bool,
+	is_desc bool,
 	filter_username string,
 	filter_oj string,
 	filter_pid string,
@@ -276,13 +277,18 @@ func XQuery_List_Submissions_With_Filter(
 		return nil, err
 	}
 
+	order_by := "ORDER BY run_id"
+	if is_desc == false {
+		order_by = JoinSQL(order_by, "DESC")
+	}
+
 	offset := (current_page - 1) * per_page
 	sql := JoinSQL(
 		`SELECT`, str_fields, `FROM Submissions`,
 		`LEFT JOIN Users ON user_id_fk=user_id `,
 		`LEFT JOIN Languages ON lang_id_fk=lang_id`,
 		`LEFT JOIN (SELECT meta_pid, number_of_testcases, oj_name, oj_pid FROM MetaProblems) AS TP ON meta_pid_fk=meta_pid`,
-		where_sql,
+		where_sql, order_by,
 		fmt.Sprintf(`LIMIT %d, %d`, offset, per_page))
 
 	if need_filter {

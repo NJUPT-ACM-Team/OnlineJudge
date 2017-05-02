@@ -103,7 +103,7 @@ func Submit_BuildResponse(
 	defer helper.Disconnect()
 
 	helper.NewClient()
-	res, err := helper.Submit(run_id)
+	res, err := helper.StartJudging(run_id)
 
 	if err != nil || res.Received != true {
 		// Log the error
