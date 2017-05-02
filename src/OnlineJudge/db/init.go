@@ -10,7 +10,7 @@ func InitTest() {
 	mysql_config := MySQLConfig{
 		Drivername: "mysql",
 		Username:   "test",
-		DBname:     "ojtest",
+		DBname:     "ojtest2",
 		Password:   "abc123",
 		Params:     params,
 	}

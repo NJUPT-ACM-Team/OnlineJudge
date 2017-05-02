@@ -236,3 +236,26 @@ func Query_Limits_By_MetaPid(
 	}
 	return tms, nil
 }
+
+func Query_Total_Submissions_By_MetaPid(
+	tx *sqlx.Tx,
+	meta_pid int64) (int, error) {
+
+	var count int
+	if err := tx.Get(&count, "SELECT COUNT(*) FROM Submissions WHERE meta_pid_fk=?", meta_pid); err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
+func Query_Total_AC_Submissions_By_MetaPid(
+	tx *sqlx.Tx,
+	meta_pid int64) (int, error) {
+
+	var count int
+	if err := tx.Get(&count, "SELECT COUNT(*) FROM Submissions WHERE meta_pid_fk=? AND status_code='ac'", meta_pid); err != nil {
+		return 0, err
+	}
+	return count, nil
+
+}

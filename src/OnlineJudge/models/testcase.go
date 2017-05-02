@@ -13,13 +13,13 @@ $OJDATA/testcases/$PID/spj/spj.cpp
 */
 
 type TestCase struct {
-	CaseId     int64 `db:"case_id"`
-	Input      []byte
-	InputPath  string
-	InputMD5   []byte `db:"input_md5"`
-	Output     []byte
-	OutputPath string
-	OutputMD5  []byte `db:"output_md5"`
+	CaseId int64 `db:"case_id"`
+	Input  []byte
+	// InputPath  string
+	InputMD5 []byte `db:"input_md5"`
+	Output   []byte
+	// OutputPath string
+	OutputMD5 []byte `db:"output_md5"`
 
 	MetaPidFK int64 `db:"meta_pid_fk"`
 }

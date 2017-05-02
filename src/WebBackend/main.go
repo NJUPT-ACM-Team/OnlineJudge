@@ -21,6 +21,11 @@ func init() {
 func main() {
 	router := router.Init()
 	// http.Handle("/", router)
-	handler := cors.Default().Handler(context.ClearHandler(router))
+	c := cors.New(cors.Options{
+		AllowCredentials: true,
+	})
+
+	// Insert the middleware
+	handler := c.Handler(context.ClearHandler(router))
 	panic(http.ListenAndServe(":8000", handler))
 }

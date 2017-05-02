@@ -74,6 +74,14 @@ func ListProblems_BuildResponse(
 	// Build response
 	lines := []*api.ListProblemsResponse_PerLine{}
 	for _, problem := range page.Problems {
+		total, err := models.Query_Total_Submissions_By_MetaPid(tx, problem.MetaPid)
+		if err != nil {
+			total = 0
+		}
+		ac, err := models.Query_Total_AC_Submissions_By_MetaPid(tx, problem.MetaPid)
+		if err != nil {
+			ac = 0
+		}
 		line := &api.ListProblemsResponse_PerLine{
 			Sid: base.GenSid(&base.Pid{
 				OJName: problem.OJName,
@@ -82,8 +90,8 @@ func ListProblems_BuildResponse(
 			Pid:             problem.OJPid,
 			Title:           problem.Title,
 			Source:          problem.Source,
-			AcSubmission:    1,
-			TotalSubmission: 2,
+			AcSubmission:    int32(ac),
+			TotalSubmission: int32(total),
 		}
 		lines = append(lines, line)
 	}

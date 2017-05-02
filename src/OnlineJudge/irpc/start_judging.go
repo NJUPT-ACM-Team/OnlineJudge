@@ -69,12 +69,15 @@ func SubmitToMQ(jmq *mq.MQ, req *rpc.StartJudgingRequest) {
 		Language: &msgs.SubmitLanguage{
 			Compiler:    lang.Compiler,
 			Lang:        lang.Language,
+			Suffix:      lang.Suffix,
 			OptionValue: lang.OptionValue,
 		},
 	}
+	log.Println("suffix:", lang.Suffix)
 
 	// Get testcases of meta problem
 	if mp.OJName == "local" {
+		log.Println("use local")
 		tcs, err := models.Query_TestCases_By_MetaPid(tx, sub.MetaPidFK, nil, nil)
 		if err != nil {
 			log.Println(err)
@@ -87,7 +90,7 @@ func SubmitToMQ(jmq *mq.MQ, req *rpc.StartJudgingRequest) {
 				CaseId:     tc.CaseId,
 				Input:      tc.Input,
 				InputHash:  tc.InputMD5,
-				Output:     tc.Input,
+				Output:     tc.Output,
 				OutputHash: tc.OutputMD5,
 			}
 			testcases = append(testcases, temp)

@@ -11,6 +11,7 @@ import (
 
 	"encoding/json"
 	"errors"
+	// "log"
 	// "fmt"
 	"io"
 	"net/http"
@@ -134,22 +135,24 @@ func SetWebResponse(
 	if webresponse.GetError() == nil && response.GetError() != nil {
 		errmsg := *(response.GetError())
 		webresponse.Error = &errmsg
-		response.GetError().Reset()
+		// response.GetError().Reset()
 	}
 
 	SetResponse(w, webresponse)
 }
 
 func SetResponse(w http.ResponseWriter, response Response) {
-	err := response.GetError()
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	if err == nil || err.Code == 0 {
-		// 200 Response
-		w.WriteHeader(http.StatusOK)
-	} else {
-		// Set response code
-		w.WriteHeader(int(err.GetCode()))
-	}
+	/*
+		err := response.GetError()
+			if err == nil || err.Code == 0 {
+				// 200 Response
+				w.WriteHeader(http.StatusOK)
+			} else {
+				// Set response code
+				w.WriteHeader(int(err.GetCode()))
+			}
+	*/
 	if err := EncodePBToJsonStream(w, response); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}

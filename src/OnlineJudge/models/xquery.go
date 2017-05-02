@@ -272,7 +272,8 @@ func XQuery_List_Submissions_With_Filter(
 	// Get lines
 	sub := &SubmissionExt{}
 	subs := []SubmissionExt{}
-	str_fields, err := GenerateSelectSQL(sub, required, []string{"submission", "language"})
+	// str_fields, err := GenerateSelectSQL(sub, required, []string{"submission", "language"})
+	str_fields, err := GenerateSelectSQL(sub, required, []string{"submission"})
 	if err != nil {
 		return nil, err
 	}

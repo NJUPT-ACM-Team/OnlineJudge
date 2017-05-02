@@ -8,6 +8,7 @@ import (
 type Language struct {
 	LangId      int64 `db:"lang_id"`
 	Language    string
+	Suffix      string
 	OptionValue string `db:"option_value"`
 	Compiler    string
 	OJIdFK      int64 `db:"oj_id_fk"`

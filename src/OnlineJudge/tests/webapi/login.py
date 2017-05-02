@@ -1,9 +1,9 @@
 import requests
 
 data = {
-        "login_auth_request": {
-    "username" : "kevince",
-    "password": "abc",
+    "login_auth_request": {
+        "username" : "kevince",
+        "password": "abc",
     }
 }
 

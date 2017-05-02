@@ -14,7 +14,10 @@ Daemon: deps
 VJudger: deps
 	go install VJudger
 
+LJudger: deps
+	go install LJudger
+
 fmt:
 	go fmt OnlineJudge/... Daemon/... VJudger/... WebBackend/...
 
-all: fmt WebBackend Daemon VJudger
+all: fmt WebBackend Daemon VJudger LJudger
