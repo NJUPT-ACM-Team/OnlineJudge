@@ -4,10 +4,13 @@ package api;
 
 import "api/common.proto";
 
-message ListContestsRequest {
-	int32 per_page = 1;
-	int32 current_page = 2;
+enum CType {
+    ICPC = 0;
+    OI = 1;
+    CF = 2;	
+}
 
+message ListContestsRequest {
 	enum Element {
 		CID = 0;
 		TITLE = 1;
@@ -15,20 +18,15 @@ message ListContestsRequest {
 		ENDTIME = 3;
 		STATUS = 4;
 	}
+
+	int32 per_page = 1;
+	int32 current_page = 2;
+
 	Element order_by = 3;
 	bool is_desc = 4;
-
-	message Filter {
-		enum CType {
-			ICPC = 0;
-			OI = 1;
-			CF = 2;	
-		}
-		CType ctype = 1;
-		bool is_public = 2;
-		bool is_virtual = 3;
-	}
-	Filter filter = 5;
+    CType filter_ctype = 5;
+    bool filter_is_public = 6;
+    bool filter_is_virtual = 7;
 }
 
 message ListContestsResponse {
@@ -39,6 +37,7 @@ message ListContestsResponse {
 		string end_time = 4;
 		string status = 5;
 		string access = 6;
+        CType contest_type = 7;
 	}
 	repeated PerLine lines = 1;
 	int32 total_lines = 2;
