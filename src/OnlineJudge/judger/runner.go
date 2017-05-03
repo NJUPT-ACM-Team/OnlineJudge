@@ -25,19 +25,9 @@ type JudgerInterface interface {
 	UpdateStatus(string, string, int)
 }
 
-var jmq *mq.MQ
-var judger *Judger
-
-func Init() {
-	jmq = mq.New()
-	if err := jmq.Connect(); err != nil {
-		panic(err)
-	}
-	judger = NewJudger()
-}
-
 func Wrapper(fn func(JudgerInterface)) func([]byte) {
 	return func(b []byte) {
+		judger := NewJudger()
 		s := &msgs.SubmitMQ{}
 		proto.Unmarshal(b, s)
 		judger.Init(s)
@@ -58,7 +48,10 @@ func RunMJ(fn func(JudgerInterface)) {
 }
 
 func Run(oj string, fn func([]byte)) {
-	Init()
+	jmq := mq.New()
+	if err := jmq.Connect(); err != nil {
+		panic(err)
+	}
 	switch oj {
 	case "l":
 		if err := jmq.DeclareLJ(); err != nil {

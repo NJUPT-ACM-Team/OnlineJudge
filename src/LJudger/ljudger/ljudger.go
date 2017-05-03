@@ -3,6 +3,7 @@ package ljudger
 import (
 	"OnlineJudge/base"
 	//	"OnlineJudge/irpc"
+	"LJudger/core"
 	"OnlineJudge/judger"
 
 	"fmt"
@@ -14,30 +15,6 @@ const (
 	SRCFILE = "src"
 )
 
-// manual judge
-type Result struct {
-	Status     string
-	StatusCode string
-}
-
-/*
-func ManualJudge(oj string, pid string, src string, lang string) *Result {
-	fmt.Printf("Problem Sid: %s-%s\n", oj, pid)
-	fmt.Printf("Language:%s\nCode:\n%s\n", lang, src)
-	fmt.Printf("1.ac\n2.wa\nchoice:")
-	var in int
-	fmt.Scanf("%d", &in)
-	fmt.Println(in)
-	switch in {
-	case 1:
-		return &Result{Status: "Accepted", StatusCode: "ac"}
-	case 2:
-		return &Result{Status: "Wrong Answer", StatusCode: "wa"}
-	}
-	return &Result{Status: "System Error", StatusCode: "se"}
-}
-*/
-
 type LocalJudger struct {
 	Dir      string
 	Jdi      judger.JudgerInterface
@@ -45,6 +22,8 @@ type LocalJudger struct {
 	RunDir   string
 	InDir    string
 	OutDir   string
+	SrcPath  string
+	SpjPath  string
 }
 
 func NewLocalJudger(dir string, jdi judger.JudgerInterface) *LocalJudger {
@@ -88,10 +67,11 @@ func (this *LocalJudger) PrepareData() error {
 	if err := base.WriteFile(src_path, []byte(this.Jdi.GetCode())); err != nil {
 		return err
 	}
+	this.SrcPath = src_path
 
-	// spj code
+	// TODO:spj code
 	/*
-		if this.Jdi.GetIsSpj() {
+		if this.Jdi.IsSpj() {
 		}
 	*/
 
@@ -109,6 +89,22 @@ func (this *LocalJudger) PrepareData() error {
 		}
 	}
 	return nil
+}
+
+func NewCoreMode(lj *LocalJudger) *core.Mode {
+	mode := &core.Mode{
+		InDir:   lj.InDir,
+		OutDir:  lj.OutDir,
+		SrcPath: lj.SrcPath,
+		SpjPath: lj.SpjPath,
+	}
+
+	// TODO:set mode
+	if lj.Jdi.IsSpj() {
+		mode.SetSPJ()
+	}
+
+	return mode
 }
 
 func EntryPoint(jdi judger.JudgerInterface) {
@@ -155,13 +151,3 @@ func EntryPoint(jdi judger.JudgerInterface) {
 	log.Println(res)
 }
 */
-
-type VJudger interface {
-	Init(judger.JudgerInterface) error
-	Login(judger.JudgerInterface) error
-	Submit(judger.JudgerInterface) error
-	GetStatus(judger.JudgerInterface) error
-	Run(judger.JudgerInterface) error
-	Match(string) bool
-	// Crawler(string) error
-}

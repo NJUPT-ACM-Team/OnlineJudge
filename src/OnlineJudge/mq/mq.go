@@ -132,11 +132,26 @@ func (this *MQ) PublishMJ(body []byte) error {
 	return this.Publish(body, this.mjq.Name)
 }
 
-func (this *MQ) Receiver(qname string, fn func([]byte)) error {
+func Worker(id int, fn func([]byte), jobs <-chan amqp.Delivery) {
+	for j := range jobs {
+		fn(j.Body)
+		j.Ack(false)
+	}
+}
+
+func (this *MQ) Receiver(qname string, fn func([]byte), num int) error {
+	// start func pool
+	jobs := make(chan amqp.Delivery)
+
+	// start workers
+	for i := 1; i <= num; i++ {
+		go Worker(i, fn, jobs)
+	}
+
 	msgs, err := this.ch.Consume(
 		qname, // queue
 		"",    // consumer
-		true,  // auto-ack
+		false, // auto-ack
 		false, // exclusive
 		false, // no-local
 		false, // no-wait
@@ -147,20 +162,22 @@ func (this *MQ) Receiver(qname string, fn func([]byte)) error {
 	}
 	go func() {
 		for d := range msgs {
-			fn(d.Body)
+			jobs <- d
+			// fn(d.Body)
+			// d.Ack(false)
 		}
 	}()
 	return nil
 }
 
 func (this *MQ) LJReceiver(fn func([]byte)) error {
-	return this.Receiver(this.ljq.Name, fn)
+	return this.Receiver(this.ljq.Name, fn, 1)
 }
 
 func (this *MQ) VJReceiver(fn func([]byte)) error {
-	return this.Receiver(this.vjq.Name, fn)
+	return this.Receiver(this.vjq.Name, fn, 8)
 }
 
 func (this *MQ) MJReceiver(fn func([]byte)) error {
-	return this.Receiver(this.mjq.Name, fn)
+	return this.Receiver(this.mjq.Name, fn, 1)
 }

@@ -12,7 +12,7 @@ func init() {
 	cfg := config.Load("")
 	mq.Init(cfg.GetMQConfig())
 	irpc.Init()
-	judger.Init()
+	// judger.Init()
 }
 
 func main() {
