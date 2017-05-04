@@ -316,25 +316,17 @@ type ListContestsPagination struct {
 	Contests    []Contest
 }
 
-/*
 func XQuery_List_Contests_With_Filter(
 	tx *sqlx.Tx,
-	show_hidden bool,
-	filter_ctype string,
-	filter_status string,
-	orderby_element string,
-	is_desc bool,
-	offset int,
 	per_page int,
 	current_page int,
+	order_by_element string,
+	is_desc bool,
+	filter_ctype_element string,
+	filter_is_public bool,
+	filter_is_virtual bool,
 	required []string,
 	excepts []string) (*ListProblemsPagination, error) {
 
-	mp := MetaProblem{}
-	mps := []MetaProblem{}
-	str_fields, err := GenerateSelectSQL(&mp, required, excepts)
-	if err != nil {
-		return nil, err
-	}
+	return nil, nil
 }
-*/

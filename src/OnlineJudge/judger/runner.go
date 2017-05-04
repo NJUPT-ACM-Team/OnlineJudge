@@ -17,6 +17,8 @@ type JudgerInterface interface {
 	IsLocal() bool
 	IsVirtual() bool
 	IsSpj() bool
+	GetTimeLimit() int
+	GetMemoryLimit() int
 	GetTestCasesBrief() []*msgs.TestCase
 	GetLanguage() *msgs.SubmitLanguage
 

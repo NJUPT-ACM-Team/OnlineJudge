@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	SRCFILE = "src"
+	COREPATH = ""
 )
 
 type LocalJudger struct {
@@ -36,8 +36,8 @@ func NewLocalJudger(dir string, jdi judger.JudgerInterface) *LocalJudger {
 func (this *LocalJudger) InitDir() error {
 	this.JudgeDir = path.Join(this.Dir, fmt.Sprintf("%d", this.Jdi.GetRunId()))
 	this.RunDir = path.Join(this.JudgeDir, "run")
-	this.InDir = path.Join(this.JudgeDir, "data", "in")
-	this.OutDir = path.Join(this.JudgeDir, "data", "out")
+	this.InDir = path.Join(this.RunDir, "in")
+	this.OutDir = path.Join(this.RunDir, "out")
 
 	if base.DirExists(this.JudgeDir) {
 		if err := base.RemoveDir(this.JudgeDir); err != nil {
@@ -93,10 +93,13 @@ func (this *LocalJudger) PrepareData() error {
 
 func NewCoreMode(lj *LocalJudger) *core.Mode {
 	mode := &core.Mode{
-		InDir:   lj.InDir,
-		OutDir:  lj.OutDir,
-		SrcPath: lj.SrcPath,
-		SpjPath: lj.SpjPath,
+		InDir:       lj.InDir,
+		OutDir:      lj.OutDir,
+		SrcPath:     lj.SrcPath,
+		SpjPath:     lj.SpjPath,
+		RunDir:      lj.RunDir,
+		TimeLimit:   lj.Jdi.GetTimeLimit(),
+		MemoryLimit: lj.Jdi.GetMemoryLimit(),
 	}
 
 	// TODO:set mode
@@ -116,6 +119,17 @@ func EntryPoint(jdi judger.JudgerInterface) {
 	if err := lj.PrepareData(); err != nil {
 		log.Fatal(err)
 	}
+
+	mode := NewCoreMode(lj)
+	core := core.NewCore(COREPATH)
+	core.SetMode(mode)
+	if err := core.Run(); err != nil {
+		// TODO: set SE
+		log.Fatal(err)
+	}
+	res := core.GetResult()
+	log.Println(res)
+	// TODO: set result
 }
 
 /*

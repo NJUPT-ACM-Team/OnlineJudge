@@ -29,9 +29,11 @@ message SubmitMQ {
     string oj_name = 2;
     string oj_pid = 3;
     string code = 4;
-    bool is_local = 5;
-    bool is_spj = 6;
-    string spj_code = 7;
-    SubmitLanguage language = 8;
-    repeated TestCase testcases = 9;
+    int32 time_limit = 5;
+    int32 memory_limit = 6;
+    bool is_local = 7;
+    bool is_spj = 8;
+    string spj_code = 9;
+    SubmitLanguage language = 10;
+    repeated TestCase testcases = 11;
 }

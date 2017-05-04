@@ -20,6 +20,14 @@ func (this *Judger) Init(sub *msgs.SubmitMQ) {
 	this.info = sub
 }
 
+func (this *Judger) GetTimeLimit() int {
+	return int(this.info.GetTimeLimit())
+}
+
+func (this *Judger) GetMemoryLimit() int {
+	return int(this.info.GetMemoryLimit())
+}
+
 func (this *Judger) GetRunId() int64 {
 	return this.info.GetRunId()
 }

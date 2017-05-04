@@ -59,6 +59,8 @@ func SubmitToMQ(jmq *mq.MQ, req *rpc.StartJudgingRequest) {
 		return
 	}
 
+	// Get limits of language
+
 	request := &msgs.SubmitMQ{
 		RunId:   req.GetRunId(),
 		OjName:  mp.OJName,
@@ -66,6 +68,9 @@ func SubmitToMQ(jmq *mq.MQ, req *rpc.StartJudgingRequest) {
 		Code:    sub.Code,
 		IsLocal: mp.OJName == "local",
 		IsSpj:   sub.IsSpj,
+		// TODO: limits
+		TimeLimit:   1000,
+		MemoryLimit: 65536,
 		Language: &msgs.SubmitLanguage{
 			Compiler:    lang.Compiler,
 			Lang:        lang.Language,
