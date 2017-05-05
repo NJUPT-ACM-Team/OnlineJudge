@@ -22,12 +22,13 @@ var test_config = `
 		"params": {"parseTime": "true", "charset": "utf8"}
 	},
 	"rabbitmq": {
-		"username": "guest",
-		"password": "guest",
-		"address": "localhost:5672"
+		"username": "oj",
+		"password": "ojtest",
+		"address": "192.168.56.1:5672"
 	},
 	"irpc": {
-		"address": "localhost:9999"
+		"server_bind_address": "localhost:9999",
+		"client_connect_address": "192.168.56.1"
 	}
 
 }
@@ -48,7 +49,8 @@ type Config struct {
 		Address  string
 	}
 	IRPC struct {
-		Address string
+		ServerBindAddress    string
+		ClientConnectAddress string
 	}
 }
 

@@ -1,6 +1,8 @@
 package core
 
 import (
+	"OnlineJudge/irpc"
+
 	"os/exec"
 	"strconv"
 	"strings"
@@ -21,8 +23,10 @@ func (this *CoreImpl) SetMode(m *Mode) {
 	this.Mode = m
 }
 
-func (this *CoreImpl) GetResult() *Result {
-	return &Result{Status: this.out}
+func (this *CoreImpl) GetSubmissionStatus() *irpc.SubmissionStatus {
+	// return &irpc.SubmissionStatus{Status: this.out}
+	// TODO: parse result
+	return &irpc.SubmissionStatus{Status: "Accepted", StatusCode: "ac", TimeUsed: 90}
 }
 
 func (this *CoreImpl) Run() error {

@@ -10,7 +10,7 @@ import (
 var BIND string
 
 func Init() {
-	BIND = "localhost:9999"
+	BIND = "192.168.56.1:9999"
 }
 
 func Run() {

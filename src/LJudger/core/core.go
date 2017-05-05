@@ -1,10 +1,15 @@
 package core
 
+import (
+	"OnlineJudge/irpc"
+)
+
 type Result struct {
 	Status          string
 	StatusCode      string
 	TimeUsed        int
 	MemoryUsed      int
+	CEInfo          int
 	TestcasesPassed int
 }
 
@@ -74,5 +79,5 @@ func (this *Mode) IsICPC() bool {
 type Core interface {
 	SetMode(*Mode)
 	Run() error
-	GetResult() *Result
+	GetSubmissionStatus() *irpc.SubmissionStatus
 }

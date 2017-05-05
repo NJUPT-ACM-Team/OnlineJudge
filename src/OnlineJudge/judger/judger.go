@@ -1,6 +1,7 @@
 package judger
 
 import (
+	"OnlineJudge/irpc"
 	msgs "OnlineJudge/pbgen/messages"
 )
 
@@ -80,8 +81,22 @@ func (this *Judger) GetTestCase(id int64) *msgs.TestCase {
 	return nil
 }
 
-func (this *Judger) UpdateStatus(status string, status_code string, cases int) {
+func (this *Judger) UpdateStatus(subs *irpc.SubmissionStatus) error {
+	subs.RunId = this.GetRunId()
+	helper := irpc.NewHelper()
+	if err := helper.Connect(); err != nil {
+		return err
+	}
+	defer helper.Disconnect()
 
+	helper.NewClient()
+
+	// Set judging
+	_, err := helper.UpdateSubmissionStatus(subs)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (this *Judger) UpdateUsage(time_used int, memory_used int) {

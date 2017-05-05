@@ -1,6 +1,7 @@
 package judger
 
 import (
+	"OnlineJudge/irpc"
 	"OnlineJudge/mq"
 	msgs "OnlineJudge/pbgen/messages"
 
@@ -24,7 +25,7 @@ type JudgerInterface interface {
 
 	GetSpjCode() *msgs.SpjCode
 	GetTestCase(id int64) *msgs.TestCase
-	UpdateStatus(string, string, int)
+	UpdateStatus(*irpc.SubmissionStatus) error
 }
 
 func Wrapper(fn func(JudgerInterface)) func([]byte) {
