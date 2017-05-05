@@ -12,8 +12,9 @@ import (
 )
 
 const (
-	COREPATH  = "/home/kevince/OnlineJudgeCore/judger"
-	JUDGEROOT = "/tmp/testoj"
+	COREPATH   = "/home/kevince/OnlineJudgeCore/judger"
+	JUDGEROOT  = "/tmp/testoj"
+	RESULTFILE = "result.json"
 )
 
 type LocalJudger struct {
@@ -57,12 +58,6 @@ func (this *LocalJudger) InitDir() error {
 	if err := base.MakeDirs(this.OutDir); err != nil {
 		return err
 	}
-
-	// for testing
-	exec_out_dir := path.Join(this.RunDir, "exec_out")
-	if err := base.MakeDirs(exec_out_dir); err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -104,6 +99,7 @@ func NewCoreMode(lj *LocalJudger) *core.Mode {
 		OutDir:      lj.OutDir,
 		SrcPath:     lj.SrcPath,
 		SpjPath:     lj.SpjPath,
+		ResPath:     path.Join(lj.RunDir, RESULTFILE),
 		RunDir:      lj.RunDir,
 		TimeLimit:   lj.Jdi.GetTimeLimit(),
 		MemoryLimit: lj.Jdi.GetMemoryLimit(),
@@ -134,7 +130,10 @@ func EntryPoint(jdi judger.JudgerInterface) {
 		// TODO: set SE
 		log.Fatal(err)
 	}
-	subs := core.GetSubmissionStatus()
+	subs, err := core.GetSubmissionStatus()
+	if err != nil {
+		log.Fatal(err)
+	}
 	log.Println(subs)
 	// TODO: set result
 

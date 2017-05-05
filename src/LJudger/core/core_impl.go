@@ -3,6 +3,8 @@ package core
 import (
 	"OnlineJudge/irpc"
 
+	"encoding/json"
+	"io/ioutil"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -15,6 +17,14 @@ type CoreImpl struct {
 	out      string
 }
 
+type Json struct {
+	Memory  int
+	PassNum int
+	Result  string
+	Time    int
+	CE      string
+}
+
 func NewCore(path string) Core {
 	return &CoreImpl{CorePath: path}
 }
@@ -23,10 +33,50 @@ func (this *CoreImpl) SetMode(m *Mode) {
 	this.Mode = m
 }
 
-func (this *CoreImpl) GetSubmissionStatus() *irpc.SubmissionStatus {
+func GetStatusByStatusCode(sc string) string {
+	var status string
+	switch strings.ToLower(sc) {
+	case "ac":
+		status = "Accepted"
+	case "ce":
+		status = "Compile Error"
+	case "tle":
+		status = "Time Limit Exceed"
+	case "mle":
+		status = "Memory Limit Exceed"
+	case "ole":
+		status = "Output Limit Exceed"
+	case "wa":
+		status = "Wrong Answer"
+	case "pe":
+		status = "Presentation Error"
+	case "se":
+		status = "System Error"
+	default:
+		status = "Unknown"
+	}
+	return status
+}
+
+func (this *CoreImpl) GetSubmissionStatus() (*irpc.SubmissionStatus, error) {
 	// return &irpc.SubmissionStatus{Status: this.out}
 	// TODO: parse result
-	return &irpc.SubmissionStatus{Status: "Accepted", StatusCode: "ac", TimeUsed: 90}
+	data, err := ioutil.ReadFile(this.Mode.ResPath)
+	if err != nil {
+		return nil, err
+	}
+	c := &Json{}
+	if err := json.Unmarshal(data, c); err != nil {
+		return nil, err
+	}
+	return &irpc.SubmissionStatus{
+		Status:          GetStatusByStatusCode(strings.ToLower(c.Result)),
+		StatusCode:      strings.ToLower(c.Result),
+		TimeUsed:        int32(c.Time),
+		MemoryUsed:      int32(c.Memory),
+		CEInfo:          c.CE,
+		TestcasesPassed: int32(c.PassNum),
+	}, nil
 }
 
 func (this *CoreImpl) Run() error {

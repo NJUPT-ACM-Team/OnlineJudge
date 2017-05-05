@@ -25,6 +25,7 @@ type Mode struct {
 	OutDir      string
 	SrcPath     string
 	SpjPath     string
+	ResPath     string
 	TimeLimit   int
 	MemoryLimit int
 	JudgingMode uint16 // SPJ: 0x0001, OI: 0x0010, ICPC: 0x0100
@@ -79,5 +80,5 @@ func (this *Mode) IsICPC() bool {
 type Core interface {
 	SetMode(*Mode)
 	Run() error
-	GetSubmissionStatus() *irpc.SubmissionStatus
+	GetSubmissionStatus() (*irpc.SubmissionStatus, error)
 }
