@@ -150,6 +150,7 @@ CREATE TABLE Contests (
     lock_board_time DATETIME NOT NULL,
     hide_others_status BOOLEAN NOT NULL,
     is_hidden BOOLEAN NOT NULL,
+    password VARCHAR(64) NOT NULL,
 
     PRIMARY KEY (contest_id),
 	UNIQUE KEY (title)

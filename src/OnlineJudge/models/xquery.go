@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
+	"strings"
 )
 
 // Some more complex methods to query data
@@ -323,10 +324,114 @@ func XQuery_List_Contests_With_Filter(
 	order_by_element string,
 	is_desc bool,
 	filter_ctype_element string,
-	filter_is_public bool,
-	filter_is_virtual bool,
+	filter_is_public string,
+	filter_is_virtual string,
 	required []string,
-	excepts []string) (*ListProblemsPagination, error) {
+	excepts []string) (*ListContestsPagination, error) {
 
-	return nil, nil
+	// initFilters(&filter_ctype_element)
+	switch strings.ToUpper(filter_ctype_element) {
+	case "ICPC":
+		filter_ctype_element = "icpc"
+	case "OI":
+		filter_ctype_element = "oi"
+	case "CF":
+		filter_ctype_element = "cf"
+	default:
+		filter_ctype_element = "%"
+	}
+
+	switch strings.ToUpper(filter_is_public) {
+	case "PUBLIC":
+		filter_is_public = "1"
+	case "PRIVATE":
+		filter_is_public = "0"
+	default:
+		filter_is_public = "%"
+	}
+
+	switch strings.ToUpper(filter_is_virtual) {
+	case "VIRTUAL":
+		filter_is_virtual = "1"
+	case "FORMAL":
+		filter_is_virtual = "0"
+	default:
+		filter_is_virtual = "%"
+	}
+	// where sql
+	where_sql := `WHERE contest_type LIKE ? AND is_virtual LIKE ?`
+	if filter_is_public == "1" {
+		where_sql = JoinSQL(where_sql, `AND password=""`)
+	} else if filter_is_public == "0" {
+		where_sql = JoinSQL(where_sql, `AND password!=""`)
+	}
+	// Get count
+	count_sql := JoinSQL("SELECT COUNT(*) FROM Contests", where_sql)
+	fmt.Println(filter_ctype_element, filter_is_virtual)
+	var count int
+	if err := tx.Get(&count, count_sql,
+		filter_ctype_element, filter_is_virtual); err != nil {
+		return nil, err
+	}
+	ret := &ListContestsPagination{}
+	ret.TotalLines = count
+
+	if per_page <= 0 {
+		ret.TotalPages = 1
+		per_page = ret.TotalLines
+	} else {
+		ret.TotalPages = ret.TotalLines / per_page
+		if ret.TotalLines%per_page != 0 {
+			ret.TotalPages += 1
+		}
+		if ret.TotalPages == 0 {
+			ret.TotalPages = 1
+		}
+	}
+	if current_page == 0 {
+		current_page = 1
+	}
+	if current_page > ret.TotalPages {
+		current_page = ret.TotalPages
+	}
+	ret.CurrentPage = current_page
+
+	cst := &Contest{}
+	csts := []Contest{}
+	str_fields, err := GenerateSelectSQL(cst, required, excepts)
+	if err != nil {
+		return nil, err
+	}
+
+	var orderby string
+	switch order_by_element {
+	case "CID":
+		orderby = "contest_id"
+	case "TITLE":
+		orderby = "title"
+	case "STARTTIME":
+		orderby = "start_time"
+	case "ENDTIME":
+		orderby = "end_time"
+	case "STATUS":
+		orderby = "status"
+	default:
+		orderby = "contest_id"
+	}
+	if is_desc {
+		orderby = JoinSQL(orderby, "DESC")
+	}
+	order_by := JoinSQL("ORDER BY", orderby)
+	offset := (current_page - 1) * per_page
+	sql := JoinSQL(
+		"SELECT", str_fields, "FROM Contests", where_sql, order_by,
+		fmt.Sprintf(`LIMIT %d, %d`, offset, per_page))
+	fmt.Println(sql)
+	if err := tx.Select(
+		&csts, sql, filter_ctype_element, filter_is_virtual); err != nil {
+
+		return nil, err
+	}
+	ret.Contests = csts
+	return ret, nil
 }

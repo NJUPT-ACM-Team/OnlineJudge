@@ -17,6 +17,8 @@ type Contest struct {
 	EndTime          time.Time `db:"end_time"`
 	LockBoardTime    time.Time `db:"lock_board_time"`
 	HideOthersStatus bool      `db:"hide_others_status"`
+	IsHidden         bool      `db:"is_hidden"`
+	Password         string    `db:"password"`
 }
 
 type ContestModel struct {

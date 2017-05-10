@@ -56,3 +56,25 @@ func TestXQuery_List_Submissions_With_Filter(t *testing.T) {
 	}
 	t.Log(paging)
 }
+
+func TestXQuery_List_Contests_With_Filter(t *testing.T) {
+	db.InitTest()
+	DB := db.New()
+	tx := DB.MustBegin()
+	paging, err := XQuery_List_Contests_With_Filter(
+		tx,
+		10,
+		1,
+		"",   // order_by_element
+		true, // is_desc
+		"",   //filter_ctype_element
+		"",   // is_public
+		"",   // is_virtual
+		nil,
+		nil,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(paging)
+}

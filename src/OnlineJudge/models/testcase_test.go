@@ -1,6 +1,5 @@
 package models
 
-/*
 import (
 	"OnlineJudge/db"
 
@@ -11,7 +10,7 @@ func TestInsertTestCase(t *testing.T) {
 	DB := db.New()
 	tx := DB.MustBegin()
 	tcm := NewTestCaseModel()
-	id, err := tcm.InsertTestCase(tx, []byte("2 2"), []byte("4"), 3)
+	id, err := tcm.InsertTestCase(tx, []byte("2 2\n"), []byte("4\n"), 3)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -20,4 +19,3 @@ func TestInsertTestCase(t *testing.T) {
 	}
 	t.Log(id)
 }
-*/

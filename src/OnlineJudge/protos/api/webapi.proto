@@ -6,6 +6,7 @@ import "api/common.proto";
 
 import "api/list_problems.proto";
 import "api/list_submissions.proto";
+import "api/list_contests.proto";
 import "api/login.proto";
 import "api/register.proto";
 import "api/show_problem.proto";
@@ -22,8 +23,9 @@ import "api/logout.proto";
 message WebGetRequest {
     ListProblemsRequest list_problems_request = 1;
     ListSubmissionsRequest list_submissions_request = 2;
-    ShowProblemRequest show_problem_request = 3;
-	AboutRequest about_request = 4;
+    ListContestsRequest list_contests_request = 3;
+    ShowProblemRequest show_problem_request = 4;
+	AboutRequest about_request = 5;
 }
 
 
@@ -43,13 +45,14 @@ message WebResponse {
     string captcha_url = 2;
     ListProblemsResponse list_problems_response = 3;
     ListSubmissionsResponse list_submissions_response = 4;
-    LoginInitResponse login_init_response = 5;
-    LoginAuthResponse login_auth_response = 6;
-    RegisterResponse register_response = 7;
-    ShowProblemResponse show_problem_response = 8;
-    SubmitResponse submit_response = 9;
-	AboutResponse about_response = 10;
-    LogoutResponse logout_response = 11;
+    ListContestsResponse list_contests_response = 5;
+    LoginInitResponse login_init_response = 6;
+    LoginAuthResponse login_auth_response = 7;
+    RegisterResponse register_response = 8;
+    ShowProblemResponse show_problem_response = 9;
+    SubmitResponse submit_response = 10;
+	AboutResponse about_response = 11;
+    LogoutResponse logout_response = 12;
 
-    Error error = 12;
+    Error error = 13;
 }
