@@ -14,7 +14,7 @@ def Login():
         "password": "abc",
         }
     }
-    r = session.post("http://127.0.0.1:8000/api/inline/login/auth", json=data)
+    r = session.post("http://35.189.170.28:8000/api/inline/login/auth", json=data)
     dump(r.json())
 
 def Submit():
@@ -52,4 +52,4 @@ def Logout():
 if __name__ == '__main__':
     Login()
     # Logout() 
-    Submit()
+    # Submit()

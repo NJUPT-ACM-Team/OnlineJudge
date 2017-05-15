@@ -15,10 +15,11 @@ var test_config = `
 {
 	"mysql": {
 		"username": "test",
-		"dbname": "test",
+		"dbname": "ojtest2",
 		"password": "abc123",
 		"address": "localhost",
 		"protocol": "tcp",
+		"port": 3306,
 		"params": {"parseTime": "true", "charset": "utf8"}
 	},
 	"rabbitmq": {

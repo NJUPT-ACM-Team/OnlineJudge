@@ -41,6 +41,18 @@ func Query_All_OJs(
 	return ojs, nil
 }
 
+func Query_ProblemNum_By_OJIdFK(
+	tx *sqlx.Tx, id int64) (int32, error) {
+
+	var count int32
+	if err := tx.Get(&count, "SELECT COUNT(*) FROM MetaProblems WHERE oj_id_fk=?",
+		id); err != nil {
+
+		return 0, err
+	}
+	return count, nil
+}
+
 // Need to be tested
 func Query_All_OJNames(tx *sqlx.Tx) ([]string, error) {
 	ojs := []string{}

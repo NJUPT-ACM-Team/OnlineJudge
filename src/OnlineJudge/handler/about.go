@@ -26,6 +26,8 @@ func (this *BasicHandler) About(response *api.AboutResponse, req *api.AboutReque
 				StatusInfo: oj.StatusInfo,
 				Lastcheck:  oj.LastCheck.String(),
 			}
+			num, _ := models.Query_ProblemNum_By_OJIdFK(tx, oj.OJId)
+			temp.ProblemNum = num
 			ojs = append(ojs, temp)
 		}
 		response.OjsList = ojs

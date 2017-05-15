@@ -52,8 +52,8 @@ func ListContests_BuildResponse(
 			Title:       contest.Title,
 			StartTime:   contest.StartTime.String(),
 			EndTime:     contest.EndTime.String(),
-			Status:      "",
-			Access:      "",
+			Status:      "ended",
+			Access:      "public",
 			ContestType: contest.ContestType,
 		}
 		lines = append(lines, line)

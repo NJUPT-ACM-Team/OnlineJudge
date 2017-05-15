@@ -11,4 +11,5 @@ message OJInfo {
 	string status = 6;
 	string status_info = 7;
 	string lastcheck = 8;
+    int32 problem_num = 9;
 }

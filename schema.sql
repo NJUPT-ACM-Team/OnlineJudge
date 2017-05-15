@@ -229,6 +229,9 @@ VALUES ('c++', '1', 'g++4.8', 'cpp', '1');
 INSERT INTO Languages (language, option_value, compiler, suffix, oj_id_fk) 
 VALUES ('c++', '1', 'g++4.9', 'cpp', '2');
 
+INSERT INTO Languages (language, option_value, compiler, suffix, oj_id_fk) 
+VALUES ('java', '2', 'java1.8', 'java', '2');
+
 INSERT INTO MetaProblems (spj_code, title, description, input, output, sample_in, sample_out, time_limit, case_time_limit, memory_limit, number_of_testcases, source, hint, hide, oj_name, oj_id_fk, oj_pid, uploader_name)
 VALUES ('', 'A+B', 'caculate result of a+b', 'Two integers', 'Sum of two integers a+b', '1 1', '2', '1000', '1000', '65536', '0', 'test', 'for test', 0,'zoj', 1, 1000, 'kevince');
 
