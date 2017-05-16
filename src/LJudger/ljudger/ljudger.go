@@ -64,7 +64,13 @@ func (this *LocalJudger) InitDir() error {
 func (this *LocalJudger) PrepareData() error {
 	// source code
 	sfx := this.Jdi.GetLanguage().GetSuffix()
-	src_file := "src." + sfx
+	var src_file string
+	switch this.Jdi.GetLanguage().GetLang() {
+	case "c++":
+		src_file = "src." + sfx
+	case "java":
+		src_file = "Main.java"
+	}
 	src_path := path.Join(this.JudgeDir, src_file)
 	if err := base.WriteFile(src_path, []byte(this.Jdi.GetCode())); err != nil {
 		return err
