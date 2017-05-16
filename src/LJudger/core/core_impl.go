@@ -52,6 +52,8 @@ func GetStatusByStatusCode(sc string) string {
 		status = "Presentation Error"
 	case "se":
 		status = "System Error"
+	case "re":
+		status = "Runtime Error"
 	default:
 		status = "Unknown"
 	}
