@@ -271,3 +271,22 @@ func Query_Total_AC_Submissions_By_MetaPid(
 	return count, nil
 
 }
+
+func Query_Contest_By_ContestId(
+	tx *sqlx.Tx,
+	contest_id int64,
+	required []string,
+	excepts []string) (*Contest, error) {
+
+	cst := &Contest{}
+	str_fields, err := GenerateSelectSQL(cst, required, excepts)
+	if err != nil {
+		return nil, err
+	}
+	sql := JoinSQL("SELECT", str_fields, "FROM Contests", "WHERE contest_id=?")
+	if err := tx.Get(cst, sql, contest_id); err != nil {
+		return nil, err
+	}
+
+	return cst, nil
+}

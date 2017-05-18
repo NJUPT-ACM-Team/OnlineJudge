@@ -10,6 +10,7 @@ import "api/list_contests.proto";
 import "api/login.proto";
 import "api/register.proto";
 import "api/show_problem.proto";
+import "api/show_contest.proto";
 import "api/submit.proto";
 import "api/about.proto";
 import "api/logout.proto";
@@ -26,6 +27,7 @@ message WebGetRequest {
     ListContestsRequest list_contests_request = 3;
     ShowProblemRequest show_problem_request = 4;
 	AboutRequest about_request = 5;
+    ShowContestRequest show_contest = 6;
 }
 
 
@@ -53,6 +55,6 @@ message WebResponse {
     SubmitResponse submit_response = 10;
 	AboutResponse about_response = 11;
     LogoutResponse logout_response = 12;
-
-    Error error = 13;
+    ShowContestResponse show_contest_response = 13;
+    Error error = 14;
 }

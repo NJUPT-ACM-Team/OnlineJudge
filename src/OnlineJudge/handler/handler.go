@@ -35,6 +35,7 @@ type Handler interface {
 	Logout(*api.LogoutResponse, *api.LogoutRequest)                // OK
 	Register(*api.RegisterResponse, *api.RegisterRequest)          // OK
 	ShowProblem(*api.ShowProblemResponse, *api.ShowProblemRequest) // OK
+	ShowContest(*api.ShowContestResponse, *api.ShowContestRequest) // OK
 	Submit(*api.SubmitResponse, *api.SubmitRequest)
 }
 

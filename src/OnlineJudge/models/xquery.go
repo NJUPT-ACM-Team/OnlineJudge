@@ -426,7 +426,6 @@ func XQuery_List_Contests_With_Filter(
 	sql := JoinSQL(
 		"SELECT", str_fields, "FROM Contests", where_sql, order_by,
 		fmt.Sprintf(`LIMIT %d, %d`, offset, per_page))
-	fmt.Println(sql)
 	if err := tx.Select(
 		&csts, sql, filter_ctype_element, filter_is_virtual); err != nil {
 

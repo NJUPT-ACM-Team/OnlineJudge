@@ -53,3 +53,15 @@ func TestQuery_Limits_By_MetaPid(t *testing.T) {
 	}
 	t.Log(tms)
 }
+
+func TestQuery_Contest_By_ContestId(t *testing.T) {
+	db.InitTest()
+	DB := db.New()
+	tx := DB.MustBegin()
+
+	cst, err := Query_Contest_By_ContestId(tx, 3, nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(cst)
+}

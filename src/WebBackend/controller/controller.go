@@ -62,6 +62,12 @@ func makeParamTypeRight(request interface{}, key string, val string) (interface{
 				return nil, err
 			}
 			return int32(i), nil
+		case int64:
+			i, err := strconv.Atoi(val)
+			if err != nil {
+				return nil, err
+			}
+			return int64(i), nil
 		case string:
 			return val, nil
 		case bool:

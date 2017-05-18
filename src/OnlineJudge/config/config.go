@@ -28,8 +28,8 @@ var test_config = `
 		"address": "192.168.56.1:5672"
 	},
 	"irpc": {
-		"server_bind_address": "localhost:9999",
-		"client_connect_address": "192.168.56.1"
+		"server_bind_address": "192.168.56.1:9999",
+		"client_connect_address": "192.168.56.1:9999"
 	}
 
 }

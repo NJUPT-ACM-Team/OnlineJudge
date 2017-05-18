@@ -130,4 +130,10 @@ var api_routes = Routes{
 		Pattern:     "/contests",
 		HandlerFunc: ctler.ListContests,
 	},
+	Route{
+		Name:        "ShowContest",
+		Method:      "GET",
+		Pattern:     "/contest",
+		HandlerFunc: ctler.ShowContest,
+	},
 }

@@ -1,5 +1,6 @@
 package models
 
+/*
 import (
 	"OnlineJudge/db"
 
@@ -19,3 +20,4 @@ func TestInsertTestCase(t *testing.T) {
 	}
 	t.Log(id)
 }
+*/
