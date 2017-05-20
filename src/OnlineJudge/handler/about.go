@@ -8,6 +8,7 @@ import (
 func (this *BasicHandler) About(response *api.AboutResponse, req *api.AboutRequest) {
 	defer PanicHandler(response, this.debug)
 	tx := this.dbu.MustBegin()
+	defer this.dbu.MustCommit()
 
 	if req.GetNeedOjsList() == true {
 		var ojs []*api.OJInfo

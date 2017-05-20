@@ -45,6 +45,8 @@ func Submit_BuildResponse(
 		return
 	}
 	tx := dbu.MustBegin()
+	defer dbu.MustCommit()
+
 	mp, err := models.Query_MetaProblem_By_OJName_OJPid(tx, pid.OJName,
 		pid.OJPid, []string{"meta_pid", "hide", "is_spj"}, nil)
 	PanicOnError(err)
@@ -81,6 +83,7 @@ func Submit_BuildResponse(
 
 	dbu.MustCommit()
 	tx = dbu.MustBegin()
+	defer dbu.MustCommit()
 	response.RunId = run_id
 
 	// Use RPC to call Daemon to judge the submission
@@ -93,7 +96,6 @@ func Submit_BuildResponse(
 		if err := subm.SetSystemError(tx, run_id); err != nil {
 			PanicOnError(err)
 		}
-		dbu.MustCommit()
 		return
 	}
 	defer helper.Disconnect()
@@ -107,7 +109,6 @@ func Submit_BuildResponse(
 		if err := subm.SetSystemError(tx, run_id); err != nil {
 			PanicOnError(err)
 		}
-		dbu.MustCommit()
 		return
 	}
 }

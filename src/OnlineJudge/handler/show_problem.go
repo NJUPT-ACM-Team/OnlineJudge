@@ -10,18 +10,16 @@ import (
 
 func (this *AdminHandler) ShowProblem(response *api.ShowProblemResponse, req *api.ShowProblemRequest) {
 	defer PanicHandler(response, this.debug)
-	this.OpenDBU()
-	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
+	defer this.dbu.MustCommit()
 
 	ShowProblem_BuildResponse(tx, response, req, true, this.debug)
 }
 
 func (this *BasicHandler) ShowProblem(response *api.ShowProblemResponse, req *api.ShowProblemRequest) {
 	defer PanicHandler(response, this.debug)
-	this.OpenDBU()
-	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
+	defer this.dbu.MustCommit()
 
 	ShowProblem_BuildResponse(tx, response, req, false, this.debug)
 }

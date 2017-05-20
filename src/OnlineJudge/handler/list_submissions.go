@@ -11,6 +11,7 @@ import (
 func (this *AdminHandler) ListSubmissions(response *api.ListSubmissionsResponse, req *api.ListSubmissionsRequest) {
 	defer PanicHandler(response, this.debug)
 	tx := this.dbu.MustBegin()
+	defer this.dbu.MustCommit()
 
 	ListSubmissions_BuildResponse(
 		tx, response, req, this.session.GetUsername(), true, true, this.debug)
@@ -19,6 +20,7 @@ func (this *AdminHandler) ListSubmissions(response *api.ListSubmissionsResponse,
 func (this *BasicHandler) ListSubmissions(response *api.ListSubmissionsResponse, req *api.ListSubmissionsRequest) {
 	defer PanicHandler(response, this.debug)
 	tx := this.dbu.MustBegin()
+	defer this.dbu.MustCommit()
 
 	ListSubmissions_BuildResponse(
 		tx, response, req, this.session.GetUsername(), false, false, this.debug)

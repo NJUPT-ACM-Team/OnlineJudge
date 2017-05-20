@@ -35,7 +35,7 @@ func NewDBU(d *sqlx.DB) *DBUtil {
 
 func (this *DBUtil) MustCommit() {
 	if err := this.Tx.Commit(); err != nil {
-		panic(err)
+		// Log
 	}
 }
 

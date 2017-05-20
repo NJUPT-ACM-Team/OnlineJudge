@@ -11,6 +11,7 @@ import (
 func (this *AdminHandler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
 	defer PanicHandler(response, this.debug)
 	tx := this.dbu.MustBegin()
+	defer this.dbu.MustCommit()
 
 	ListProblems_BuildResponse(
 		tx, response, req, this.session.GetUsername(), true, this.debug)
@@ -19,6 +20,7 @@ func (this *AdminHandler) ListProblems(response *api.ListProblemsResponse, req *
 func (this *BasicHandler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
 	defer PanicHandler(response, this.debug)
 	tx := this.dbu.MustBegin()
+	defer this.dbu.MustCommit()
 
 	// filter := req.GetFilter()
 	if req.GetFilterPStatus() != 0 {
@@ -33,6 +35,7 @@ func (this *BasicHandler) ListProblems(response *api.ListProblemsResponse, req *
 func (this *UserHandler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
 	defer PanicHandler(response, this.debug)
 	tx := this.dbu.MustBegin()
+	defer this.dbu.MustCommit()
 
 	ListProblems_BuildResponse(
 		tx, response, req, this.session.GetUsername(), false, this.debug)
