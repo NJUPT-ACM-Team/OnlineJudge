@@ -17,8 +17,6 @@ func (this *BasicHandler) LoginInit(response *api.LoginInitResponse, req *api.Lo
 
 func (this *BasicHandler) LoginAuth(response *api.LoginAuthResponse, req *api.LoginAuthRequest) {
 	defer PanicHandler(response, this.debug)
-	this.OpenDBU()
-	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
 
 	// Authentic the login information

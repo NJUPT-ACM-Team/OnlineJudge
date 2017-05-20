@@ -10,8 +10,6 @@ import (
 
 func (this *AdminHandler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
 	defer PanicHandler(response, this.debug)
-	this.OpenDBU()
-	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
 
 	ListProblems_BuildResponse(
@@ -20,8 +18,6 @@ func (this *AdminHandler) ListProblems(response *api.ListProblemsResponse, req *
 
 func (this *BasicHandler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
 	defer PanicHandler(response, this.debug)
-	this.OpenDBU()
-	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
 
 	// filter := req.GetFilter()
@@ -36,8 +32,6 @@ func (this *BasicHandler) ListProblems(response *api.ListProblemsResponse, req *
 
 func (this *UserHandler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
 	defer PanicHandler(response, this.debug)
-	this.OpenDBU()
-	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
 
 	ListProblems_BuildResponse(

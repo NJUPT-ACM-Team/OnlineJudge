@@ -48,6 +48,19 @@ func (this *DBUtil) Close() {
 	this.db.Close()
 }
 
+var dbM *sqlx.DB
+
+func MustGetDB() *sqlx.DB {
+	if dbM == nil {
+		db, err := NewDB()
+		if err != nil {
+			panic(err)
+		}
+		dbM = db
+	}
+	return dbM
+}
+
 func NewDB() (*sqlx.DB, error) {
 	InitTest()
 	dn := config.GetDriverName()

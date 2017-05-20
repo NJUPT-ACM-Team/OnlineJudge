@@ -10,8 +10,6 @@ import (
 
 func (this *AdminHandler) ListSubmissions(response *api.ListSubmissionsResponse, req *api.ListSubmissionsRequest) {
 	defer PanicHandler(response, this.debug)
-	this.OpenDBU()
-	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
 
 	ListSubmissions_BuildResponse(
@@ -20,8 +18,6 @@ func (this *AdminHandler) ListSubmissions(response *api.ListSubmissionsResponse,
 
 func (this *BasicHandler) ListSubmissions(response *api.ListSubmissionsResponse, req *api.ListSubmissionsRequest) {
 	defer PanicHandler(response, this.debug)
-	this.OpenDBU()
-	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
 
 	ListSubmissions_BuildResponse(

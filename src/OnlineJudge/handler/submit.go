@@ -13,8 +13,6 @@ import (
 
 func (this *AdminHandler) Submit(response *api.SubmitResponse, req *api.SubmitRequest) {
 	defer PanicHandler(response, this.debug)
-	this.OpenDBU()
-	defer this.CloseDBU()
 	Submit_BuildResponse(this.dbu, response, req,
 		this.session.GetUserId(), this.session.GetIPAddr(), true, this.debug)
 }
@@ -27,8 +25,6 @@ func (this *BasicHandler) Submit(response *api.SubmitResponse, req *api.SubmitRe
 // Depend on MetaProblems, OJInfo,
 func (this *UserHandler) Submit(response *api.SubmitResponse, req *api.SubmitRequest) {
 	defer PanicHandler(response, this.debug)
-	this.OpenDBU()
-	defer this.CloseDBU()
 	Submit_BuildResponse(this.dbu, response, req,
 		this.session.GetUserId(), this.session.GetIPAddr(), false, this.debug)
 }

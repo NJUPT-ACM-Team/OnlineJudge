@@ -10,8 +10,6 @@ import (
 
 func (this *AdminHandler) ShowContest(response *api.ShowContestResponse, req *api.ShowContestRequest) {
 	defer PanicHandler(response, this.debug)
-	this.OpenDBU()
-	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
 
 	ShowContest_BuildResponse(tx, response, req, int64(req.GetContestId()), true, this.debug)
@@ -19,8 +17,6 @@ func (this *AdminHandler) ShowContest(response *api.ShowContestResponse, req *ap
 
 func (this *BasicHandler) ShowContest(response *api.ShowContestResponse, req *api.ShowContestRequest) {
 	defer PanicHandler(response, this.debug)
-	this.OpenDBU()
-	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
 
 	fmt.Println(req.GetContestId())

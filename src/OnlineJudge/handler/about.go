@@ -7,8 +7,6 @@ import (
 
 func (this *BasicHandler) About(response *api.AboutResponse, req *api.AboutRequest) {
 	defer PanicHandler(response, this.debug)
-	this.OpenDBU()
-	defer this.CloseDBU()
 	tx := this.dbu.MustBegin()
 
 	if req.GetNeedOjsList() == true {

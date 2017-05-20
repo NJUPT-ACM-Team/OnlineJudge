@@ -5,6 +5,7 @@ import (
 	"OnlineJudge/pbgen/api"
 	locals "OnlineJudge/sessions"
 	"github.com/jmoiron/sqlx"
+	//	"log"
 )
 
 // For testing purpose
@@ -67,6 +68,7 @@ func NewHandler(sess locals.Session, dbg bool) Handler {
 	basic := &BasicHandler{
 		session: sess,
 		debug:   dbg,
+		dbu:     db.NewDBU(db.MustGetDB()),
 	}
 	if !CheckLogin(sess) {
 		return basic
@@ -83,15 +85,21 @@ func NewHandler(sess locals.Session, dbg bool) Handler {
 }
 
 func (this *BasicHandler) OpenDBU() {
-	d, err := db.NewDB()
-	if err != nil {
-		panic(err)
-	}
-	this.dbu = db.NewDBU(d)
+	/*
+		log.Println("open dbu.")
+		d, err := db.NewDB()
+		if err != nil {
+			panic(err)
+		}
+		this.dbu = db.NewDBU(d)
+	*/
 }
 
 func (this *BasicHandler) CloseDBU() {
-	this.dbu.Close()
+	/*
+		log.Println("close dbu.")
+		this.dbu.Close()
+	*/
 }
 
 func PanicOnError(err error) {
