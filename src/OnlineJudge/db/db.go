@@ -3,6 +3,8 @@ package db
 import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
+
+	"log"
 )
 
 type Config interface {
@@ -33,9 +35,13 @@ func NewDBU(d *sqlx.DB) *DBUtil {
 	return &DBUtil{db: d}
 }
 
+func (this *DBUtil) Rollback() {
+	this.Tx.Rollback()
+}
+
 func (this *DBUtil) MustCommit() {
 	if err := this.Tx.Commit(); err != nil {
-		// Log
+		log.Println("failed to commit:" + err.Error())
 	}
 }
 

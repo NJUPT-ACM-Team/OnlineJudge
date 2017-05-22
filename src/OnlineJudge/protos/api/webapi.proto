@@ -7,6 +7,7 @@ import "api/common.proto";
 import "api/list_problems.proto";
 import "api/list_submissions.proto";
 import "api/list_contests.proto";
+import "api/save_contest.proto";
 import "api/login.proto";
 import "api/register.proto";
 import "api/show_problem.proto";
@@ -40,6 +41,7 @@ message WebPostRequest {
     RegisterRequest register_request = 5;
     SubmitRequest submit_request = 6;
     LogoutRequest logout_request = 7;
+    SaveContestRequest save_contest_request = 8;
 }
 
 message WebResponse {
@@ -56,5 +58,6 @@ message WebResponse {
 	AboutResponse about_response = 11;
     LogoutResponse logout_response = 12;
     ShowContestResponse show_contest_response = 13;
-    Error error = 14;
+    SaveContestResponse save_contest_response = 14;
+    Error error = 15;
 }

@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package api;
+
+import "api/common.proto";
+
+message SaveContestRequest{
+    message ContestProblem {
+        string alias = 1;
+        string problem_sid = 2;
+        int32 id = 3;
+        int64 meta_pid = 4;
+    }
+
+    int64 contest_id = 1;
+
+    string title = 2;
+    string description = 3;
+    bool is_virtual = 4;
+    string contest_type = 5;
+    string start_time = 6;
+    string end_time = 7;
+    string lock_board_time = 8;
+    bool hide_others_status = 9;
+    bool is_hidden = 10;
+    string password = 11;
+    repeated ContestProblem problems = 12; // use sid
+}
+
+message SaveContestResponse {
+    int64 contest_id = 1;
+    Error error = 2;
+}

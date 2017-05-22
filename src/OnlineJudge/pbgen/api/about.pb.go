@@ -17,6 +17,7 @@ It is generated from these files:
 	api/logout.proto
 	api/ojinfo.proto
 	api/register.proto
+	api/save_contest.proto
 	api/show_contest.proto
 	api/show_problem.proto
 	api/submit.proto
@@ -45,6 +46,8 @@ It has these top-level messages:
 	OJInfo
 	RegisterRequest
 	RegisterResponse
+	SaveContestRequest
+	SaveContestResponse
 	ShowContestRequest
 	Contest
 	ShowContestResponse

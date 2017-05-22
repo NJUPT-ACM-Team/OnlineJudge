@@ -5,3 +5,4 @@ src/golang.org/
 src/google.golang.org/
 
 .*.swp
+*.png

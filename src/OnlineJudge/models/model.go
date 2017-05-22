@@ -167,3 +167,11 @@ func (this *Model) InlineUpdate(tx *sqlx.Tx, st interface{}, pk string, required
 func JoinSQL(sqls ...string) string {
 	return strings.Join(sqls, " ")
 }
+
+func (this *Model) InlineDelete(tx *sqlx.Tx, st interface{}, pk string) error {
+	sql_del := fmt.Sprintf("DELETE FROM %s WHERE %s=:%s", this.Table, pk, pk)
+	if _, err := tx.NamedExec(sql_del, st); err != nil {
+		return err
+	}
+	return nil
+}

@@ -172,6 +172,7 @@ CREATE TABLE ContestProblems (
     meta_pid_fk INTEGER UNSIGNED DEFAULT NULL,
     contest_id_fk INTEGER UNSIGNED DEFAULT NULL,
     label VARCHAR(64) NOT NULL,
+    alias VARCHAR(255) NOT NULL,
     problem_type ENUM('icpc', 'oi', 'cf', 'cfd') NOT NULL,
     base INTEGER NOT NULL,
     minp INTEGER NOT NULL,
