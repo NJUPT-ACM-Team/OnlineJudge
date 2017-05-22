@@ -11,7 +11,7 @@ import (
 func (this *AdminHandler) ShowProblem(response *api.ShowProblemResponse, req *api.ShowProblemRequest) {
 	defer PanicHandler(response, this.debug)
 	tx := this.dbu.MustBegin()
-	defer this.dbu.MustCommit()
+	defer this.dbu.Rollback()
 
 	ShowProblem_BuildResponse(tx, response, req, true, this.debug)
 }
@@ -19,7 +19,7 @@ func (this *AdminHandler) ShowProblem(response *api.ShowProblemResponse, req *ap
 func (this *BasicHandler) ShowProblem(response *api.ShowProblemResponse, req *api.ShowProblemRequest) {
 	defer PanicHandler(response, this.debug)
 	tx := this.dbu.MustBegin()
-	defer this.dbu.MustCommit()
+	defer this.dbu.Rollback()
 
 	ShowProblem_BuildResponse(tx, response, req, false, this.debug)
 }

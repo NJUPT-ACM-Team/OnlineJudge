@@ -58,7 +58,7 @@ func CheckRegisterRequest(tx *sqlx.Tx, req *api.RegisterRequest, res *api.Regist
 func (this *BasicHandler) Register(response *api.RegisterResponse, req *api.RegisterRequest) {
 	defer PanicHandler(response, this.debug)
 	tx := this.dbu.MustBegin()
-	defer this.dbu.MustCommit()
+	defer this.dbu.Rollback()
 
 	// Check Request
 	if err := CheckRegisterRequest(tx, req, response); err != nil {

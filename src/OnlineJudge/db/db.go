@@ -42,7 +42,12 @@ func (this *DBUtil) Rollback() {
 func (this *DBUtil) MustCommit() {
 	if err := this.Tx.Commit(); err != nil {
 		log.Println("failed to commit:" + err.Error())
+		panic(err)
 	}
+}
+
+func (this *DBUtil) Commit() error {
+	return this.Tx.Commit()
 }
 
 func (this *DBUtil) MustBegin() *sqlx.Tx {

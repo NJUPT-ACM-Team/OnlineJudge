@@ -11,7 +11,7 @@ import (
 func (this *AdminHandler) ListSubmissions(response *api.ListSubmissionsResponse, req *api.ListSubmissionsRequest) {
 	defer PanicHandler(response, this.debug)
 	tx := this.dbu.MustBegin()
-	defer this.dbu.MustCommit()
+	defer this.dbu.Rollback()
 
 	ListSubmissions_BuildResponse(
 		tx, response, req, this.session.GetUsername(), true, true, this.debug)

@@ -10,7 +10,7 @@ import (
 func (this *BasicHandler) ListContests(response *api.ListContestsResponse, req *api.ListContestsRequest) {
 	defer PanicHandler(response, this.debug)
 	tx := this.dbu.MustBegin()
-	defer this.dbu.MustCommit()
+	defer this.dbu.Rollback()
 	ListContests_BuildResponse(
 		tx,
 		response,
