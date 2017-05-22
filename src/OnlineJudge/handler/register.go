@@ -69,13 +69,14 @@ func (this *BasicHandler) Register(response *api.RegisterResponse, req *api.Regi
 	// Insert into database
 	um := models.NewUserModel()
 	user := &models.User{
-		Username:     req.GetUsername(),
-		Password:     []byte(req.GetPassword()),
-		Email:        req.GetEmail(),
-		Phone:        req.GetPhone(),
-		School:       req.GetSchool(),
-		Motto:        req.GetMotto(),
-		RegisterTime: time.Now(),
+		Username:      req.GetUsername(),
+		Password:      []byte(req.GetPassword()),
+		Email:         req.GetEmail(),
+		Phone:         req.GetPhone(),
+		School:        req.GetSchool(),
+		Motto:         req.GetMotto(),
+		RegisterTime:  time.Now(),
+		LastLoginTime: base.GetDefaultTime(),
 	}
 	user_id, err := um.Insert(tx, user)
 	PanicOnError(err)
