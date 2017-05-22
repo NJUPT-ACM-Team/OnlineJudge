@@ -180,7 +180,7 @@ CREATE TABLE ContestProblems (
     para_b DOUBLE NOT NULL,
 
     PRIMARY KEY (cp_id),
-    UNIQUE KEY (contest_id_fk, meta_pid_fk),
+    -- UNIQUE KEY (contest_id_fk, meta_pid_fk),
     UNIQUE KEY (contest_id_fk, label),
     FOREIGN KEY (meta_pid_fk) REFERENCES MetaProblems(meta_pid) ON DELETE SET NULL,
     FOREIGN KEY (contest_id_fk) REFERENCES Contests(contest_id) ON DELETE SET NULL

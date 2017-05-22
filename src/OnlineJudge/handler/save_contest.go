@@ -53,6 +53,7 @@ func SaveContest_BuildResponse(
 
 	// save contest details
 	cst := &models.Contest{
+		ContestId:        req.GetContestId(),
 		Title:            req.GetTitle(),
 		Description:      req.GetDescription(),
 		IsVirtual:        req.GetIsVirtual(),
@@ -73,15 +74,14 @@ func SaveContest_BuildResponse(
 	if req.GetContestId() == 0 {
 		id, err := cm.Insert(tx, cst)
 		if err != nil {
-			MakeResponseError(response, debug, PBInternalError,
-				errors.New("failed to insert contest detail:"+err.Error()))
-			return
+			PanicOnError(
+				errors.New("failed to insert contest detail:" + err.Error()))
 		}
 		response.ContestId = id
 	} else {
 		if err := cm.Update(tx, "", cst, nil, []string{"create_time"}); err != nil {
-			MakeResponseError(response, debug, PBInternalError,
-				errors.New("failed to update contest detail:"+err.Error()))
+			PanicOnError(
+				errors.New("failed to update contest detail:" + err.Error()))
 		}
 		response.ContestId = cst.ContestId
 	}
@@ -90,17 +90,23 @@ func SaveContest_BuildResponse(
 	if len(req.GetProblems()) > 26 {
 		MakeResponseError(response, debug, PBBadRequest,
 			errors.New("too many problems"))
-
+		return
 	}
+
+	// clear problems
+	cpm := models.NewContestProblemModel()
+	if err := cpm.DeleteProblemsByContestId(tx, response.ContestId); err != nil {
+		PanicOnError(errors.New("failed to clear problems:" + err.Error()))
+	}
+
 	// insert problems
 	cnt := 0
-	cpm := models.NewContestProblemModel()
 	for _, v := range req.GetProblems() {
 		sid := v.GetProblemSid()
 		meta_pid, err := Query_MetaPid_By_Sid(tx, sid)
 		if err != nil {
 			// Log
-			log.Println("query meta_pid " + err.Error())
+			log.Println("query meta_pid: " + err.Error())
 		}
 
 		cp := &models.ContestProblem{
@@ -115,7 +121,7 @@ func SaveContest_BuildResponse(
 		_, err = cpm.Insert(tx, cp)
 		if err != nil {
 			// Log
-			log.Println("insert contest problem" + err.Error())
+			log.Println("insert contest problem: " + err.Error())
 		}
 	}
 

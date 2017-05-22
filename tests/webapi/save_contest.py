@@ -41,6 +41,31 @@ def Save():
     print(r.status_code)
     dump(r.json())
 
+def Update():
+    data = {
+        "save_contest_request": {
+            "contest_id": 6,
+            "title": "不是瞎搞的比赛",
+            "description": "这是第四次比赛",
+            "is_virtual": True,
+            "contest_type": "icpc",
+            "problems": [
+                {
+                    "problem_sid": "zoj-1000",
+                },
+                {
+                    "problem_sid": "zoj-1001",
+                }
+            ]
+        }
+
+    }
+
+    r = session.post("http://127.0.0.1:8000/api/inline/save_contest", json=data)
+    print(r.status_code)
+    dump(r.json())
+
+
 def Logout():
     data = {
             "logout_request": {}
@@ -52,6 +77,7 @@ def Logout():
 
 if __name__ == '__main__':
     Login()
-    Save()
+    # Save()
+    Update()
     # Logout() 
     # Submit()
