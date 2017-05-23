@@ -290,3 +290,21 @@ func Query_Contest_By_ContestId(
 
 	return cst, nil
 }
+
+func Query_ContestUser_By_ContestId_And_UserId(
+	tx *sqlx.Tx,
+	contest_id int64,
+	user_id int64,
+) (*ContestUser, error) {
+	cu := &ContestUser{}
+	str_fields, err := GenerateSelectSQL(cu, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	sql := JoinSQL("SELECT", str_fields,
+		"FROM ContestUsers", "WHERE contest_id_fk=? AND user_id_fk=?")
+	if err := tx.Get(cu, sql, contest_id, user_id); err != nil {
+		return nil, err
+	}
+	return cu, nil
+}

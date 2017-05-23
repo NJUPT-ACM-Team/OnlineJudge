@@ -21,10 +21,11 @@ def Login():
 def Save():
     data = {
         "save_contest_request": {
-            "title": "瞎搞的比赛",
+            "title": "有密码的比赛",
             "description": "这是第四次比赛",
             "is_virtual": True,
             "contest_type": "icpc",
+            "password": "123456",
             "problems": [
                 {
                     "problem_sid": "zoj-1000",
@@ -77,7 +78,7 @@ def Logout():
 
 if __name__ == '__main__':
     Login()
-    # Save()
-    Update()
+    Save()
+    # Update()
     # Logout() 
     # Submit()

@@ -8,6 +8,8 @@ Package api is a generated protocol buffer package.
 It is generated from these files:
 	api/about.proto
 	api/common.proto
+	api/contest_auth.proto
+	api/contest_list_problems.proto
 	api/edit_problem.proto
 	api/language.proto
 	api/list_contests.proto
@@ -28,6 +30,10 @@ It has these top-level messages:
 	AboutRequest
 	AboutResponse
 	Error
+	ContestAuthRequest
+	ContestAuthResponse
+	ContestListProblemsRequest
+	ContestListProblemsResponse
 	EditProblemRequest
 	EditProblemResponse
 	Language

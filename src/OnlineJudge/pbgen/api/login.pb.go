@@ -21,7 +21,7 @@ type LoginInitRequest struct {
 func (m *LoginInitRequest) Reset()                    { *m = LoginInitRequest{} }
 func (m *LoginInitRequest) String() string            { return proto.CompactTextString(m) }
 func (*LoginInitRequest) ProtoMessage()               {}
-func (*LoginInitRequest) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{0} }
+func (*LoginInitRequest) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{0} }
 
 func (m *LoginInitRequest) GetMsg() string {
 	if m != nil {
@@ -47,7 +47,7 @@ type LoginInitResponse struct {
 func (m *LoginInitResponse) Reset()                    { *m = LoginInitResponse{} }
 func (m *LoginInitResponse) String() string            { return proto.CompactTextString(m) }
 func (*LoginInitResponse) ProtoMessage()               {}
-func (*LoginInitResponse) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{1} }
+func (*LoginInitResponse) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{1} }
 
 func (m *LoginInitResponse) GetSalt() []byte {
 	if m != nil {
@@ -86,7 +86,7 @@ type LoginAuthRequest struct {
 func (m *LoginAuthRequest) Reset()                    { *m = LoginAuthRequest{} }
 func (m *LoginAuthRequest) String() string            { return proto.CompactTextString(m) }
 func (*LoginAuthRequest) ProtoMessage()               {}
-func (*LoginAuthRequest) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{2} }
+func (*LoginAuthRequest) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{2} }
 
 func (m *LoginAuthRequest) GetUsername() string {
 	if m != nil {
@@ -119,7 +119,7 @@ type LoginAuthResponse struct {
 func (m *LoginAuthResponse) Reset()                    { *m = LoginAuthResponse{} }
 func (m *LoginAuthResponse) String() string            { return proto.CompactTextString(m) }
 func (*LoginAuthResponse) ProtoMessage()               {}
-func (*LoginAuthResponse) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{3} }
+func (*LoginAuthResponse) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{3} }
 
 func (m *LoginAuthResponse) GetMsg() string {
 	if m != nil {
@@ -156,9 +156,9 @@ func init() {
 	proto.RegisterType((*LoginAuthResponse)(nil), "api.LoginAuthResponse")
 }
 
-func init() { proto.RegisterFile("api/login.proto", fileDescriptor7) }
+func init() { proto.RegisterFile("api/login.proto", fileDescriptor9) }
 
-var fileDescriptor7 = []byte{
+var fileDescriptor9 = []byte{
 	// 267 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x84, 0x91, 0x41, 0x4b, 0xc4, 0x30,
 	0x10, 0x85, 0xe9, 0xee, 0xaa, 0xdb, 0x51, 0xb0, 0xe6, 0x14, 0x16, 0x85, 0xd2, 0x53, 0x4f, 0x15,

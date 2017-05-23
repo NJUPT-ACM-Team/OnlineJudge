@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package api;
+
+import "api/common.proto";
+
+message ContestAuthRequest {
+    int64 contest_id = 1;
+    string password = 2;
+}
+
+message ContestAuthResponse {
+    int64 contest_id = 1;
+    bool success = 2;
+    Error error = 3;
+}

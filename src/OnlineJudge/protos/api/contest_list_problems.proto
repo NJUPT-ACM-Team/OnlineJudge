@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package api;
+
+import "api/common.proto";
+
+message ContestListProblemsRequest {
+    int64 contest_id = 1;
+}
+
+message ContestListProblemsResponse {
+    message PerLine {
+        string label = 1;
+        string alias = 2;
+        int32 ac_submission = 3;
+        int32 total_submission = 4;
+        // only used by users in contest
+        string status = 5; // Accepted, Attempted
+        // only used by admin or contest owner
+        string sid = 6;
+        string title = 7;
+    }
+
+    repeated PerLine lines = 1;
+    Error error = 2;
+}

@@ -15,6 +15,8 @@ import "api/show_contest.proto";
 import "api/submit.proto";
 import "api/about.proto";
 import "api/logout.proto";
+import "api/contest_list_problems.proto";
+import "api/contest_auth.proto";
 
 
 // ListProblemsRequest
@@ -28,7 +30,8 @@ message WebGetRequest {
     ListContestsRequest list_contests_request = 3;
     ShowProblemRequest show_problem_request = 4;
 	AboutRequest about_request = 5;
-    ShowContestRequest show_contest = 6;
+    ShowContestRequest show_contest_request = 6;
+    ContestListProblemsRequest contest_list_problems_request = 7;
 }
 
 
@@ -42,6 +45,7 @@ message WebPostRequest {
     SubmitRequest submit_request = 6;
     LogoutRequest logout_request = 7;
     SaveContestRequest save_contest_request = 8;
+    ContestAuthRequest contest_auth_request = 9;
 }
 
 message WebResponse {
@@ -59,5 +63,7 @@ message WebResponse {
     LogoutResponse logout_response = 12;
     ShowContestResponse show_contest_response = 13;
     SaveContestResponse save_contest_response = 14;
-    Error error = 15;
+    ContestListProblemsResponse contest_list_problems_response = 15;
+    ContestAuthResponse contest_auth_response = 16;
+    Error error = 17;
 }

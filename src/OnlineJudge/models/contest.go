@@ -21,6 +21,24 @@ type Contest struct {
 	Password         string    `db:"password"`
 }
 
+func (this *Contest) IsPrivate() bool {
+	if this.Password != "" {
+		return true
+	}
+	return false
+}
+
+func (this *Contest) IsPublic() bool {
+	if this.Password == "" {
+		return true
+	}
+	return false
+}
+
+func (this *Contest) IsProtected() bool {
+	return false
+}
+
 type ContestModel struct {
 	Model
 }

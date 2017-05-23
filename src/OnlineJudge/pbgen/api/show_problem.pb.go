@@ -21,7 +21,7 @@ type ShowProblemRequest struct {
 func (m *ShowProblemRequest) Reset()                    { *m = ShowProblemRequest{} }
 func (m *ShowProblemRequest) String() string            { return proto.CompactTextString(m) }
 func (*ShowProblemRequest) ProtoMessage()               {}
-func (*ShowProblemRequest) Descriptor() ([]byte, []int) { return fileDescriptor13, []int{0} }
+func (*ShowProblemRequest) Descriptor() ([]byte, []int) { return fileDescriptor15, []int{0} }
 
 func (m *ShowProblemRequest) GetContestId() uint64 {
 	if m != nil {
@@ -53,7 +53,7 @@ type Problem struct {
 func (m *Problem) Reset()                    { *m = Problem{} }
 func (m *Problem) String() string            { return proto.CompactTextString(m) }
 func (*Problem) ProtoMessage()               {}
-func (*Problem) Descriptor() ([]byte, []int) { return fileDescriptor13, []int{1} }
+func (*Problem) Descriptor() ([]byte, []int) { return fileDescriptor15, []int{1} }
 
 func (m *Problem) GetTitle() string {
 	if m != nil {
@@ -135,7 +135,7 @@ type Problem_Limit struct {
 func (m *Problem_Limit) Reset()                    { *m = Problem_Limit{} }
 func (m *Problem_Limit) String() string            { return proto.CompactTextString(m) }
 func (*Problem_Limit) ProtoMessage()               {}
-func (*Problem_Limit) Descriptor() ([]byte, []int) { return fileDescriptor13, []int{1, 0} }
+func (*Problem_Limit) Descriptor() ([]byte, []int) { return fileDescriptor15, []int{1, 0} }
 
 func (m *Problem_Limit) GetLanguage() string {
 	if m != nil {
@@ -177,7 +177,7 @@ type ShowProblemResponse struct {
 func (m *ShowProblemResponse) Reset()                    { *m = ShowProblemResponse{} }
 func (m *ShowProblemResponse) String() string            { return proto.CompactTextString(m) }
 func (*ShowProblemResponse) ProtoMessage()               {}
-func (*ShowProblemResponse) Descriptor() ([]byte, []int) { return fileDescriptor13, []int{2} }
+func (*ShowProblemResponse) Descriptor() ([]byte, []int) { return fileDescriptor15, []int{2} }
 
 func (m *ShowProblemResponse) GetContestId() uint64 {
 	if m != nil {
@@ -221,9 +221,9 @@ func init() {
 	proto.RegisterType((*ShowProblemResponse)(nil), "api.ShowProblemResponse")
 }
 
-func init() { proto.RegisterFile("api/show_problem.proto", fileDescriptor13) }
+func init() { proto.RegisterFile("api/show_problem.proto", fileDescriptor15) }
 
-var fileDescriptor13 = []byte{
+var fileDescriptor15 = []byte{
 	// 429 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xa4, 0x92, 0x5f, 0x8a, 0xdb, 0x30,
 	0x10, 0xc6, 0xf1, 0xfa, 0x4f, 0xe2, 0x71, 0x42, 0xcb, 0xb4, 0x04, 0x11, 0x28, 0xf5, 0xa6, 0xb0,

@@ -142,4 +142,10 @@ var api_routes = Routes{
 		Pattern:     "/save_contest",
 		HandlerFunc: ctler.SaveContest,
 	},
+	Route{
+		Name:        "ContestAuth",
+		Method:      "POST",
+		Pattern:     "/contest_auth",
+		HandlerFunc: ctler.ContestAuth,
+	},
 }

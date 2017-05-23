@@ -20,7 +20,7 @@ type ShowContestRequest struct {
 func (m *ShowContestRequest) Reset()                    { *m = ShowContestRequest{} }
 func (m *ShowContestRequest) String() string            { return proto.CompactTextString(m) }
 func (*ShowContestRequest) ProtoMessage()               {}
-func (*ShowContestRequest) Descriptor() ([]byte, []int) { return fileDescriptor12, []int{0} }
+func (*ShowContestRequest) Descriptor() ([]byte, []int) { return fileDescriptor14, []int{0} }
 
 func (m *ShowContestRequest) GetContestId() int64 {
 	if m != nil {
@@ -45,7 +45,7 @@ type Contest struct {
 func (m *Contest) Reset()                    { *m = Contest{} }
 func (m *Contest) String() string            { return proto.CompactTextString(m) }
 func (*Contest) ProtoMessage()               {}
-func (*Contest) Descriptor() ([]byte, []int) { return fileDescriptor12, []int{1} }
+func (*Contest) Descriptor() ([]byte, []int) { return fileDescriptor14, []int{1} }
 
 func (m *Contest) GetContestId() int64 {
 	if m != nil {
@@ -125,7 +125,7 @@ type ShowContestResponse struct {
 func (m *ShowContestResponse) Reset()                    { *m = ShowContestResponse{} }
 func (m *ShowContestResponse) String() string            { return proto.CompactTextString(m) }
 func (*ShowContestResponse) ProtoMessage()               {}
-func (*ShowContestResponse) Descriptor() ([]byte, []int) { return fileDescriptor12, []int{2} }
+func (*ShowContestResponse) Descriptor() ([]byte, []int) { return fileDescriptor14, []int{2} }
 
 func (m *ShowContestResponse) GetContest() *Contest {
 	if m != nil {
@@ -147,9 +147,9 @@ func init() {
 	proto.RegisterType((*ShowContestResponse)(nil), "api.ShowContestResponse")
 }
 
-func init() { proto.RegisterFile("api/show_contest.proto", fileDescriptor12) }
+func init() { proto.RegisterFile("api/show_contest.proto", fileDescriptor14) }
 
-var fileDescriptor12 = []byte{
+var fileDescriptor14 = []byte{
 	// 315 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x84, 0x91, 0xc1, 0x4a, 0x03, 0x31,
 	0x10, 0x86, 0xd9, 0xd6, 0x76, 0xbb, 0xd3, 0x8a, 0x12, 0xa5, 0x44, 0x41, 0x58, 0x7b, 0x90, 0x9e,
