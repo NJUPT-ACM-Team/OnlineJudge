@@ -96,6 +96,7 @@ func Submit_BuildResponse(
 		if err := subm.SetSystemError(tx, run_id); err != nil {
 			PanicOnError(err)
 		}
+		dbu.MustCommit()
 		return
 	}
 	defer helper.Disconnect()
@@ -109,6 +110,7 @@ func Submit_BuildResponse(
 		if err := subm.SetSystemError(tx, run_id); err != nil {
 			PanicOnError(err)
 		}
+		dbu.MustCommit()
+		return
 	}
-	dbu.MustCommit()
 }
