@@ -85,32 +85,35 @@ func Submit_BuildResponse(
 	dbu.MustCommit()
 
 	// Use RPC to call Daemon to judge the submission
-	dbu.MustBegin()
-	defer dbu.Rollback()
+	go func(dbu *db.DBUtil) {
+		tx := dbu.MustBegin()
+		defer dbu.Rollback()
 
-	helper := irpc.NewHelper()
+		helper := irpc.NewHelper()
 
-	if err := helper.Connect(); err != nil {
-		// Log the error
-		log.Println(err)
-		if err := subm.SetSystemError(tx, run_id); err != nil {
-			PanicOnError(err)
+		if err := helper.Connect(); err != nil {
+			// Log the error
+			log.Println("connect error:" + err.Error())
+			if err := subm.SetSystemError(tx, run_id); err != nil {
+				log.Println("set error:" + err.Error())
+
+			}
+			dbu.Commit()
+			return
 		}
-		dbu.MustCommit()
-		return
-	}
-	defer helper.Disconnect()
+		defer helper.Disconnect()
 
-	helper.NewClient()
-	res, err := helper.StartJudging(run_id)
+		helper.NewClient()
+		res, err := helper.StartJudging(run_id)
 
-	if err != nil || res.Received != true {
-		// Log the error
-		log.Println(err)
-		if err := subm.SetSystemError(tx, run_id); err != nil {
-			PanicOnError(err)
+		if err != nil || res.Received != true {
+			// Log the error
+			log.Println("start judging error:" + err.Error())
+			if err := subm.SetSystemError(tx, run_id); err != nil {
+				log.Println("set error:" + err.Error())
+			}
+			dbu.Commit()
+			return
 		}
-		dbu.MustCommit()
-		return
-	}
+	}(dbu)
 }
