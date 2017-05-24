@@ -31,6 +31,10 @@ func (this *UserHandler) SaveContest(response *api.SaveContestResponse, req *api
 		defer this.dbu.Rollback()
 		cst, err := models.Query_Contest_By_ContestId(tx, req.GetContestId(), nil, nil)
 		PanicOnError(err)
+		if cst == nil {
+			MakeResponseError(response, this.debug, PBContestNotFound, nil)
+			return
+		}
 		if cst.CreatorId != this.session.GetUserId() {
 			MakeResponseError(response, this.debug, PBUnauthorized, nil)
 			return
@@ -123,6 +127,9 @@ func SaveContest_BuildResponse(
 			// Log
 			log.Println("query meta_pid: " + err.Error())
 		}
+		if meta_pid == 0 {
+			log.Println("problem not exist")
+		}
 
 		cp := &models.ContestProblem{
 			MetaPidFK:   meta_pid,
@@ -153,9 +160,12 @@ func Query_MetaPid_By_Sid(tx *sqlx.Tx, sid string) (int64, error) {
 
 	mp, err := models.Query_MetaProblem_By_OJName_OJPid(
 		tx, pid.OJName, pid.OJPid, []string{"meta_pid"}, nil)
-
 	if err != nil {
 		return 0, err
+	}
+
+	if mp == nil {
+		return 0, nil
 	}
 
 	return mp.MetaPid, nil

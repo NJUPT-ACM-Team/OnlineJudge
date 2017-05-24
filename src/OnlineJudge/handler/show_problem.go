@@ -41,6 +41,10 @@ func ShowProblem_BuildResponse(
 	// Query problem
 	mp, err := models.Query_MetaProblem_By_OJName_OJPid(tx, pid.OJName, pid.OJPid, nil, nil)
 	PanicOnError(err)
+	if mp == nil {
+		MakeResponseError(response, debug, PBProblemNotFound, err)
+		return
+	}
 
 	// QueryLanguages
 	langs, err := models.Query_Languages_By_OJIdFK(tx, mp.OJIdFK, nil, nil)
@@ -50,14 +54,16 @@ func ShowProblem_BuildResponse(
 	limits, err := models.Query_Limits_By_MetaPid(tx, mp.MetaPid, nil, nil)
 	PanicOnError(err)
 	r_limits := []*api.Problem_Limit{}
-	for _, limit := range limits {
-		temp := &api.Problem_Limit{
-			Language:      limit.Language,
-			TimeLimit:     int32(limit.TimeLimit),
-			CaseTimeLimit: int32(limit.CaseTimeLimit),
-			MemoryLimit:   int32(limit.MemoryLimit),
+	if limits != nil {
+		for _, limit := range limits {
+			temp := &api.Problem_Limit{
+				Language:      limit.Language,
+				TimeLimit:     int32(limit.TimeLimit),
+				CaseTimeLimit: int32(limit.CaseTimeLimit),
+				MemoryLimit:   int32(limit.MemoryLimit),
+			}
+			r_limits = append(r_limits, temp)
 		}
-		r_limits = append(r_limits, temp)
 	}
 
 	// Judge if authorized

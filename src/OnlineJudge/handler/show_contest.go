@@ -38,6 +38,10 @@ func ShowContest_BuildResponse(
 	// Query Contest
 	cst, err := models.Query_Contest_By_ContestId(tx, int64(contest_id), nil, nil)
 	PanicOnError(err)
+	if cst == nil {
+		MakeResponseError(response, debug, PBContestNotFound, nil)
+		return
+	}
 
 	contest := &api.Contest{
 		ContestId:     contest_id,

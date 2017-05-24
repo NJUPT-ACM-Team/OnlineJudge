@@ -28,6 +28,7 @@ var (
 	PBAuthFailure     = NewPBError(http.StatusUnauthorized, "username not exists or wrong password")
 	PBBadRequest      = NewPBError(http.StatusBadRequest, "bad request")
 	PBProblemNotFound = NewPBError(http.StatusNotFound, "problem does not exist or not visible")
+	PBContestNotFound = NewPBError(http.StatusNotFound, "contest does not exist or not visible")
 	PBLoginRequired   = NewPBError(http.StatusUnauthorized, "login required")
 	PBUnauthorized    = NewPBError(http.StatusUnauthorized, "unauthorized")
 )

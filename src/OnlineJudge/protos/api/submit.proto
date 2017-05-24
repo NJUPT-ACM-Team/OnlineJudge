@@ -5,7 +5,7 @@ package api;
 import "api/common.proto";
 
 message SubmitRequest {
-    uint64 contest_id = 1;
+    int64 contest_id = 1;
     string problem_sid = 2;
     string code = 3;
     int64 language_id= 4;

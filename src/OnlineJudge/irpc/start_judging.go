@@ -36,7 +36,7 @@ func SubmitToMQ(jmq *mq.MQ, req *rpc.StartJudgingRequest) {
 
 	// Get Submission info
 	sub, err := models.Query_Submission_By_RunId(tx, req.GetRunId(), nil, nil)
-	if err != nil {
+	if sub == nil || err != nil {
 		log.Println(err)
 		MustSetSystemError(tx, sub.RunId)
 		return
@@ -45,7 +45,7 @@ func SubmitToMQ(jmq *mq.MQ, req *rpc.StartJudgingRequest) {
 	// Get Info of meta problem
 	mp, err := models.Query_MetaProblem_By_MetaPid(
 		tx, sub.MetaPidFK, []string{"oj_name", "oj_pid", "is_spj"}, nil)
-	if err != nil {
+	if mp == nil || err != nil {
 		log.Println(err)
 		MustSetSystemError(tx, sub.RunId)
 		return
@@ -53,7 +53,7 @@ func SubmitToMQ(jmq *mq.MQ, req *rpc.StartJudgingRequest) {
 
 	// Get language of submission
 	lang, err := models.Query_Language_By_LangId(tx, sub.LangIdFK, nil, nil)
-	if err != nil {
+	if lang == nil || err != nil {
 		log.Println(err)
 		MustSetSystemError(tx, sub.RunId)
 		return
@@ -90,15 +90,17 @@ func SubmitToMQ(jmq *mq.MQ, req *rpc.StartJudgingRequest) {
 			return
 		}
 		testcases := []*msgs.TestCase{}
-		for _, tc := range tcs {
-			temp := &msgs.TestCase{
-				CaseId:     tc.CaseId,
-				Input:      tc.Input,
-				InputHash:  tc.InputMD5,
-				Output:     tc.Output,
-				OutputHash: tc.OutputMD5,
+		if tcs != nil {
+			for _, tc := range tcs {
+				temp := &msgs.TestCase{
+					CaseId:     tc.CaseId,
+					Input:      tc.Input,
+					InputHash:  tc.InputMD5,
+					Output:     tc.Output,
+					OutputHash: tc.OutputMD5,
+				}
+				testcases = append(testcases, temp)
 			}
-			testcases = append(testcases, temp)
 		}
 		request.Testcases = testcases
 	} else {

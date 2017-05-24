@@ -50,8 +50,7 @@ func Submit_BuildResponse(
 	mp, err := models.Query_MetaProblem_By_OJName_OJPid(tx, pid.OJName,
 		pid.OJPid, []string{"meta_pid", "hide", "is_spj"}, nil)
 	PanicOnError(err)
-
-	if mp.MetaPid == 0 {
+	if mp == nil {
 		MakeResponseError(response, debug, PBProblemNotFound, nil)
 		return
 	}

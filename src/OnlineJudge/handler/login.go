@@ -38,6 +38,10 @@ func (this *BasicHandler) LoginAuth(response *api.LoginAuthResponse, req *api.Lo
 		[]string{"username", "user_id", "privilege"},
 		nil)
 	PanicOnError(err)
+	if user == nil {
+		MakeResponseError(response, this.debug, PBAuthFailure, nil)
+		return
+	}
 
 	// Save IPAddr into database
 	ip_addr := this.session.GetIPAddr()

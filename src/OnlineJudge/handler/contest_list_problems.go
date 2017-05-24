@@ -20,6 +20,10 @@ func (this *BasicHandler) ContestListProblems(response *api.ContestListProblemsR
 	cst, err := models.Query_Contest_By_ContestId(tx,
 		req.GetContestId(), nil, nil)
 	PanicOnError(err)
+	if cst == nil {
+		MakeResponseError(response, this.debug, PBContestNotFound, nil)
+		return
+	}
 	// if contest is private, we have no access for problem list
 	if cst.IsPrivate() {
 		MakeResponseError(response, this.debug, PBUnauthorized, nil)
@@ -37,9 +41,15 @@ func (this *UserHandler) ContestListProblems(response *api.ContestListProblemsRe
 	cst, err := models.Query_Contest_By_ContestId(tx,
 		req.GetContestId(), nil, nil)
 	PanicOnError(err)
+	if cst == nil {
+		MakeResponseError(response, this.debug, PBContestNotFound, nil)
+		return
+	}
 	// if contest is private, we need to check if we are in contest_users.
 	if cst.IsPrivate() {
-		if CheckContestUser(tx, cst.ContestId, this.session.GetUserId()) == false {
+		check, err := CheckContestUser(tx, cst.ContestId, this.session.GetUserId())
+		PanicOnError(err)
+		if check == false {
 			MakeResponseError(response, this.debug, PBUnauthorized, nil)
 			return
 		}
@@ -52,13 +62,16 @@ func (this *UserHandler) ContestListProblems(response *api.ContestListProblemsRe
 	ContestListProblems_BuildResponse(tx, response, req, show_details, cst.ContestId, this.session.GetUserId())
 }
 
-func CheckContestUser(tx *sqlx.Tx, contest_id, user_id int64) bool {
-	_, err := models.Query_ContestUser_By_ContestId_And_UserId(
+func CheckContestUser(tx *sqlx.Tx, contest_id, user_id int64) (bool, error) {
+	cst, err := models.Query_ContestUser_By_ContestId_And_UserId(
 		tx, contest_id, user_id)
 	if err != nil {
-		return false
+		return false, err
 	}
-	return true
+	if cst == nil {
+		return false, nil
+	}
+	return true, nil
 }
 
 func ContestListProblems_BuildResponse(

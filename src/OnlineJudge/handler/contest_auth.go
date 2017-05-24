@@ -18,8 +18,10 @@ func (this *UserHandler) ContestAuth(response *api.ContestAuthResponse, req *api
 
 	response.Success = false
 	cst, err := models.Query_Contest_By_ContestId(tx, req.GetContestId(), nil, nil)
-	// TODO: replace by 404
 	PanicOnError(err)
+	if cst == nil {
+		MakeResponseError(response, this.debug, PBContestNotFound, nil)
+	}
 
 	if cst.IsProtected() || cst.IsPrivate() {
 		response.ContestId = cst.ContestId

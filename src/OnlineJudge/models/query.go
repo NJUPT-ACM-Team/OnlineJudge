@@ -15,9 +15,21 @@ func Query_MetaProblem_By_MetaPid(
 	if err != nil {
 		return nil, err
 	}
-	sql := JoinSQL("SELECT", str_fields, "FROM MetaProblems",
-		"WHERE meta_pid=?")
-	if err := tx.Get(mp, sql, meta_pid); err != nil {
+	from_sql := "FROM MetaProblems"
+	where_sql := "WHERE meta_pid=?"
+
+	select_sql := JoinSQL("SELECT", str_fields, from_sql, where_sql)
+	count_sql := JoinSQL("SELECT COUNT(*)", from_sql, where_sql)
+
+	var cnt int
+	if err := tx.Get(&cnt, count_sql, meta_pid); err != nil {
+		return nil, err
+	}
+	if cnt == 0 {
+		return nil, nil
+	}
+
+	if err := tx.Get(mp, select_sql, meta_pid); err != nil {
 		return nil, err
 	}
 	return mp, nil
@@ -104,10 +116,19 @@ func Query_MetaProblem_By_OJName_OJPid(
 	if err != nil {
 		return nil, err
 	}
-	sql := JoinSQL(
-		"SELECT", str_fields,
-		"FROM MetaProblems WHERE oj_pid=? AND oj_name=?")
-	if err := tx.Get(mp, sql, oj_pid, oj_name); err != nil {
+
+	from_where_sql := "FROM MetaProblems WHERE oj_pid=? AND oj_name=?"
+	select_sql := JoinSQL("SELECT", str_fields, from_where_sql)
+	count_sql := JoinSQL("SELECT COUNT(*)", from_where_sql)
+	var cnt int
+	if err := tx.Get(&cnt, count_sql, oj_pid, oj_name); err != nil {
+		return nil, err
+	}
+	if cnt == 0 {
+		return nil, nil
+	}
+
+	if err := tx.Get(mp, select_sql, oj_pid, oj_name); err != nil {
 		return nil, err
 	}
 	return mp, nil
@@ -141,8 +162,19 @@ func Query_User_By_Username(
 	if err != nil {
 		return nil, err
 	}
-	sql := JoinSQL("SELECT", str_fields, "FROM Users", "WHERE username=?")
-	if err := tx.Get(user, sql, name); err != nil {
+	from_where_sql := "FROM Users WHERE username=?"
+	count_sql := JoinSQL("SELECT COUNT(*)", from_where_sql)
+	select_sql := JoinSQL("SELECT", str_fields, from_where_sql)
+
+	var cnt int
+	if err := tx.Get(&cnt, count_sql, name); err != nil {
+		return nil, err
+	}
+	if cnt == 0 {
+		return nil, nil
+	}
+
+	if err := tx.Get(user, select_sql, name); err != nil {
 		return nil, err
 	}
 	return user, nil
@@ -160,10 +192,18 @@ func Query_Language_By_LangId(
 	if err != nil {
 		return nil, err
 	}
-	sql := JoinSQL(
-		"SELECT", str_fields, "FROM Languages",
-		"WHERE lang_id=?")
-	if err := tx.Get(lang, sql, lang_id); err != nil {
+	from_where_sql := "FROM Languages WHERE lang_id=?"
+	count_sql := JoinSQL("SELECT COUNT(*)", from_where_sql)
+	select_sql := JoinSQL("SELECT", str_fields, from_where_sql)
+	var cnt int
+	if err := tx.Get(&cnt, count_sql, lang_id); err != nil {
+		return nil, err
+	}
+	if cnt == 0 {
+		return nil, nil
+	}
+
+	if err := tx.Get(lang, select_sql, lang_id); err != nil {
 		return nil, err
 	}
 	return lang, nil
@@ -202,8 +242,19 @@ func Query_Submission_By_RunId(
 	if err != nil {
 		return nil, err
 	}
-	sql := JoinSQL("SELECT", str_fields, "FROM Submissions", "WHERE run_id=?")
-	if err := tx.Get(sub, sql, run_id); err != nil {
+	from_where_sql := "FROM Submissions WHERE run_id=?"
+	count_sql := JoinSQL("SELECT COUNT(*)", from_where_sql)
+	select_sql := JoinSQL("SELECT", str_fields, from_where_sql)
+
+	var cnt int
+	if err := tx.Get(&cnt, count_sql, run_id); err != nil {
+		return nil, err
+	}
+	if cnt == 0 {
+		return nil, nil
+	}
+
+	if err := tx.Get(sub, select_sql, run_id); err != nil {
 		return nil, err
 	}
 	return sub, nil
@@ -222,8 +273,19 @@ func Query_TestCases_By_MetaPid(
 	if err != nil {
 		return nil, err
 	}
-	sql := JoinSQL("SELECT", str_fields, "FROM TestCases", "WHERE meta_pid_fk=?")
-	if err := tx.Select(&tcs, sql, meta_pid); err != nil {
+	from_where_sql := "FROM TestCases WHERE meta_pid_fk=?"
+	count_sql := JoinSQL("SELECT COUNT(*)", from_where_sql)
+	select_sql := JoinSQL("SELECT", str_fields, from_where_sql)
+
+	var cnt int
+	if err := tx.Select(&cnt, count_sql, meta_pid); err != nil {
+		return nil, err
+	}
+	if cnt == 0 {
+		return nil, nil
+	}
+
+	if err := tx.Select(&tcs, select_sql, meta_pid); err != nil {
 		return nil, err
 	}
 	return tcs, nil
@@ -242,8 +304,20 @@ func Query_Limits_By_MetaPid(
 	if err != nil {
 		return nil, err
 	}
-	sql := JoinSQL("SELECT", str_fields, "FROM", TimeMemoryLimit_TableName, "WHERE meta_pid_fk=?")
-	if err := tx.Select(&tms, sql, meta_pid); err != nil {
+
+	from_where_sql := JoinSQL("FROM", TimeMemoryLimit_TableName, "WHERE meta_pid_fk=?")
+	count_sql := JoinSQL("SELECT COUNT(*)", from_where_sql)
+	select_sql := JoinSQL("SELECT", str_fields, from_where_sql)
+
+	var cnt int
+	if err := tx.Select(&cnt, count_sql, meta_pid); err != nil {
+		return nil, err
+	}
+	if cnt == 0 {
+		return nil, nil
+	}
+
+	if err := tx.Select(&tms, select_sql, meta_pid); err != nil {
 		return nil, err
 	}
 	return tms, nil
@@ -283,8 +357,19 @@ func Query_Contest_By_ContestId(
 	if err != nil {
 		return nil, err
 	}
-	sql := JoinSQL("SELECT", str_fields, "FROM Contests", "WHERE contest_id=?")
-	if err := tx.Get(cst, sql, contest_id); err != nil {
+	from_where_sql := "FROM Contests WHERE contest_id=?"
+	count_sql := JoinSQL("SELECT COUNT(*)", from_where_sql)
+	select_sql := JoinSQL("SELECT", str_fields, from_where_sql)
+
+	var cnt int
+	if err := tx.Get(&cnt, count_sql, contest_id); err != nil {
+		return nil, err
+	}
+	if cnt == 0 {
+		return nil, nil
+	}
+
+	if err := tx.Get(cst, select_sql, contest_id); err != nil {
 		return nil, err
 	}
 
@@ -301,10 +386,46 @@ func Query_ContestUser_By_ContestId_And_UserId(
 	if err != nil {
 		return nil, err
 	}
-	sql := JoinSQL("SELECT", str_fields,
-		"FROM ContestUsers", "WHERE contest_id_fk=? AND user_id_fk=?")
-	if err := tx.Get(cu, sql, contest_id, user_id); err != nil {
+	from_where_sql := "FROM ContestUsers WHERE contest_id_fk=? AND user_id_fk=?"
+	select_sql := JoinSQL("SELECT", str_fields, from_where_sql)
+	count_sql := JoinSQL("SELECT COUNT(*)", from_where_sql)
+	var cnt int
+	if err := tx.Get(&cnt, count_sql, contest_id, user_id); err != nil {
+		return nil, err
+	}
+	if cnt == 0 {
+		return nil, nil
+	}
+
+	if err := tx.Get(cu, select_sql, contest_id, user_id); err != nil {
 		return nil, err
 	}
 	return cu, nil
+}
+
+func Query_ContestProblem_By_ContestId_And_Label(
+	tx *sqlx.Tx,
+	contest_id int64,
+	label string,
+) (*ContestProblem, error) {
+	cp := &ContestProblem{}
+	str_fields, err := GenerateSelectSQL(cp, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	from_where_sql := "FROM ContestProblems WHERE contest_id_fk=? AND label=?"
+	select_sql := JoinSQL("SELECT", str_fields, from_where_sql)
+	count_sql := JoinSQL("SELECT COUNT(*)", from_where_sql)
+	var cnt int
+	if err := tx.Get(&cnt, count_sql, contest_id, label); err != nil {
+		return nil, err
+	}
+	if cnt == 0 {
+		return nil, nil
+	}
+
+	if err := tx.Get(cp, select_sql, contest_id, label); err != nil {
+		return nil, err
+	}
+	return cp, nil
 }
