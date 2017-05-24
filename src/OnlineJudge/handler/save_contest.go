@@ -15,7 +15,7 @@ import (
 
 func (this *AdminHandler) SaveContest(response *api.SaveContestResponse, req *api.SaveContestRequest) {
 	defer PanicHandler(response, this.debug)
-	SaveContest_BuildResponse(this.dbu, true, response, req, this.debug)
+	SaveContest_BuildResponse(this.dbu, true, this.session.GetUserId(), response, req, this.debug)
 }
 
 func (this *BasicHandler) SaveContest(response *api.SaveContestResponse, req *api.SaveContestRequest) {
@@ -25,12 +25,25 @@ func (this *BasicHandler) SaveContest(response *api.SaveContestResponse, req *ap
 
 func (this *UserHandler) SaveContest(response *api.SaveContestResponse, req *api.SaveContestRequest) {
 	defer PanicHandler(response, this.debug)
-	SaveContest_BuildResponse(this.dbu, false, response, req, this.debug)
+	// check if able to upate
+	if req.GetContestId() != 0 {
+		tx := this.dbu.MustBegin()
+		defer this.dbu.Rollback()
+		cst, err := models.Query_Contest_By_ContestId(tx, req.GetContestId(), nil, nil)
+		PanicOnError(err)
+		if cst.CreatorId != this.session.GetUserId() {
+			MakeResponseError(response, this.debug, PBUnauthorized, nil)
+			return
+		}
+	}
+
+	SaveContest_BuildResponse(this.dbu, false, this.session.GetUserId(), response, req, this.debug)
 }
 
 func SaveContest_BuildResponse(
 	dbu *db.DBUtil,
 	is_admin bool,
+	user_id int64,
 	response *api.SaveContestResponse,
 	req *api.SaveContestRequest,
 	debug bool,
@@ -70,8 +83,9 @@ func SaveContest_BuildResponse(
 	cm := models.NewContestModel()
 	tx := dbu.MustBegin()
 	defer dbu.Rollback()
-	// check if update
+	// check if insert or update
 	if req.GetContestId() == 0 {
+		cst.CreatorId = user_id
 		id, err := cm.Insert(tx, cst)
 		if err != nil {
 			PanicOnError(
@@ -79,7 +93,8 @@ func SaveContest_BuildResponse(
 		}
 		response.ContestId = id
 	} else {
-		if err := cm.Update(tx, "", cst, nil, []string{"create_time"}); err != nil {
+		if err := cm.Update(tx, "", cst, nil,
+			[]string{"create_time", "creator_id"}); err != nil {
 			PanicOnError(
 				errors.New("failed to update contest detail:" + err.Error()))
 		}

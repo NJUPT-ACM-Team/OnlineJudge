@@ -19,6 +19,7 @@ type Contest struct {
 	HideOthersStatus bool      `db:"hide_others_status"`
 	IsHidden         bool      `db:"is_hidden"`
 	Password         string    `db:"password"`
+	CreatorId        int64     `db:"creator_id"`
 }
 
 func (this *Contest) IsPrivate() bool {

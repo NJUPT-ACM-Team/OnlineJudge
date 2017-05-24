@@ -151,6 +151,7 @@ CREATE TABLE Contests (
     hide_others_status BOOLEAN NOT NULL,
     is_hidden BOOLEAN NOT NULL,
     password VARCHAR(64) NOT NULL,
+    creator_id INTEGER UNSIGNED NOT NULL,
 
     PRIMARY KEY (contest_id),
 	UNIQUE KEY (title)

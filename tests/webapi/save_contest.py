@@ -11,7 +11,7 @@ def Login():
     data = {
         "login_auth_request":
         {
-        "username" : "kevince",
+        "username" : "hong",
         "password": "abc",
         }
     }
@@ -21,7 +21,8 @@ def Login():
 def Save():
     data = {
         "save_contest_request": {
-            "title": "有密码的比赛",
+            "contest_id":9,
+            "title": "有密码的比赛2",
             "description": "这是第四次比赛",
             "is_virtual": True,
             "contest_type": "icpc",

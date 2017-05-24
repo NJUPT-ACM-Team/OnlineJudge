@@ -6,3 +6,4 @@ src/google.golang.org/
 
 .*.swp
 *.png
+.DS_Store

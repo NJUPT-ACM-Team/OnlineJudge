@@ -212,7 +212,7 @@ func XQuery_List_Submissions_With_Filter(
 		&filter_language,
 		&filter_compiler)
 
-	where_sql := `WHERE 1`
+	where_sql := `WHERE is_contest=false`
 
 	if show_private == false {
 		where_sql = JoinSQL(where_sql, "AND is_private=0")
@@ -433,4 +433,34 @@ func XQuery_List_Contests_With_Filter(
 	}
 	ret.Contests = csts
 	return ret, nil
+}
+
+type ProblemExt struct {
+	MetaProblem
+	Status string `db:"status"`
+	Label  string `db:"label"`
+	Alias  string `db:"alias"`
+}
+
+func XQuery_Contest_List_Problems(
+	tx *sqlx.Tx,
+	contest_id, user_id int64) ([]ProblemExt, error) {
+
+	pext := &ProblemExt{}
+	pexts := []ProblemExt{}
+	str_fields, err := GenerateSelectSQL(pext, nil, []string{"status", "metaproblem"})
+	if err != nil {
+		return nil, err
+	}
+	sql := JoinSQL("SELECT", str_fields,
+		"FROM ContestProblems cps",
+		"LEFT JOIN MetaProblems mps ON cps.meta_pid_fk=mps.meta_pid",
+		"WHERE contest_id_fk=?",
+		"ORDER BY cps.label")
+	// "ORDER BY cps.Label")
+	if err := tx.Select(&pexts, sql, contest_id); err != nil {
+		return nil, err
+	}
+	// TODO: add status check
+	return pexts, nil
 }
