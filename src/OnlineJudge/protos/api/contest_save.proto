@@ -4,7 +4,7 @@ package api;
 
 import "api/common.proto";
 
-message SaveContestRequest{
+message ContestSaveRequest{
     message ContestProblem {
         string alias = 1;
         string problem_sid = 2;
@@ -27,7 +27,7 @@ message SaveContestRequest{
     repeated ContestProblem problems = 12; // use sid
 }
 
-message SaveContestResponse {
+message ContestSaveResponse {
     int64 contest_id = 1;
     Error error = 2;
 }

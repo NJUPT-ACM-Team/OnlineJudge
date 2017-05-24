@@ -17,20 +17,19 @@ func (this *BasicHandler) ContestListProblems(response *api.ContestListProblemsR
 	// Check Access
 	tx := this.dbu.MustBegin()
 	defer this.dbu.Rollback()
-	cst, err := models.Query_Contest_By_ContestId(tx,
-		req.GetContestId(), nil, nil)
+	access, err := CheckContestAccess(
+		tx, true, req.GetContestId(), this.session.GetUserId(), this.debug)
 	PanicOnError(err)
-	if cst == nil {
+	if access.If404 {
 		MakeResponseError(response, this.debug, PBContestNotFound, nil)
 		return
 	}
-	// if contest is private, we have no access for problem list
-	if cst.IsPrivate() {
+	if !access.Problems {
 		MakeResponseError(response, this.debug, PBUnauthorized, nil)
 		return
 	}
 	// list problems
-	ContestListProblems_BuildResponse(tx, response, req, false, cst.ContestId, this.session.GetUserId())
+	ContestListProblems_BuildResponse(tx, response, req, false, req.GetContestId(), this.session.GetUserId())
 }
 
 func (this *UserHandler) ContestListProblems(response *api.ContestListProblemsResponse, req *api.ContestListProblemsRequest) {
@@ -38,28 +37,24 @@ func (this *UserHandler) ContestListProblems(response *api.ContestListProblemsRe
 	// Check Access
 	tx := this.dbu.MustBegin()
 	defer this.dbu.Rollback()
-	cst, err := models.Query_Contest_By_ContestId(tx,
-		req.GetContestId(), nil, nil)
+	access, err := CheckContestAccess(
+		tx, false, req.GetContestId(), this.session.GetUserId(), this.debug)
 	PanicOnError(err)
-	if cst == nil {
+	if access.If404 {
 		MakeResponseError(response, this.debug, PBContestNotFound, nil)
 		return
 	}
-	// if contest is private, we need to check if we are in contest_users.
-	if cst.IsPrivate() {
-		check, err := CheckContestUser(tx, cst.ContestId, this.session.GetUserId())
-		PanicOnError(err)
-		if check == false {
-			MakeResponseError(response, this.debug, PBUnauthorized, nil)
-			return
-		}
+	if !access.Problems {
+		MakeResponseError(response, this.debug, PBUnauthorized, nil)
+		return
 	}
+
 	// list problems
 	show_details := false
-	if cst.CreatorId == this.session.GetUserId() {
+	if access.Creator {
 		show_details = true
 	}
-	ContestListProblems_BuildResponse(tx, response, req, show_details, cst.ContestId, this.session.GetUserId())
+	ContestListProblems_BuildResponse(tx, response, req, show_details, req.GetContestId(), this.session.GetUserId())
 }
 
 func CheckContestUser(tx *sqlx.Tx, contest_id, user_id int64) (bool, error) {
@@ -101,4 +96,79 @@ func ContestListProblems_BuildResponse(
 		lines = append(lines, line)
 	}
 	response.Lines = lines
+}
+
+type ContestAccess struct {
+	If404    bool
+	Problems bool
+	Status   bool
+	Rank     bool
+	Submit   bool
+	Creator  bool
+}
+
+func CheckContestAccess(
+	tx *sqlx.Tx, is_guest bool,
+	contest_id int64, user_id int64, debug bool) (*ContestAccess, error) {
+
+	cst, err := models.Query_Contest_By_ContestId(tx, contest_id, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	if cst == nil {
+		return &ContestAccess{If404: true}, nil
+	}
+
+	if is_guest {
+		if cst.IsPrivate() {
+			return &ContestAccess{}, nil
+		} else {
+			return &ContestAccess{
+				Problems: true,
+				Status:   true,
+				Rank:     true,
+			}, nil
+		}
+	}
+
+	if cst.CreatorId == user_id {
+		return &ContestAccess{
+			Problems: true,
+			Status:   true,
+			Rank:     true,
+			Submit:   true,
+			Creator:  true,
+		}, nil
+	}
+
+	cu, err := models.Query_ContestUser_By_ContestId_And_UserId(
+		tx, contest_id, user_id)
+	if err != nil {
+		return nil, err
+	}
+
+	if cu == nil {
+		if cst.IsPrivate() {
+			return &ContestAccess{}, nil
+		} else if cst.IsProtected() {
+			return &ContestAccess{
+				Problems: true,
+				Status:   true,
+				Rank:     true,
+			}, nil
+		} else if cst.IsPublic() {
+			return &ContestAccess{
+				Problems: true,
+				Status:   true,
+				Rank:     true,
+				Submit:   true,
+			}, nil
+		}
+	}
+	return &ContestAccess{
+		Problems: true,
+		Status:   true,
+		Rank:     true,
+		Submit:   true,
+	}, nil
 }

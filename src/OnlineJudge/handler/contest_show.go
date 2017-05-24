@@ -8,27 +8,27 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func (this *AdminHandler) ShowContest(response *api.ShowContestResponse, req *api.ShowContestRequest) {
+func (this *AdminHandler) ContestShow(response *api.ContestShowResponse, req *api.ContestShowRequest) {
 	defer PanicHandler(response, this.debug)
 	tx := this.dbu.MustBegin()
 	defer this.dbu.Rollback()
 
-	ShowContest_BuildResponse(tx, response, req, int64(req.GetContestId()), true, this.debug)
+	ContestShow_BuildResponse(tx, response, req, int64(req.GetContestId()), true, this.debug)
 }
 
-func (this *BasicHandler) ShowContest(response *api.ShowContestResponse, req *api.ShowContestRequest) {
+func (this *BasicHandler) ContestShow(response *api.ContestShowResponse, req *api.ContestShowRequest) {
 	defer PanicHandler(response, this.debug)
 	tx := this.dbu.MustBegin()
 	defer this.dbu.Rollback()
 
 	fmt.Println(req.GetContestId())
-	ShowContest_BuildResponse(tx, response, req, int64(req.GetContestId()), false, this.debug)
+	ContestShow_BuildResponse(tx, response, req, int64(req.GetContestId()), false, this.debug)
 }
 
-func ShowContest_BuildResponse(
+func ContestShow_BuildResponse(
 	tx *sqlx.Tx,
-	response *api.ShowContestResponse,
-	req *api.ShowContestRequest,
+	response *api.ContestShowResponse,
+	req *api.ContestShowRequest,
 	contest_id int64,
 	is_admin bool,
 	debug bool) {

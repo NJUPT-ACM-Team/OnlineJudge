@@ -131,21 +131,27 @@ var api_routes = Routes{
 		HandlerFunc: ctler.ListContests,
 	},
 	Route{
-		Name:        "ShowContest",
+		Name:        "ContestShow",
 		Method:      "GET",
 		Pattern:     "/contest",
-		HandlerFunc: ctler.ShowContest,
+		HandlerFunc: ctler.ContestShow,
 	},
 	Route{
-		Name:        "SaveContest",
+		Name:        "ContestSave",
 		Method:      "POST",
-		Pattern:     "/save_contest",
-		HandlerFunc: ctler.SaveContest,
+		Pattern:     "/contest_save",
+		HandlerFunc: ctler.ContestSave,
 	},
 	Route{
 		Name:        "ContestAuth",
 		Method:      "POST",
 		Pattern:     "/contest_auth",
 		HandlerFunc: ctler.ContestAuth,
+	},
+	Route{
+		Name:        "ContestListProblems",
+		Method:      "GET",
+		Pattern:     "/contest_problems",
+		HandlerFunc: ctler.ContestListProblems,
 	},
 }

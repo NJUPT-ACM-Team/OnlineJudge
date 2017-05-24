@@ -13,43 +13,44 @@ import (
 	"time"
 )
 
-func (this *AdminHandler) SaveContest(response *api.SaveContestResponse, req *api.SaveContestRequest) {
+func (this *AdminHandler) ContestSave(response *api.ContestSaveResponse, req *api.ContestSaveRequest) {
 	defer PanicHandler(response, this.debug)
-	SaveContest_BuildResponse(this.dbu, true, this.session.GetUserId(), response, req, this.debug)
+	ContestSave_BuildResponse(this.dbu, true, this.session.GetUserId(), response, req, this.debug)
 }
 
-func (this *BasicHandler) SaveContest(response *api.SaveContestResponse, req *api.SaveContestRequest) {
+func (this *BasicHandler) ContestSave(response *api.ContestSaveResponse, req *api.ContestSaveRequest) {
 	log.Println("Get here")
 	MakeResponseError(response, this.debug, PBLoginRequired, nil)
 }
 
-func (this *UserHandler) SaveContest(response *api.SaveContestResponse, req *api.SaveContestRequest) {
+func (this *UserHandler) ContestSave(response *api.ContestSaveResponse, req *api.ContestSaveRequest) {
 	defer PanicHandler(response, this.debug)
 	// check if able to upate
 	if req.GetContestId() != 0 {
 		tx := this.dbu.MustBegin()
 		defer this.dbu.Rollback()
-		cst, err := models.Query_Contest_By_ContestId(tx, req.GetContestId(), nil, nil)
+		access, err := CheckContestAccess(
+			tx, true, req.GetContestId(), this.session.GetUserId(), this.debug)
 		PanicOnError(err)
-		if cst == nil {
+		if access.If404 {
 			MakeResponseError(response, this.debug, PBContestNotFound, nil)
 			return
 		}
-		if cst.CreatorId != this.session.GetUserId() {
+		if !access.Creator {
 			MakeResponseError(response, this.debug, PBUnauthorized, nil)
 			return
 		}
 	}
 
-	SaveContest_BuildResponse(this.dbu, false, this.session.GetUserId(), response, req, this.debug)
+	ContestSave_BuildResponse(this.dbu, false, this.session.GetUserId(), response, req, this.debug)
 }
 
-func SaveContest_BuildResponse(
+func ContestSave_BuildResponse(
 	dbu *db.DBUtil,
 	is_admin bool,
 	user_id int64,
-	response *api.SaveContestResponse,
-	req *api.SaveContestRequest,
+	response *api.ContestSaveResponse,
+	req *api.ContestSaveRequest,
 	debug bool,
 ) {
 	if is_admin == false {

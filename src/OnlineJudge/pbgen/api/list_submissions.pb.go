@@ -28,7 +28,7 @@ type ListSubmissionsRequest struct {
 func (m *ListSubmissionsRequest) Reset()                    { *m = ListSubmissionsRequest{} }
 func (m *ListSubmissionsRequest) String() string            { return proto.CompactTextString(m) }
 func (*ListSubmissionsRequest) ProtoMessage()               {}
-func (*ListSubmissionsRequest) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{0} }
+func (*ListSubmissionsRequest) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{0} }
 
 func (m *ListSubmissionsRequest) GetPerPage() int32 {
 	if m != nil {
@@ -104,7 +104,7 @@ type ListSubmissionsResponse struct {
 func (m *ListSubmissionsResponse) Reset()                    { *m = ListSubmissionsResponse{} }
 func (m *ListSubmissionsResponse) String() string            { return proto.CompactTextString(m) }
 func (*ListSubmissionsResponse) ProtoMessage()               {}
-func (*ListSubmissionsResponse) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{1} }
+func (*ListSubmissionsResponse) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{1} }
 
 func (m *ListSubmissionsResponse) GetLines() []*ListSubmissionsResponse_PerLine {
 	if m != nil {
@@ -163,7 +163,7 @@ func (m *ListSubmissionsResponse_PerLine) Reset()         { *m = ListSubmissions
 func (m *ListSubmissionsResponse_PerLine) String() string { return proto.CompactTextString(m) }
 func (*ListSubmissionsResponse_PerLine) ProtoMessage()    {}
 func (*ListSubmissionsResponse_PerLine) Descriptor() ([]byte, []int) {
-	return fileDescriptor8, []int{1, 0}
+	return fileDescriptor11, []int{1, 0}
 }
 
 func (m *ListSubmissionsResponse_PerLine) GetSid() string {
@@ -277,9 +277,9 @@ func init() {
 	proto.RegisterType((*ListSubmissionsResponse_PerLine)(nil), "api.ListSubmissionsResponse.PerLine")
 }
 
-func init() { proto.RegisterFile("api/list_submissions.proto", fileDescriptor8) }
+func init() { proto.RegisterFile("api/list_submissions.proto", fileDescriptor11) }
 
-var fileDescriptor8 = []byte{
+var fileDescriptor11 = []byte{
 	// 575 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x74, 0x93, 0xcd, 0x6e, 0x13, 0x31,
 	0x14, 0x85, 0x95, 0xa6, 0x93, 0x9f, 0x9b, 0xfe, 0x44, 0x96, 0x68, 0x4d, 0x00, 0x11, 0x2a, 0x24,

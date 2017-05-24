@@ -3,7 +3,7 @@ package api;
 
 import "api/common.proto";
 
-message ShowContestRequest {
+message ContestShowRequest {
     int64 contest_id = 1; 
 }
 
@@ -20,7 +20,7 @@ message Contest {
     string status = 10;
 }
 
-message ShowContestResponse {
+message ContestShowResponse {
     Contest contest = 1;
     Error error = 2;
 }

@@ -51,6 +51,9 @@ func (this *DBUtil) Commit() error {
 }
 
 func (this *DBUtil) MustBegin() *sqlx.Tx {
+	if this.Tx != nil {
+		this.Tx.Rollback()
+	}
 	this.Tx = this.db.MustBegin()
 	return this.Tx
 }

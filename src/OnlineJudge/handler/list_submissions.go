@@ -82,7 +82,7 @@ func ListSubmissions_BuildResponse(
 			IsSpj:           submission.IsSpj,
 			// Code,
 		}
-		if show_all_code || submission.IsShared {
+		if show_all_code || submission.IsShared || submission.Username == username {
 			line.Code = submission.Code
 		}
 		lines = append(lines, line)

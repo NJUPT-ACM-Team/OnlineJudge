@@ -20,9 +20,8 @@ def Login():
 
 def Save():
     data = {
-        "save_contest_request": {
-            "contest_id":9,
-            "title": "有密码的比赛2",
+        "contest_save_request": {
+            "title": "有密码的比赛3",
             "description": "这是第四次比赛",
             "is_virtual": True,
             "contest_type": "icpc",
@@ -39,7 +38,7 @@ def Save():
 
     }
 
-    r = session.post("http://127.0.0.1:8000/api/inline/save_contest", json=data)
+    r = session.post("http://127.0.0.1:8000/api/inline/contest_save", json=data)
     print(r.status_code)
     dump(r.json())
 
@@ -63,7 +62,7 @@ def Update():
 
     }
 
-    r = session.post("http://127.0.0.1:8000/api/inline/save_contest", json=data)
+    r = session.post("http://127.0.0.1:8000/api/inline/contest_save", json=data)
     print(r.status_code)
     dump(r.json())
 

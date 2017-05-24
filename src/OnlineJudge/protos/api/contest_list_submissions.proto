@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package api;
+
+import "api/common.proto";
+import "api/language.proto";
+
+message ContestListSubmissionsRequest {
+    int32 per_page = 1;
+    int32 current_page = 2;
+
+    string filter_username = 3;
+    string filter_label = 4;
+    string filter_status_code = 5;
+    string filter_language = 6;
+    string filter_compiler = 7;
+    bool is_desc = 8;
+}
+
+message ContestListSubmissionsResponse {
+    message PerLine {
+        string label = 1;
+        int64 run_id = 2;
+        string username = 3;
+        string status = 4;
+        string status_code = 5;
+        string ce_info = 6;
+        Language language = 7;
+        int32 time_used = 8;
+        int32 memory_used = 9;
+        int32 testcases = 10;
+        int32 testcases_passed = 11;
+        int32 code_length = 12;
+        string submit_time = 13;
+        string code = 14;
+        bool is_spj = 15;
+    }
+
+    repeated PerLine lines = 1;
+    int32 total_lines = 2;
+    int32 total_pages = 3;
+    int32 current_page = 4;
+    Error error = 5;
+}

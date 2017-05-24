@@ -36,10 +36,11 @@ type Handler interface {
 	Logout(*api.LogoutResponse, *api.LogoutRequest)                // OK
 	Register(*api.RegisterResponse, *api.RegisterRequest)          // OK
 	ShowProblem(*api.ShowProblemResponse, *api.ShowProblemRequest) // OK
-	ShowContest(*api.ShowContestResponse, *api.ShowContestRequest) // OK
+	ContestShow(*api.ContestShowResponse, *api.ContestShowRequest) // OK
 	Submit(*api.SubmitResponse, *api.SubmitRequest)
-	SaveContest(*api.SaveContestResponse, *api.SaveContestRequest)              // ING
-	ContestAuth(response *api.ContestAuthResponse, req *api.ContestAuthRequest) // ING
+	ContestSave(*api.ContestSaveResponse, *api.ContestSaveRequest)                         // ING
+	ContestAuth(*api.ContestAuthResponse, *api.ContestAuthRequest)                         // ING
+	ContestListProblems(*api.ContestListProblemsResponse, *api.ContestListProblemsRequest) // ING
 }
 
 type BasicHandler struct {

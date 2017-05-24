@@ -10,6 +10,9 @@ It is generated from these files:
 	api/common.proto
 	api/contest_auth.proto
 	api/contest_list_problems.proto
+	api/contest_list_submissions.proto
+	api/contest_save.proto
+	api/contest_show.proto
 	api/edit_problem.proto
 	api/language.proto
 	api/list_contests.proto
@@ -19,8 +22,6 @@ It is generated from these files:
 	api/logout.proto
 	api/ojinfo.proto
 	api/register.proto
-	api/save_contest.proto
-	api/show_contest.proto
 	api/show_problem.proto
 	api/submit.proto
 	api/upload_problem.proto
@@ -34,6 +35,13 @@ It has these top-level messages:
 	ContestAuthResponse
 	ContestListProblemsRequest
 	ContestListProblemsResponse
+	ContestListSubmissionsRequest
+	ContestListSubmissionsResponse
+	ContestSaveRequest
+	ContestSaveResponse
+	ContestShowRequest
+	Contest
+	ContestShowResponse
 	EditProblemRequest
 	EditProblemResponse
 	Language
@@ -52,11 +60,6 @@ It has these top-level messages:
 	OJInfo
 	RegisterRequest
 	RegisterResponse
-	SaveContestRequest
-	SaveContestResponse
-	ShowContestRequest
-	Contest
-	ShowContestResponse
 	ShowProblemRequest
 	Problem
 	ShowProblemResponse

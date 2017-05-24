@@ -7,11 +7,11 @@ import (
 	"net/http"
 )
 
-func (this *Controller) ShowContest(w http.ResponseWriter, r *http.Request) {
+func (this *Controller) ContestShow(w http.ResponseWriter, r *http.Request) {
 	var webresponse = &api.WebResponse{}
 
-	var response = &api.ShowContestResponse{}
-	var request = &api.ShowContestRequest{}
+	var response = &api.ContestShowResponse{}
+	var request = &api.ContestShowRequest{}
 	defer SetWebResponse(w, response, webresponse)
 
 	session, err := this.Prepare(webresponse, request, w, r)
@@ -21,7 +21,7 @@ func (this *Controller) ShowContest(w http.ResponseWriter, r *http.Request) {
 	defer session.Save(r, w)
 
 	handler := handler.NewHandler(session, this.debug)
-	handler.ShowContest(response, request)
+	handler.ContestShow(response, request)
 
-	webresponse.ShowContestResponse = response
+	webresponse.ContestShowResponse = response
 }

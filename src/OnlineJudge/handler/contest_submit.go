@@ -21,6 +21,19 @@ func (this *BasicHandler) ContestSubmit(response *api.SubmitResponse, req *api.S
 
 func (this *UserHandler) ContestSubmit(response *api.SubmitResponse, req *api.SubmitRequest) {
 	defer PanicHandler(response, this.debug)
+	tx := this.dbu.MustBegin()
+	defer this.dbu.Rollback()
+	access, err := CheckContestAccess(
+		tx, false, req.GetContestId(), this.session.GetUserId(), this.debug)
+	PanicOnError(err)
+	if access.If404 {
+		MakeResponseError(response, this.debug, PBContestNotFound, nil)
+		return
+	}
+	if !access.Submit {
+		MakeResponseError(response, this.debug, PBUnauthorized, nil)
+		return
+	}
 	Submit_BuildResponse(this.dbu, response, req,
 		this.session.GetUserId(), this.session.GetIPAddr(), false, this.debug)
 }
