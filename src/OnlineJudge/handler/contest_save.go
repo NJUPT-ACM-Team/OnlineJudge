@@ -125,9 +125,11 @@ func ContestSave_BuildResponse(
 
 	// clear problems
 	cpm := models.NewContestProblemModel()
-	if err := cpm.DeleteProblemsByContestId(tx, response.ContestId); err != nil {
-		PanicOnError(errors.New("failed to clear problems:" + err.Error()))
-	}
+	/*
+		if err := cpm.DeleteProblemsByContestId(tx, response.ContestId); err != nil {
+			PanicOnError(errors.New("failed to clear problems:" + err.Error()))
+		}
+	*/
 
 	// insert problems
 	cnt := 0
@@ -151,16 +153,57 @@ func ContestSave_BuildResponse(
 		cnt++
 
 		// insert
-		_, err = cpm.Insert(tx, cp)
+		check, err := Check_Del_ContestProblem(tx, cp)
 		if err != nil {
-			// Log
-			log.Println("insert contest problem: " + err.Error())
+			log.Println("check del contest problem: " + err.Error())
+			continue
 		}
+		if check {
+			_, err = cpm.Insert(tx, cp)
+			if err != nil {
+				// Log
+				log.Println("insert contest problem: " + err.Error())
+			}
+		} else {
+			if err := cpm.Update(tx, cp, "", []string{"alias"}, nil); err != nil {
+				// Log
+				log.Println("update contest problem: " + err.Error())
+			}
+		}
+	}
+	for i := cnt; i < 26; i++ {
+		label := base.GenerateLabel(cnt)
+		Check_Del_ContestProblem(tx,
+			&models.ContestProblem{ContestIdFK: response.ContestId, Label: label})
 	}
 
 	// Commit changes
 	dbu.MustCommit()
 
+}
+
+// if true insert, else update
+func Check_Del_ContestProblem(tx *sqlx.Tx, cp *models.ContestProblem) (bool, error) {
+	ocp, err := models.Query_ContestProblem_By_ContestId_And_Label(
+		tx, cp.ContestIdFK, cp.Label)
+	if err != nil {
+		return false, err
+	}
+	if ocp == nil {
+		return true, nil
+	}
+	if ocp.MetaPidFK == cp.MetaPidFK {
+		cp.CPId = ocp.CPId
+		return false, nil
+	}
+
+	// delete current problem
+	cpm := models.NewContestProblemModel()
+	if err := cpm.DeleteByContestIdAndLabel(
+		tx, ocp.ContestIdFK, ocp.Label); err != nil {
+		return false, err
+	}
+	return true, nil
 }
 
 func Query_MetaPid_By_Sid(tx *sqlx.Tx, sid string) (int64, error) {
