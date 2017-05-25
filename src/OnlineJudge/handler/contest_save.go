@@ -29,7 +29,7 @@ func (this *UserHandler) ContestSave(response *api.ContestSaveResponse, req *api
 		tx := this.dbu.MustBegin()
 		defer this.dbu.Rollback()
 		access, err := CheckContestAccess(
-			tx, true, req.GetContestId(), this.session.GetUserId(), this.debug)
+			tx, false, req.GetContestId(), this.session.GetUserId(), this.debug)
 		PanicOnError(err)
 		if access.If404 {
 			MakeResponseError(response, this.debug, PBContestNotFound, nil)
