@@ -19,7 +19,6 @@ func (this *AdminHandler) ContestSave(response *api.ContestSaveResponse, req *ap
 }
 
 func (this *BasicHandler) ContestSave(response *api.ContestSaveResponse, req *api.ContestSaveRequest) {
-	log.Println("Get here")
 	MakeResponseError(response, this.debug, PBLoginRequired, nil)
 }
 
@@ -37,7 +36,7 @@ func (this *UserHandler) ContestSave(response *api.ContestSaveResponse, req *api
 			return
 		}
 		if !access.Creator {
-			MakeResponseError(response, this.debug, PBUnauthorized, nil)
+			MakeResponseError(response, this.debug, PBUnauthorized, errors.New("not the creator"))
 			return
 		}
 	}
@@ -58,6 +57,7 @@ func ContestSave_BuildResponse(
 		if req.GetIsVirtual() == false {
 			MakeResponseError(response, debug, PBUnauthorized,
 				errors.New("only admin can create formal contest"))
+			return
 		}
 	}
 

@@ -19,6 +19,8 @@ func MakeResponseError(res interface{}, debug bool, pberr *api.Error, err error)
 	field := reflect.ValueOf(res).Elem().FieldByName("Error")
 	if debug == true && err != nil {
 		pberr.Debug = err.Error()
+	} else {
+		pberr.Debug = ""
 	}
 	field.Set(reflect.ValueOf(pberr))
 }
