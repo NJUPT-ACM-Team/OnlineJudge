@@ -6,6 +6,10 @@ import (
 	locals "OnlineJudge/sessions"
 	"github.com/jmoiron/sqlx"
 	//	"log"
+
+	"errors"
+	"fmt"
+	"runtime"
 )
 
 // For testing purpose
@@ -109,7 +113,8 @@ func (this *BasicHandler) CloseDBU() {
 
 func PanicOnError(err error) {
 	if err != nil {
-		panic(err)
+		_, fn, line, _ := runtime.Caller(1)
+		panic(errors.New(fmt.Sprintf("[error] %s:%d %v", fn, line, err)))
 	}
 }
 
