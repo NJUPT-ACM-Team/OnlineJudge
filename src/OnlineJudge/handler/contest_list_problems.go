@@ -6,6 +6,7 @@ import (
 	"OnlineJudge/pbgen/api"
 
 	"github.com/jmoiron/sqlx"
+	//	"log"
 )
 
 func (this *AdminHandler) ContestListProblems(response *api.ContestListProblemsResponse, req *api.ContestListProblemsRequest) {
@@ -119,6 +120,8 @@ func CheckContestAccess(
 		}
 	}
 
+	// log.Println("cst.CreatorId:", cst.CreatorId)
+	// log.Println("user_id:", user_id)
 	if cst.CreatorId == user_id {
 		return &ContestAccess{
 			Problems: true,

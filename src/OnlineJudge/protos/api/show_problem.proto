@@ -5,7 +5,7 @@ import "api/common.proto";
 import "api/language.proto";
 
 message ShowProblemRequest {
-  uint64 contest_id = 1;
+  int64 contest_id = 1;
   string problem_sid = 2;
 }
 
@@ -30,7 +30,7 @@ message Problem {
 
 // response
 message ShowProblemResponse {
-  uint64 contest_id = 1;
+  int64 contest_id = 1;
   string problem_sid = 2;
 
   Problem problem = 3;
