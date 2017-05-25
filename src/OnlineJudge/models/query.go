@@ -278,7 +278,7 @@ func Query_TestCases_By_MetaPid(
 	select_sql := JoinSQL("SELECT", str_fields, from_where_sql)
 
 	var cnt int
-	if err := tx.Select(&cnt, count_sql, meta_pid); err != nil {
+	if err := tx.Get(&cnt, count_sql, meta_pid); err != nil {
 		return nil, err
 	}
 	if cnt == 0 {
@@ -310,7 +310,7 @@ func Query_Limits_By_MetaPid(
 	select_sql := JoinSQL("SELECT", str_fields, from_where_sql)
 
 	var cnt int
-	if err := tx.Select(&cnt, count_sql, meta_pid); err != nil {
+	if err := tx.Get(&cnt, count_sql, meta_pid); err != nil {
 		return nil, err
 	}
 	if cnt == 0 {

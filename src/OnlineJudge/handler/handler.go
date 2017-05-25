@@ -41,6 +41,7 @@ type Handler interface {
 	ContestSave(*api.ContestSaveResponse, *api.ContestSaveRequest)                         // ING
 	ContestAuth(*api.ContestAuthResponse, *api.ContestAuthRequest)                         // ING
 	ContestListProblems(*api.ContestListProblemsResponse, *api.ContestListProblemsRequest) // ING
+	ContestSubmit(*api.SubmitResponse, *api.SubmitRequest)
 }
 
 type BasicHandler struct {

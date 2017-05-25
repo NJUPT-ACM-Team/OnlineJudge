@@ -57,18 +57,6 @@ func (this *UserHandler) ContestListProblems(response *api.ContestListProblemsRe
 	ContestListProblems_BuildResponse(tx, response, req, show_details, req.GetContestId(), this.session.GetUserId())
 }
 
-func CheckContestUser(tx *sqlx.Tx, contest_id, user_id int64) (bool, error) {
-	cst, err := models.Query_ContestUser_By_ContestId_And_UserId(
-		tx, contest_id, user_id)
-	if err != nil {
-		return false, err
-	}
-	if cst == nil {
-		return false, nil
-	}
-	return true, nil
-}
-
 func ContestListProblems_BuildResponse(
 	tx *sqlx.Tx,
 	response *api.ContestListProblemsResponse,

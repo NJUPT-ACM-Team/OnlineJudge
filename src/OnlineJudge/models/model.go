@@ -103,6 +103,8 @@ func GenerateSelectSQL(st interface{}, required []string, excepts []string) (str
 			dft = "0"
 		case int64:
 			dft = "0"
+		case float32:
+			dft = "0.0"
 		case string, []byte:
 			dft = "''"
 		case time.Time:

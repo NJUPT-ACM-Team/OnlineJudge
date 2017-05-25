@@ -6,12 +6,13 @@ import (
 	"OnlineJudge/pbgen/api"
 	// "github.com/jmoiron/sqlx"
 
+	// "log"
 	"time"
 )
 
 func (this *AdminHandler) ContestSubmit(response *api.SubmitResponse, req *api.SubmitRequest) {
 	defer PanicHandler(response, this.debug)
-	Submit_BuildResponse(this.dbu, response, req,
+	ContestSubmit_BuildResponse(this.dbu, response, req,
 		this.session.GetUserId(), this.session.GetIPAddr(), true, this.debug)
 }
 
@@ -34,7 +35,7 @@ func (this *UserHandler) ContestSubmit(response *api.SubmitResponse, req *api.Su
 		MakeResponseError(response, this.debug, PBUnauthorized, nil)
 		return
 	}
-	Submit_BuildResponse(this.dbu, response, req,
+	ContestSubmit_BuildResponse(this.dbu, response, req,
 		this.session.GetUserId(), this.session.GetIPAddr(), false, this.debug)
 }
 
@@ -47,14 +48,25 @@ func ContestSubmit_BuildResponse(
 	use_hide bool,
 	debug bool) {
 
+	// log.Println("get in contest submit")
+
 	contest_id := req.GetContestId()
 	label := req.GetProblemSid()
 
 	tx := dbu.MustBegin()
 	defer dbu.Rollback()
 
+	// add user to contestuser
+	check, err := CheckContestUser(tx, contest_id, user_id)
+	PanicOnError(err)
+	if !check {
+		err = AddUserToContest(tx, user_id, contest_id)
+		PanicOnError(err)
+	}
+
 	cp, err := models.Query_ContestProblem_By_ContestId_And_Label(
 		tx, contest_id, label)
+	// log.Println("query contestproblem:", err.Error())
 	PanicOnError(err)
 	if cp == nil {
 		MakeResponseError(response, debug, PBProblemNotFound, nil)
@@ -64,6 +76,7 @@ func ContestSubmit_BuildResponse(
 	mp, err := models.Query_MetaProblem_By_MetaPid(
 		tx, cp.MetaPidFK, []string{"meta_pid", "hide", "is_spj"}, nil)
 	PanicOnError(err)
+	// log.Println("query metaproblem:", err.Error())
 	if mp == nil {
 		MakeResponseError(response, debug, PBProblemNotFound, nil)
 		return
@@ -72,13 +85,16 @@ func ContestSubmit_BuildResponse(
 	// Get contestuser by contest_id, user_id
 	cu, err := models.Query_ContestUser_By_ContestId_And_UserId(
 		tx, contest_id, user_id)
+	// log.Println("query contestuser:", err.Error())
 	PanicOnError(err)
+	// log.Println("get here 0")
 	if cu == nil {
 		MakeResponseError(response, debug, PBUnauthorized, nil)
 		return
 	}
 	cu_id := cu.CUId
 
+	// log.Println("get here 1")
 	// Add Submission
 	subm := models.NewSubmissionModel()
 	sub := &models.Submission{
@@ -99,6 +115,7 @@ func ContestSubmit_BuildResponse(
 	run_id, err := subm.Insert(tx, sub)
 	PanicOnError(err)
 	response.RunId = run_id
+	// log.Println("get here 2")
 	dbu.MustCommit()
 
 	go CallJudging(dbu, run_id)

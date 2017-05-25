@@ -21,7 +21,9 @@ def Login():
 def Submit():
     data = {
         "submit_request": {
-            "problem_sid" : "local-1000",
+            "contest_id": 5,
+            "problem_sid": "C",
+            # "problem_sid" : "local-1000",
             "code":"""
 #include <iostream>
 using namespace std;
@@ -32,13 +34,14 @@ int main() {
     return 0;
 }
                 """,
-            "language_id": 1,
+            "language_id": 2,
             "is_shared" : True,
         },
     }
 
     # r = session.post("http://35.189.170.28:8000/api/inline/submit", json=data)
-    r = session.post("http://127.0.0.1:8000/api/inline/submit", json=data)
+    r = session.post("http://127.0.0.1:8000/api/inline/contest_submit", json=data)
+    print(r.text)
     print(r.status_code)
     dump(r.json())
 

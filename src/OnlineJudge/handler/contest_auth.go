@@ -36,6 +36,18 @@ func (this *UserHandler) ContestAuth(response *api.ContestAuthResponse, req *api
 	}
 }
 
+func CheckContestUser(tx *sqlx.Tx, contest_id, user_id int64) (bool, error) {
+	cst, err := models.Query_ContestUser_By_ContestId_And_UserId(
+		tx, contest_id, user_id)
+	if err != nil {
+		return false, err
+	}
+	if cst == nil {
+		return false, nil
+	}
+	return true, nil
+}
+
 func AddUserToContest(tx *sqlx.Tx, user_id, contest_id int64) error {
 	cum := models.NewContestUserModel()
 	cu := &models.ContestUser{
