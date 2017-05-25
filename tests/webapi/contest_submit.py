@@ -40,7 +40,7 @@ int main() {
     }
 
     # r = session.post("http://35.189.170.28:8000/api/inline/submit", json=data)
-    r = session.post("http://127.0.0.1:8000/api/inline/contest_submit", json=data)
+    r = session.post("http://127.0.0.1:8000/api/inline/contest/submit", json=data)
     print(r.text)
     print(r.status_code)
     dump(r.json())

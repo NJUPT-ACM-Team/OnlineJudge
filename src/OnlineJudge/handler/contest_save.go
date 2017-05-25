@@ -76,14 +76,24 @@ func ContestSave_BuildResponse(
 		Description:      req.GetDescription(),
 		IsVirtual:        req.GetIsVirtual(),
 		ContestType:      req.GetContestType(),
-		CreateTime:       time.Now(),
-		StartTime:        base.GetDefaultTime(),
-		EndTime:          base.GetDefaultTime(),
+		CreateTime:       time.Now().UTC(),
 		LockBoardTime:    base.GetDefaultTime(),
 		HideOthersStatus: req.GetHideOthersStatus(),
 		IsHidden:         req.GetIsHidden(),
 		Password:         req.GetPassword(),
 	}
+	startTime, err := base.UnmarshalTime(req.GetStartTime())
+	if err != nil {
+		MakeResponseError(response, debug, PBBadRequest, errors.New("time format wrong"))
+		return
+	}
+	endTime, err := base.UnmarshalTime(req.GetEndTime())
+	if err != nil {
+		MakeResponseError(response, debug, PBBadRequest, errors.New("time format wrong"))
+		return
+	}
+	cst.StartTime = startTime
+	cst.EndTime = endTime
 
 	cm := models.NewContestModel()
 	tx := dbu.MustBegin()

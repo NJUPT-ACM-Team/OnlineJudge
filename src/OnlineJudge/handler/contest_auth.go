@@ -27,10 +27,16 @@ func (this *UserHandler) ContestAuth(response *api.ContestAuthResponse, req *api
 		response.ContestId = cst.ContestId
 		// check password
 		if req.GetPassword() == cst.Password {
-			// add user to contestusers
-			err = AddUserToContest(tx, this.session.GetUserId(), cst.ContestId)
+			// check and add user to contestusers
+			check, err := CheckContestUser(
+				tx, cst.ContestId, this.session.GetUserId())
 			PanicOnError(err)
-			this.dbu.MustCommit()
+			if !check {
+				err = AddUserToContest(
+					tx, this.session.GetUserId(), cst.ContestId)
+				PanicOnError(err)
+				this.dbu.MustCommit()
+			}
 			response.Success = true
 		}
 	}

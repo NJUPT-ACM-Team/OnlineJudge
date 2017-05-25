@@ -18,6 +18,7 @@ message Contest {
     string lock_board_time = 8;
     string access = 9;
     string status = 10;
+    bool has_access = 11;
 }
 
 message ContestShowResponse {

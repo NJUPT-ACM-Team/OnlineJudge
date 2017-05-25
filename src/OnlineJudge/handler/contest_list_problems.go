@@ -6,6 +6,9 @@ import (
 	"OnlineJudge/pbgen/api"
 
 	"github.com/jmoiron/sqlx"
+
+	"errors"
+	"time"
 	//	"log"
 )
 
@@ -29,6 +32,10 @@ func (this *BasicHandler) ContestListProblems(response *api.ContestListProblemsR
 		MakeResponseError(response, this.debug, PBUnauthorized, nil)
 		return
 	}
+	if access.Time < 0 && !access.Creator {
+		MakeResponseError(response, this.debug, PBUnauthorized, errors.New("contest not started"))
+		return
+	}
 	// list problems
 	ContestListProblems_BuildResponse(tx, response, req, false, req.GetContestId(), this.session.GetUserId())
 }
@@ -47,6 +54,10 @@ func (this *UserHandler) ContestListProblems(response *api.ContestListProblemsRe
 	}
 	if !access.Problems {
 		MakeResponseError(response, this.debug, PBUnauthorized, nil)
+		return
+	}
+	if access.Time < 0 && !access.Creator {
+		MakeResponseError(response, this.debug, PBUnauthorized, errors.New("contest not started"))
 		return
 	}
 
@@ -78,6 +89,10 @@ func ContestListProblems_BuildResponse(
 			Alias:  cp.Alias,
 			Status: cp.Status,
 		}
+		// if alias is "", use title
+		if line.Alias == "" {
+			line.Alias = cp.Title
+		}
 		if show_details {
 			line.Title = cp.Title
 			line.Sid = base.GenSid(&base.Pid{OJName: cp.OJName, OJPid: cp.OJPid})
@@ -94,6 +109,7 @@ type ContestAccess struct {
 	Rank     bool
 	Submit   bool
 	Creator  bool
+	Time     int // -1 future, 0 running, 1 ended
 }
 
 func CheckContestAccess(
@@ -108,14 +124,17 @@ func CheckContestAccess(
 		return &ContestAccess{If404: true}, nil
 	}
 
+	rtime := JudgeContestStatus(cst, time.Now().UTC())
+
 	if is_guest {
 		if cst.IsPrivate() {
-			return &ContestAccess{}, nil
+			return &ContestAccess{Time: rtime}, nil
 		} else {
 			return &ContestAccess{
 				Problems: true,
 				Status:   true,
 				Rank:     true,
+				Time:     rtime,
 			}, nil
 		}
 	}
@@ -129,6 +148,7 @@ func CheckContestAccess(
 			Rank:     true,
 			Submit:   true,
 			Creator:  true,
+			Time:     rtime,
 		}, nil
 	}
 
@@ -140,12 +160,13 @@ func CheckContestAccess(
 
 	if cu == nil {
 		if cst.IsPrivate() {
-			return &ContestAccess{}, nil
+			return &ContestAccess{Time: rtime}, nil
 		} else if cst.IsProtected() {
 			return &ContestAccess{
 				Problems: true,
 				Status:   true,
 				Rank:     true,
+				Time:     rtime,
 			}, nil
 		} else if cst.IsPublic() {
 			return &ContestAccess{
@@ -153,6 +174,7 @@ func CheckContestAccess(
 				Status:   true,
 				Rank:     true,
 				Submit:   true,
+				Time:     rtime,
 			}, nil
 		}
 	}
@@ -161,5 +183,6 @@ func CheckContestAccess(
 		Status:   true,
 		Rank:     true,
 		Submit:   true,
+		Time:     rtime,
 	}, nil
 }

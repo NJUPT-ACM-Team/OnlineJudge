@@ -7,6 +7,7 @@ import (
 	// "github.com/jmoiron/sqlx"
 
 	// "log"
+	"errors"
 	"time"
 )
 
@@ -33,6 +34,10 @@ func (this *UserHandler) ContestSubmit(response *api.SubmitResponse, req *api.Su
 	}
 	if !access.Submit {
 		MakeResponseError(response, this.debug, PBUnauthorized, nil)
+		return
+	}
+	if access.Time != 0 && !access.Creator {
+		MakeResponseError(response, this.debug, PBUnauthorized, errors.New("contest not started or ended"))
 		return
 	}
 	ContestSubmit_BuildResponse(this.dbu, response, req,

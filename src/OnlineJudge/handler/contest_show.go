@@ -4,31 +4,40 @@ import (
 	"OnlineJudge/models"
 	"OnlineJudge/pbgen/api"
 
-	"fmt"
 	"github.com/jmoiron/sqlx"
+
+	"fmt"
+	"time"
 )
 
 func (this *AdminHandler) ContestShow(response *api.ContestShowResponse, req *api.ContestShowRequest) {
 	defer PanicHandler(response, this.debug)
 	tx := this.dbu.MustBegin()
 	defer this.dbu.Rollback()
+	access, err := CheckContestAccess(
+		tx, false, req.GetContestId(), this.session.GetUserId(), this.debug)
+	PanicOnError(err)
 
-	ContestShow_BuildResponse(tx, response, req, int64(req.GetContestId()), true, this.debug)
+	ContestShow_BuildResponse(tx, response, req, access, int64(req.GetContestId()), true, this.debug)
 }
 
 func (this *BasicHandler) ContestShow(response *api.ContestShowResponse, req *api.ContestShowRequest) {
 	defer PanicHandler(response, this.debug)
 	tx := this.dbu.MustBegin()
 	defer this.dbu.Rollback()
+	access, err := CheckContestAccess(
+		tx, false, req.GetContestId(), this.session.GetUserId(), this.debug)
+	PanicOnError(err)
 
 	fmt.Println(req.GetContestId())
-	ContestShow_BuildResponse(tx, response, req, int64(req.GetContestId()), false, this.debug)
+	ContestShow_BuildResponse(tx, response, req, access, int64(req.GetContestId()), false, this.debug)
 }
 
 func ContestShow_BuildResponse(
 	tx *sqlx.Tx,
 	response *api.ContestShowResponse,
 	req *api.ContestShowRequest,
+	access *ContestAccess,
 	contest_id int64,
 	is_admin bool,
 	debug bool) {
@@ -58,7 +67,13 @@ func ContestShow_BuildResponse(
 	} else {
 		contest.Access = "private"
 	}
-	contest.Status = "ended"
+	statusCode := JudgeContestStatus(cst, time.Now().UTC())
+	contest.Status = ContestStatusCodeString(statusCode)
+
+	// check access
+	if access.Creator || access.Submit {
+		contest.HasAccess = true
+	}
 
 	response.Contest = contest
 }

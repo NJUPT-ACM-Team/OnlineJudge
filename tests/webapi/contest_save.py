@@ -21,11 +21,13 @@ def Login():
 def Save():
     data = {
         "contest_save_request": {
-            "title": "有密码的比赛3",
+            "title": "有密码的比赛6",
             "description": "这是第四次比赛",
             "is_virtual": True,
             "contest_type": "icpc",
             "password": "123456",
+            "start_time": "Fri, 25 May 2017 09:25:00 GMT",
+            "end_time": "Fri, 25 May 2017 12:25:00 GMT",
             "problems": [
                 {
                     "problem_sid": "zoj-1000",
@@ -38,7 +40,7 @@ def Save():
 
     }
 
-    r = session.post("http://127.0.0.1:8000/api/inline/contest_save", json=data)
+    r = session.post("http://127.0.0.1:8000/api/inline/contest/save", json=data)
     print(r.status_code)
     dump(r.json())
 
@@ -62,7 +64,7 @@ def Update():
 
     }
 
-    r = session.post("http://127.0.0.1:8000/api/inline/contest_save", json=data)
+    r = session.post("http://127.0.0.1:8000/api/inline/contest/save", json=data)
     print(r.status_code)
     dump(r.json())
 

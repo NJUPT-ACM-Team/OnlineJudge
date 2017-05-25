@@ -5,6 +5,8 @@ import (
 	"OnlineJudge/pbgen/api"
 
 	"github.com/jmoiron/sqlx"
+
+	"errors"
 )
 
 func (this *AdminHandler) ContestShowProblem(response *api.ShowProblemResponse, req *api.ShowProblemRequest) {
@@ -27,6 +29,10 @@ func (this *BasicHandler) ContestShowProblem(response *api.ShowProblemResponse, 
 		MakeResponseError(response, this.debug, PBUnauthorized, nil)
 		return
 	}
+	if access.Time < 0 && !access.Creator {
+		MakeResponseError(response, this.debug, PBUnauthorized, errors.New("contest not started"))
+		return
+	}
 	ContestShowProblem_BuildResponse(tx, response, req, this.debug)
 }
 
@@ -42,6 +48,10 @@ func (this *UserHandler) ContestShowProblem(response *api.ShowProblemResponse, r
 	}
 	if !access.Problems {
 		MakeResponseError(response, this.debug, PBUnauthorized, nil)
+		return
+	}
+	if access.Time < 0 && !access.Creator {
+		MakeResponseError(response, this.debug, PBUnauthorized, errors.New("contest not started"))
 		return
 	}
 	ContestShowProblem_BuildResponse(tx, response, req, this.debug)
@@ -106,6 +116,9 @@ func ContestShowProblem_BuildResponse(
 		Source:       mp.Source,
 		Hint:         mp.Hint,
 		Hide:         mp.Hide,
+	}
+	if problem.Title == "" {
+		problem.Title = mp.Title
 	}
 	response.Problem = problem
 	languages := []*api.Language{}
