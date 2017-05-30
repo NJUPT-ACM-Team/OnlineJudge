@@ -575,6 +575,7 @@ func XQuery_Contest_List_Submissions_With_Filter(
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println(str_fields)
 
 	order_by := "ORDER BY run_id"
 	if is_desc == false {
@@ -584,7 +585,7 @@ func XQuery_Contest_List_Submissions_With_Filter(
 	offset := (current_page - 1) * per_page
 	sql := JoinSQL(
 		`SELECT`, str_fields, `FROM Submissions sub`,
-		`LEFT JOIN Users ON user_id_fk=user_id `,
+		`LEFT JOIN (SELECT cu_id, username FROM ContestUsers LEFT JOIN Users ON user_id=user_id_fk WHERE contest_id_fk=?) nu ON sub.cu_id_fk=nu.cu_id`,
 		`LEFT JOIN Languages ON lang_id_fk=lang_id`,
 		`LEFT JOIN 
 		(SELECT meta_pid, number_of_testcases , alias, label FROM MetaProblems mp
@@ -599,12 +600,12 @@ func XQuery_Contest_List_Submissions_With_Filter(
 			&subs, sql, contest_id,
 			filter_username,
 			contest_id, filter_label, filter_status_code,
-			filter_language, filter_compiler, contest_id); err != nil {
+			filter_language, filter_compiler, contest_id, contest_id); err != nil {
 
 			return nil, err
 		}
 	} else {
-		if err := tx.Select(&subs, sql, contest_id, contest_id); err != nil {
+		if err := tx.Select(&subs, sql, contest_id, contest_id, contest_id); err != nil {
 			return nil, err
 		}
 	}
