@@ -91,3 +91,29 @@ func TestXQuery_Contest_List_Problems(t *testing.T) {
 	}
 	t.Log(ps)
 }
+
+func TestXQuery_Contest_List_Submissions_With_Filter(t *testing.T) {
+	db.InitTest()
+	DB := db.New()
+	tx := DB.MustBegin()
+	ss, err := XQuery_Contest_List_Submissions_With_Filter(
+		tx,
+		"",    //username
+		false, // show_private,
+		8,
+		false, // is_desc,
+		"",    //username
+		"",    //label
+		"",    //status_code
+		"",    //language
+		"",    // compiler
+		20,    //per_page
+		1,     // current_page
+		nil,
+		nil,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(ss)
+}

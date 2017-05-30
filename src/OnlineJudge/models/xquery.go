@@ -1,8 +1,9 @@
 package models
 
 import (
-	"fmt"
 	"github.com/jmoiron/sqlx"
+
+	"fmt"
 	"strings"
 )
 
@@ -463,4 +464,151 @@ func XQuery_Contest_List_Problems(
 	}
 	// TODO: add status check
 	return pexts, nil
+}
+
+type ContestSubmissionExt struct {
+	Username          string
+	NumberOfTestcases int    `db:"number_of_testcases"`
+	Label             string `db:"label"`
+
+	Submission
+	Language
+}
+
+type ContestListSubmissionsPagination struct {
+	TotalLines  int
+	TotalPages  int
+	CurrentPage int
+	Submissions []ContestSubmissionExt
+}
+
+func XQuery_Contest_List_Submissions_With_Filter(
+	tx *sqlx.Tx,
+	username string,
+	show_private bool,
+	contest_id int64,
+	is_desc bool,
+	filter_username string,
+	filter_label string,
+	filter_status_code string,
+	filter_language string,
+	filter_compiler string,
+	per_page int,
+	current_page int,
+	required []string,
+	excepts []string) (*ContestListSubmissionsPagination, error) {
+
+	/*-- Func start --*/
+	need_filter := initFilters(
+		&filter_username,
+		&filter_label,
+		&filter_status_code,
+		&filter_language,
+		&filter_compiler)
+
+	where_sql := JoinSQL(`WHERE is_contest=true AND cu_id_fk IN 
+	(SELECT cu_id FROM ContestUsers WHERE contest_id_fk=?)`)
+
+	if show_private == false {
+		where_sql = JoinSQL(where_sql, "AND is_private=0")
+	}
+
+	if need_filter {
+		fmt.Println("need filter")
+		where_sql = JoinSQL(where_sql,
+			`AND
+		cu_id_fk IN (SELECT cu.cu_id FROM Users u LEFT JOIN ContestUsers cu ON u.user_id=cu.user_id_fk WHERE username LIKE ?) AND
+		meta_pid_fk IN 
+			(SELECT mp.meta_pid FROM MetaProblems mp LEFT JOIN ContestProblems cp ON cp.meta_pid_fk=mp.meta_pid
+			 WHERE cp.contest_id_fk=? AND cp.label LIKE ?) AND
+		status_code like ? AND
+		lang_id_fk IN
+			(SELECT lang_id FROM Languages
+			 WHERE language like ? AND compiler like ?)`)
+	}
+
+	ret := &ContestListSubmissionsPagination{}
+
+	// Get count
+	count_sql := JoinSQL("SELECT COUNT(*) FROM Submissions", where_sql)
+	var count int
+	if need_filter {
+		if err := tx.Get(&count, count_sql,
+			contest_id, filter_username,
+			contest_id, filter_label, filter_status_code,
+			filter_language, filter_compiler); err != nil {
+
+			return nil, err
+		}
+	} else {
+		if err := tx.Get(&count, count_sql, contest_id); err != nil {
+			return nil, err
+		}
+	}
+	ret.TotalLines = count
+
+	if per_page <= 0 {
+		ret.TotalPages = 1
+		per_page = ret.TotalLines
+	} else {
+		ret.TotalPages = ret.TotalLines / per_page
+		if ret.TotalLines%per_page != 0 {
+			ret.TotalPages += 1
+		}
+		if ret.TotalPages == 0 {
+			ret.TotalPages = 1
+		}
+	}
+	if current_page == 0 {
+		current_page = 1
+	}
+	if current_page > ret.TotalPages {
+		current_page = ret.TotalPages
+	}
+	ret.CurrentPage = current_page
+
+	// Get lines
+	sub := &ContestSubmissionExt{}
+	subs := []ContestSubmissionExt{}
+	// str_fields, err := GenerateSelectSQL(sub, required, []string{"submission", "language"})
+	str_fields, err := GenerateSelectSQL(sub, required, []string{"submission"})
+	if err != nil {
+		return nil, err
+	}
+
+	order_by := "ORDER BY run_id"
+	if is_desc == false {
+		order_by = JoinSQL(order_by, "DESC")
+	}
+
+	offset := (current_page - 1) * per_page
+	sql := JoinSQL(
+		`SELECT`, str_fields, `FROM Submissions sub`,
+		`LEFT JOIN Users ON user_id_fk=user_id `,
+		`LEFT JOIN Languages ON lang_id_fk=lang_id`,
+		`LEFT JOIN 
+		(SELECT meta_pid, number_of_testcases , alias, label FROM MetaProblems mp
+		LEFT JOIN (SELECT alias, label, meta_pid_fk AS cp_meta_pid_fk FROM ContestProblems WHERE contest_id_fk=?) cp 
+			ON mp.meta_pid=cp.cp_meta_pid_fk) nmp ON nmp.meta_pid=sub.meta_pid_fk`,
+		// `LEFT JOIN (SELECT alias, label, meta_pid_fk AS cp_meta_pid_fk FROM ContestProblems) cp ON sub.meta_pid_fk=cp.cp_meta_pid_fk`,
+		where_sql, order_by,
+		fmt.Sprintf(`LIMIT %d, %d`, offset, per_page))
+
+	if need_filter {
+		if err := tx.Select(
+			&subs, sql, contest_id,
+			filter_username,
+			contest_id, filter_label, filter_status_code,
+			filter_language, filter_compiler, contest_id); err != nil {
+
+			return nil, err
+		}
+	} else {
+		if err := tx.Select(&subs, sql, contest_id, contest_id); err != nil {
+			return nil, err
+		}
+	}
+	// fmt.Println(subs)
+	ret.Submissions = subs
+	return ret, nil
 }

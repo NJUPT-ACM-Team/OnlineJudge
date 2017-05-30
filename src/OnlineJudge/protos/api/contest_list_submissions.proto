@@ -9,12 +9,13 @@ message ContestListSubmissionsRequest {
     int32 per_page = 1;
     int32 current_page = 2;
 
-    string filter_username = 3;
-    string filter_label = 4;
-    string filter_status_code = 5;
-    string filter_language = 6;
-    string filter_compiler = 7;
-    bool is_desc = 8;
+    int64 contest_id = 3;
+    string filter_username = 4;
+    string filter_label = 5;
+    string filter_status_code = 6;
+    string filter_language = 7;
+    string filter_compiler = 8;
+    bool is_desc = 9;
 }
 
 message ContestListSubmissionsResponse {
