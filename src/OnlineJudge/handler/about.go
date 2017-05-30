@@ -47,4 +47,8 @@ func (this *BasicHandler) About(response *api.AboutResponse, req *api.AboutReque
 		}
 		response.LanguagesList = languages
 	}
+
+	if req.GetNeedUsername() == true {
+		response.Username = this.session.GetUsername()
+	}
 }

@@ -9,10 +9,12 @@ import "api/ojinfo.proto";
 message AboutRequest {
 	bool need_ojs_list = 1;
 	bool need_languages_list = 2;
+    bool need_username = 3;
 }
 
 message AboutResponse {
 	repeated OJInfo ojs_list = 1;
 	repeated Language languages_list = 2;
-	Error error = 3;
+    string username = 3;
+	Error error = 4;
 }
