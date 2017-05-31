@@ -2,6 +2,8 @@ package models
 
 import (
 	"github.com/jmoiron/sqlx"
+
+	"time"
 )
 
 func Query_MetaProblem_By_MetaPid(
@@ -357,6 +359,43 @@ func Query_Total_AC_Submissions_By_MetaPid(
 	}
 	return count, nil
 
+}
+
+func Query_Contest_Total_Submissions_By_ContestId_Label(
+	tx *sqlx.Tx,
+	contest_id int64,
+	label string,
+	start_time time.Time,
+	end_time time.Time,
+) (int, error) {
+	var cnt int
+	sql := JoinSQL("SELECT COUNT(*)",
+		"FROM Submissions WHERE is_contest=true",
+		"AND submit_time BETWEEN ? AND ?",
+		"AND cp_id_fk=(SELECT cp_id FROM ContestProblems WHERE contest_id_fk=? AND label=? LIMIT 1)")
+	if err := tx.Get(&cnt, sql, start_time, end_time, contest_id, label); err != nil {
+		return 0, err
+	}
+	return cnt, nil
+}
+
+func Query_Contest_AC_Submissions_By_ContestId_Label(
+	tx *sqlx.Tx,
+	contest_id int64,
+	label string,
+	start_time time.Time,
+	end_time time.Time,
+) (int, error) {
+	var cnt int
+	sql := JoinSQL("SELECT COUNT(*)",
+		"FROM Submissions WHERE is_contest=true",
+		"AND status_code='ac'",
+		"AND submit_time BETWEEN ? AND ?",
+		"AND cp_id_fk=(SELECT cp_id FROM ContestProblems WHERE contest_id_fk=? AND label=? LIMIT 1)")
+	if err := tx.Get(&cnt, sql, start_time, end_time, contest_id, label); err != nil {
+		return 0, err
+	}
+	return cnt, nil
 }
 
 func Query_Contest_By_ContestId(

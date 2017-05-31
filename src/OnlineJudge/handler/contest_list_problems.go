@@ -37,7 +37,7 @@ func (this *BasicHandler) ContestListProblems(response *api.ContestListProblemsR
 		return
 	}
 	// list problems
-	ContestListProblems_BuildResponse(tx, response, req, false, req.GetContestId(), this.session.GetUserId())
+	ContestListProblems_BuildResponse(tx, response, req, false, req.GetContestId(), this.session.GetUserId(), this.debug)
 }
 
 func (this *UserHandler) ContestListProblems(response *api.ContestListProblemsResponse, req *api.ContestListProblemsRequest) {
@@ -66,7 +66,7 @@ func (this *UserHandler) ContestListProblems(response *api.ContestListProblemsRe
 	if access.Creator {
 		show_details = true
 	}
-	ContestListProblems_BuildResponse(tx, response, req, show_details, req.GetContestId(), this.session.GetUserId())
+	ContestListProblems_BuildResponse(tx, response, req, show_details, req.GetContestId(), this.session.GetUserId(), this.debug)
 }
 
 func ContestListProblems_BuildResponse(
@@ -75,19 +75,34 @@ func ContestListProblems_BuildResponse(
 	req *api.ContestListProblemsRequest,
 	show_details bool,
 	contest_id int64,
-	user_id int64) {
+	user_id int64,
+	debug bool) {
 
 	cps, err := models.XQuery_Contest_List_Problems(
 		tx, contest_id, user_id)
 	PanicOnError(err)
 
+	cst, err := models.Query_Contest_By_ContestId(
+		tx, contest_id, nil, nil)
+	PanicOnError(err)
+	if cst == nil {
+		MakeResponseError(response, debug, PBContestNotFound, nil)
+		return
+	}
+
 	lines := []*api.ContestListProblemsResponse_PerLine{}
 	for _, cp := range cps {
 		// TODO: add ac count
+		total_cnt, _ := models.Query_Contest_Total_Submissions_By_ContestId_Label(
+			tx, contest_id, cp.Label, cst.StartTime, cst.EndTime)
+		ac_cnt, _ := models.Query_Contest_AC_Submissions_By_ContestId_Label(
+			tx, contest_id, cp.Label, cst.StartTime, cst.EndTime)
 		line := &api.ContestListProblemsResponse_PerLine{
-			Label:  cp.Label,
-			Alias:  cp.Alias,
-			Status: cp.Status,
+			Label:           cp.Label,
+			Alias:           cp.Alias,
+			Status:          cp.Status,
+			AcSubmission:    int32(ac_cnt),
+			TotalSubmission: int32(total_cnt),
 		}
 		// if alias is "", use title
 		if line.Alias == "" {
