@@ -34,6 +34,7 @@ message SubmitMQ {
     bool is_local = 7;
     bool is_spj = 8;
     string spj_code = 9;
-    SubmitLanguage language = 10;
-    repeated TestCase testcases = 11;
+    string submit_time = 10;
+    SubmitLanguage language = 11;
+    repeated TestCase testcases = 12;
 }

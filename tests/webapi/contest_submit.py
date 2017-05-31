@@ -3,6 +3,9 @@ import json
 
 session = requests.session()
 
+url = "http://35.189.170.28:8000"
+# url = "http://127.0.0.1:8000"
+
 def dump(js):
     print json.dumps(js, indent=4)
 
@@ -10,19 +13,20 @@ def Login():
     data = {
         "login_auth_request":
         {
-        "username" : "kevince",
+        "username" : "hong",
         "password": "abc",
         }
     }
     # r = session.post("http://35.189.170.28:8000/api/inline/login/auth", json=data)
-    r = session.post("http://127.0.0.1:8000/api/inline/login/auth", json=data)
+    # r = session.post("http://127.0.0.1:8000/api/inline/login/auth", json=data)
+    r = session.post(url+"/api/inline/login/auth", json=data)
     dump(r.json())
 
 def Submit():
     data = {
         "submit_request": {
-            "contest_id": 5,
-            "problem_sid": "C",
+            "contest_id": 10,
+            "problem_sid": "B",
             # "problem_sid" : "local-1000",
             "code":"""
 #include <iostream>
@@ -40,7 +44,8 @@ int main() {
     }
 
     # r = session.post("http://35.189.170.28:8000/api/inline/submit", json=data)
-    r = session.post("http://127.0.0.1:8000/api/inline/contest/submit", json=data)
+    # r = session.post("http://127.0.0.1:8000/api/inline/contest/submit", json=data)
+    r = session.post(url+"/api/inline/contest/submit", json=data)
     print(r.text)
     print(r.status_code)
     dump(r.json())

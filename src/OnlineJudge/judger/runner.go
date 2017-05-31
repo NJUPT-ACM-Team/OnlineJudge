@@ -6,6 +6,8 @@ import (
 	msgs "OnlineJudge/pbgen/messages"
 
 	"github.com/golang/protobuf/proto"
+
+	"time"
 )
 
 type JudgerInterface interface {
@@ -22,9 +24,13 @@ type JudgerInterface interface {
 	GetMemoryLimit() int
 	GetTestCasesBrief() []*msgs.TestCase
 	GetLanguage() *msgs.SubmitLanguage
+	GetSubmitTime() time.Time
 
 	GetSpjCode() *msgs.SpjCode
 	GetTestCase(id int64) *msgs.TestCase
+	UpdateResource(int, int) error
+	UpdateResult(string, string) error
+	UpdateCEInfo(string) error
 	UpdateStatus(*irpc.SubmissionStatus) error
 	UpdateStatusJudging() error
 }

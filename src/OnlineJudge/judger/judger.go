@@ -1,8 +1,11 @@
 package judger
 
 import (
+	"OnlineJudge/base"
 	"OnlineJudge/irpc"
 	msgs "OnlineJudge/pbgen/messages"
+
+	"time"
 )
 
 type Judger struct {
@@ -23,6 +26,30 @@ func (this *Judger) Init(sub *msgs.SubmitMQ) {
 
 func (this *Judger) GetTimeLimit() int {
 	return int(this.info.GetTimeLimit())
+}
+
+func (this *Judger) GetSubmitTime() time.Time {
+	t, err := base.UnmarshalTime(this.info.GetSubmitTime())
+	if err != nil {
+		return base.GetDefaultTime()
+	}
+	return t
+}
+
+func (this *Judger) UpdateResource(t, m int) error {
+	subs := &irpc.SubmissionStatus{
+		TimeUsed:   int32(t),
+		MemoryUsed: int32(m),
+	}
+	return this.UpdateStatus(subs)
+}
+
+func (this *Judger) UpdateResult(s, sc string) error {
+	subs := &irpc.SubmissionStatus{
+		Status:     s,
+		StatusCode: sc,
+	}
+	return this.UpdateStatus(subs)
 }
 
 func (this *Judger) GetMemoryLimit() int {
@@ -107,10 +134,13 @@ func (this *Judger) UpdateStatusJudging() error {
 	return this.UpdateStatus(subs)
 }
 
-func (this *Judger) UpdateUsage(time_used int, memory_used int) {
-
+func (this *Judger) UpdateCEInfo(ce string) error {
+	subs := &irpc.SubmissionStatus{
+		CEInfo: ce,
+	}
+	return this.UpdateStatus(subs)
 }
 
-func (this *Judger) UpdateCEInfo(ce string) {
+func (this *Judger) UpdateUsage(time_used int, memory_used int) {
 
 }

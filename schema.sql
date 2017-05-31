@@ -225,6 +225,15 @@ VALUES ('zoj', '1', '%lld', 'Main', 'ok', 'OK', '2016-11-17 09:19:16');
 INSERT INTO OJInfo (oj_name, version, int64io, javaclass, status, status_info, lastcheck)
 VALUES ('local', '1', '%lld', 'Main', 'ok', 'OK', '2017-05-02 19:20:16');
 
+INSERT INTO OJInfo (oj_name, version, int64io, javaclass, status, status_info, lastcheck)
+VALUES ('hdu', '1', '%I64d', 'Main', 'ok', 'OK', '2017-05-02 19:20:16');
+
+INSERT INTO Languages (language, option_value, compiler, suffix, oj_id_fk) 
+VALUES ('c++', '1', 'g++', 'cpp', '3');
+
+INSERT INTO Languages (language, option_value, compiler, suffix, oj_id_fk) 
+VALUES ('java', '2', 'java', 'java', '3');
+
 INSERT INTO Languages (language, option_value, compiler, suffix, oj_id_fk) 
 VALUES ('c++', '1', 'g++4.8', 'cpp', '1');
 
@@ -242,3 +251,6 @@ VALUES ('', 'C+D', 'caculate result of a+b', 'Two integers', 'Sum of two integer
 
 INSERT INTO MetaProblems (spj_code, title, description, input, output, sample_in, sample_out, time_limit, case_time_limit, memory_limit, number_of_testcases, source, hint, hide, oj_name, oj_id_fk, oj_pid, uploader_name) 
 VALUES ('', 'Sum of A and B', 'caculate result of a+b', 'Two integers', 'Sum of two integers a+b', '1 1', '2', '1000', '1000', '65536', '0', 'test', 'for test', 0,'local', 2, 1000, 'kevince');
+
+INSERT INTO MetaProblems (spj_code, title, description, input, output, sample_in, sample_out, time_limit, case_time_limit, memory_limit, number_of_testcases, source, hint, hide, oj_name, oj_id_fk, oj_pid, uploader_name)
+VALUES ('', 'A+B Problem', 'Calculate A + B.', 'Each line will contain two integers A and B. Process to end of file.', 'For each case, output A + B in one line.', '1 1', '2', '1000', '1000', '65536', '0', 'test', 'for test', 0,'hdu', 3, 1000, 'kevince');

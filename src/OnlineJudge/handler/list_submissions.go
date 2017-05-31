@@ -6,6 +6,8 @@ import (
 	"OnlineJudge/pbgen/api"
 
 	"github.com/jmoiron/sqlx"
+
+	"strings"
 )
 
 func (this *AdminHandler) ListSubmissions(response *api.ListSubmissionsResponse, req *api.ListSubmissionsRequest) {
@@ -63,7 +65,7 @@ func ListSubmissions_BuildResponse(
 	lines := []*api.ListSubmissionsResponse_PerLine{}
 	for _, submission := range page.Submissions {
 		line := &api.ListSubmissionsResponse_PerLine{
-			Sid:        base.GenSid(&base.Pid{OJName: submission.OJName, OJPid: submission.OJPid}),
+			Sid:        strings.ToUpper(base.GenSid(&base.Pid{OJName: submission.OJName, OJPid: submission.OJPid})),
 			RunId:      submission.RunId,
 			Username:   submission.Username,
 			Status:     submission.Status,

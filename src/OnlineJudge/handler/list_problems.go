@@ -6,6 +6,8 @@ import (
 	"OnlineJudge/pbgen/api"
 
 	"github.com/jmoiron/sqlx"
+
+	"strings"
 )
 
 func (this *AdminHandler) ListProblems(response *api.ListProblemsResponse, req *api.ListProblemsRequest) {
@@ -80,9 +82,9 @@ func ListProblems_BuildResponse(
 			ac = 0
 		}
 		line := &api.ListProblemsResponse_PerLine{
-			Sid: base.GenSid(&base.Pid{
+			Sid: strings.ToUpper(base.GenSid(&base.Pid{
 				OJName: problem.OJName,
-				OJPid:  problem.OJPid}),
+				OJPid:  problem.OJPid})),
 			Oj:              problem.OJName,
 			Pid:             problem.OJPid,
 			Title:           problem.Title,

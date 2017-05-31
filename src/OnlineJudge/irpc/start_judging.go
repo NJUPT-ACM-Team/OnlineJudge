@@ -1,6 +1,7 @@
 package irpc
 
 import (
+	"OnlineJudge/base"
 	"OnlineJudge/db"
 	"OnlineJudge/models"
 	"OnlineJudge/mq"
@@ -71,6 +72,7 @@ func SubmitToMQ(jmq *mq.MQ, req *rpc.StartJudgingRequest) {
 		// TODO: limits
 		TimeLimit:   1000,
 		MemoryLimit: 65536,
+		SubmitTime:  base.MarshalTime(sub.SubmitTime),
 		Language: &msgs.SubmitLanguage{
 			Compiler:    lang.Compiler,
 			Lang:        lang.Language,
