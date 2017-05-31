@@ -99,6 +99,14 @@ func (this *Judger) UpdateStatus(subs *irpc.SubmissionStatus) error {
 	return nil
 }
 
+func (this *Judger) UpdateStatusJudging() error {
+	subs := &irpc.SubmissionStatus{
+		Status:     "Judging",
+		StatusCode: "wt",
+	}
+	return this.UpdateStatus(subs)
+}
+
 func (this *Judger) UpdateUsage(time_used int, memory_used int) {
 
 }

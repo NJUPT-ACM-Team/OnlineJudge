@@ -121,6 +121,10 @@ func NewCoreMode(lj *LocalJudger) *core.Mode {
 
 func EntryPoint(jdi judger.JudgerInterface) {
 	log.Println("received run_id=", jdi.GetRunId())
+	// set judging status
+	if err := jdi.UpdateStatusJudging(); err != nil {
+		log.Fatal(err)
+	}
 	lj := NewLocalJudger(JUDGEROOT, jdi)
 	if err := lj.InitDir(); err != nil {
 		log.Fatal(err)

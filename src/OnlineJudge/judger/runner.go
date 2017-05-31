@@ -26,6 +26,7 @@ type JudgerInterface interface {
 	GetSpjCode() *msgs.SpjCode
 	GetTestCase(id int64) *msgs.TestCase
 	UpdateStatus(*irpc.SubmissionStatus) error
+	UpdateStatusJudging() error
 }
 
 func Wrapper(fn func(JudgerInterface)) func([]byte) {
