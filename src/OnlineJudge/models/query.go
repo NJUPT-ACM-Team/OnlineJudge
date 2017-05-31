@@ -213,18 +213,31 @@ func Query_Languages_By_OJIdFK(
 	tx *sqlx.Tx,
 	oj_id_fk int64,
 	required []string,
-	excepts []string) ([]Language, error) {
+	excepts []string) ([]LanguageExt, error) {
 
 	/*-- Func start --*/
-	lang := Language{}
-	langs := []Language{}
+	lang := LanguageExt{}
+	langs := []LanguageExt{}
 	str_fields, err := GenerateSelectSQL(&lang, required, excepts)
 	if err != nil {
 		return nil, err
 	}
-	sql := JoinSQL("SELECT", str_fields,
-		"FROM Languages", "WHERE oj_id_fk=?")
-	if err := tx.Select(&langs, sql, oj_id_fk); err != nil {
+	from_where_sql := JoinSQL(
+		"FROM Languages",
+		"LEFT JOIN OJInfo ON oj_id_fk=oj_id",
+		"WHERE oj_id_fk=?")
+	count_sql := JoinSQL("SELECT COUNT(*)", from_where_sql)
+	select_sql := JoinSQL("SELECT", str_fields, from_where_sql)
+
+	var cnt int
+	if err := tx.Get(&cnt, count_sql, oj_id_fk); err != nil {
+		return nil, err
+	}
+	if cnt == 0 {
+		return nil, nil
+	}
+
+	if err := tx.Select(&langs, select_sql, oj_id_fk); err != nil {
 		return nil, err
 	}
 	return langs, nil

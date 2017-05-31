@@ -123,10 +123,12 @@ func ContestShowProblem_BuildResponse(
 	response.Problem = problem
 	languages := []*api.Language{}
 	for _, lang := range langs {
+
 		temp := &api.Language{
-			Compiler:   lang.Compiler,
-			Language:   lang.Language,
-			LanguageId: lang.LangId,
+			Compiler:   lang.Language.Compiler,
+			Language:   lang.Language.Language,
+			LanguageId: lang.Language.LangId,
+			OjName:     lang.OJName,
 		}
 		languages = append(languages, temp)
 	}

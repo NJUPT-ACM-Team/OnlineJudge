@@ -92,6 +92,7 @@ func ContestListSubmissions_BuildResponse(
 		false,
 		contest_id,
 		req.GetIsDesc(),
+		req.GetFilterRunId(),
 		filter_username,
 		req.GetFilterLabel(),
 		req.GetFilterStatusCode(),

@@ -42,6 +42,7 @@ func TestXQuery_List_Submissions_With_Filter(t *testing.T) {
 		"kevince",
 		true,
 		false,
+		0,
 		"kevince",
 		"zoj",
 		"1000",
@@ -104,6 +105,7 @@ func TestXQuery_Contest_List_Submissions_With_Filter(t *testing.T) {
 		false, // show_private,
 		8,
 		false, // is_desc,
+		0,     // run_id,
 		"",    //username
 		"",    //label
 		"",    //status_code

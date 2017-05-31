@@ -43,6 +43,7 @@ func ListSubmissions_BuildResponse(
 		username,
 		show_private,
 		req.GetIsDesc(),
+		req.GetFilterRunId(),
 		// filter.GetUsername(),
 		req.GetFilterUsername(),
 		// filter.GetOj(),

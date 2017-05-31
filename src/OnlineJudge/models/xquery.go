@@ -4,6 +4,7 @@ import (
 	"github.com/jmoiron/sqlx"
 
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -194,6 +195,7 @@ func XQuery_List_Submissions_With_Filter(
 	username string,
 	show_private bool,
 	is_desc bool,
+	filter_run_id int64,
 	filter_username string,
 	filter_oj string,
 	filter_pid string,
@@ -214,6 +216,14 @@ func XQuery_List_Submissions_With_Filter(
 		&filter_language,
 		&filter_compiler)
 
+	var filter_run_id_str string
+	if filter_run_id == 0 {
+		filter_run_id_str = "%"
+	} else {
+		need_filter = true
+		filter_run_id_str = strconv.FormatInt(filter_run_id, 10)
+	}
+
 	where_sql := `WHERE is_contest=false`
 
 	if show_private == false {
@@ -230,7 +240,8 @@ func XQuery_List_Submissions_With_Filter(
 		status_code like ? AND
 		lang_id_fk IN
 			(SELECT lang_id FROM Languages
-			 WHERE language like ? AND compiler like ?)`)
+			 WHERE language like ? AND compiler like ?)
+		AND run_id LIKE ?`)
 	}
 
 	ret := &ListSubmissionsPagination{}
@@ -241,7 +252,7 @@ func XQuery_List_Submissions_With_Filter(
 	if need_filter {
 		if err := tx.Get(&count, count_sql,
 			filter_username, filter_oj, filter_pid,
-			filter_status_code, filter_language, filter_compiler); err != nil {
+			filter_status_code, filter_language, filter_compiler, filter_run_id_str); err != nil {
 
 			return nil, err
 		}
@@ -299,7 +310,8 @@ func XQuery_List_Submissions_With_Filter(
 		if err := tx.Select(
 			&subs, sql,
 			filter_username, filter_oj, filter_pid,
-			filter_status_code, filter_language, filter_compiler); err != nil {
+			filter_status_code, filter_language,
+			filter_compiler, filter_run_id_str); err != nil {
 
 			return nil, err
 		}
@@ -489,6 +501,7 @@ func XQuery_Contest_List_Submissions_With_Filter(
 	show_private bool,
 	contest_id int64,
 	is_desc bool,
+	filter_run_id int64,
 	filter_username string,
 	filter_label string,
 	filter_status_code string,
@@ -506,6 +519,14 @@ func XQuery_Contest_List_Submissions_With_Filter(
 		&filter_status_code,
 		&filter_language,
 		&filter_compiler)
+
+	var filter_run_id_str string
+	if filter_run_id == 0 {
+		filter_run_id_str = "%"
+	} else {
+		need_filter = true
+		filter_run_id_str = strconv.FormatInt(filter_run_id, 10)
+	}
 
 	where_sql := JoinSQL(`WHERE is_contest=true AND cu_id_fk IN 
 	(SELECT cu_id FROM ContestUsers WHERE contest_id_fk=?)`)
@@ -525,7 +546,8 @@ func XQuery_Contest_List_Submissions_With_Filter(
 		status_code like ? AND
 		lang_id_fk IN
 			(SELECT lang_id FROM Languages
-			 WHERE language like ? AND compiler like ?)`)
+			 WHERE language like ? AND compiler like ?)
+		AND run_id LIKE ?`)
 	}
 
 	ret := &ContestListSubmissionsPagination{}
@@ -537,7 +559,7 @@ func XQuery_Contest_List_Submissions_With_Filter(
 		if err := tx.Get(&count, count_sql,
 			contest_id, filter_username,
 			contest_id, filter_label, filter_status_code,
-			filter_language, filter_compiler); err != nil {
+			filter_language, filter_compiler, filter_run_id_str); err != nil {
 
 			return nil, err
 		}
@@ -596,10 +618,10 @@ func XQuery_Contest_List_Submissions_With_Filter(
 
 	if need_filter {
 		if err := tx.Select(
-			&subs, sql, contest_id,
+			&subs, sql, contest_id, contest_id, contest_id,
 			filter_username,
 			contest_id, filter_label, filter_status_code,
-			filter_language, filter_compiler, contest_id, contest_id); err != nil {
+			filter_language, filter_compiler, filter_run_id_str); err != nil {
 
 			return nil, err
 		}
