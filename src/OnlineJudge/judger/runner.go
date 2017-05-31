@@ -33,6 +33,7 @@ type JudgerInterface interface {
 	UpdateCEInfo(string) error
 	UpdateStatus(*irpc.SubmissionStatus) error
 	UpdateStatusJudging() error
+	SetSystemError() error
 }
 
 func Wrapper(fn func(JudgerInterface)) func([]byte) {

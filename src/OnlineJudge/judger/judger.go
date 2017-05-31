@@ -141,6 +141,14 @@ func (this *Judger) UpdateCEInfo(ce string) error {
 	return this.UpdateStatus(subs)
 }
 
+func (this *Judger) SetSystemError() error {
+	subs := &irpc.SubmissionStatus{
+		Status:     "System Error",
+		StatusCode: "se",
+	}
+	return this.UpdateStatus(subs)
+}
+
 func (this *Judger) UpdateUsage(time_used int, memory_used int) {
 
 }

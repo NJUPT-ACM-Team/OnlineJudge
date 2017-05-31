@@ -23,7 +23,9 @@ var VJs = []VJudger{&HDUJudger{}, &PKUJudger{}}
 func RunVJ(jdi judger.JudgerInterface) {
 	for _, vj := range VJs {
 		if vj.Match(jdi.GetOJName()) { //init?match
-			vj.Run(jdi)
+			if err := vj.Run(jdi); err != nil {
+				jdi.SetSystemError()
+			}
 			break
 		}
 	}

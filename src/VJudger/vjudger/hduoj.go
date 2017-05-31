@@ -1,8 +1,10 @@
 package vjudger
 
 import (
+	"OnlineJudge/base"
 	"OnlineJudge/judger"
 
+	"html"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -116,10 +118,13 @@ func (h *HDUJudger) Login(_ judger.JudgerInterface) error {
 func (h *HDUJudger) Submit(u judger.JudgerInterface) error {
 
 	uv := url.Values{}
+	sd := h.FixCode(strconv.FormatInt(u.GetRunId(), 10), u.GetCode())
+	// sd = strings.Replace(sd, "\r\n", "\n", -1)
+
 	uv.Add("check", "0")
 	uv.Add("problemid", u.GetOJPid())
 	uv.Add("language", strconv.Itoa(HDULang[u.GetLanguage().GetLang()]))
-	uv.Add("usercode", u.GetCode())
+	uv.Add("usercode", sd)
 
 	req, err := http.NewRequest("POST", "http://acm.hdu.edu.cn/submit.php?action=submit", strings.NewReader(uv.Encode()))
 	if err != nil {
@@ -157,6 +162,7 @@ func (h *HDUJudger) GetStatus(u judger.JudgerInterface) error {
 
 	endTime := time.Now().Add(MAX_WaitTime * time.Second)
 
+	this_rid := ""
 	for true {
 		if time.Now().After(endTime) {
 			return BadStatus
@@ -171,16 +177,22 @@ func (h *HDUJudger) GetStatus(u judger.JudgerInterface) error {
 		AllStatus := h.pat.FindAllStringSubmatch(string(b), -1)
 		// log.Println(AllStatus)
 
-		layout := "2006-01-02 15:04:05 (MST)" //parse time
+		// layout := "2006-01-02 15:04:05 (MST)" //parse time
 		for i := 0; i < len(AllStatus); i++ {
 			status := AllStatus[i]
 			// log.Println(status)
-			t, _ := time.Parse(layout, status[2]+" (CST)")
-			t = t.Add(20 * time.Second) //HDU server's time is less 36s.
+			// t, _ := time.Parse(layout, status[2]+" (CST)")
+			// t = t.Add(20 * time.Second) //HDU server's time is less 36s.
 			// log.Println(t, u.GetSubmitTime())
 			// log.Println(status[1:])
-			if t.After(u.GetSubmitTime()) {
-				rid := status[1] //remote server run id
+			rid := status[1] //remote server run id
+			log.Println("rid=", rid)
+			log.Println("code_id=", h.GetCodeID(rid))
+			flag := false
+			if (this_rid != "" && this_rid == rid) ||
+				(this_rid == "" && h.GetCodeID(rid) == strconv.FormatInt(u.GetRunId(), 10)) {
+
+				this_rid = rid
 				sc := HDURes[status[3]]
 				if err := u.UpdateResult(status[3], sc); err != nil {
 					// LOG
@@ -193,6 +205,7 @@ func (h *HDUJudger) GetStatus(u judger.JudgerInterface) error {
 							// log.Println(err)
 						}
 						if err := u.UpdateCEInfo(CE); err != nil {
+							log.Println(err)
 							// LOG
 						}
 					}
@@ -203,11 +216,38 @@ func (h *HDUJudger) GetStatus(u judger.JudgerInterface) error {
 					u.UpdateResource(Time, Mem)
 					return nil
 				}
+				flag = true
+			}
+			if flag {
+				break
 			}
 		}
 		time.Sleep(1 * time.Second)
 	}
 	return nil
+}
+
+func (h *HDUJudger) FixCode(sid string, code string) string {
+	return "//" + sid + "\n" + code
+}
+
+func (h *HDUJudger) GetCodeID(rid string) string {
+	resp, err := h.client.Get("http://acm.hdu.edu.cn/viewcode.php?rid=" + rid)
+	if err != nil {
+		return ""
+	}
+
+	b, _ := ioutil.ReadAll(resp.Body)
+
+	textarea := `(?s)<textarea id=usercode.*?>(.*?)</textarea>`
+	// pre := `(?s)<pre.*?>(.*?)</pre>`
+	re := regexp.MustCompile(textarea)
+	match := re.FindStringSubmatch(string(b))
+	// log.Println(match)
+	code := html.UnescapeString(match[1])
+	split := strings.Split(code, "\n")
+	// log.Println(split)
+	return strings.TrimPrefix(split[0], "//")
 }
 
 func (h *HDUJudger) GetCEInfo(rid string) (string, error) {
@@ -218,16 +258,21 @@ func (h *HDUJudger) GetCEInfo(rid string) (string, error) {
 	}
 
 	b, _ := ioutil.ReadAll(resp.Body)
+	nb, err := base.Decodegbk(b)
+	if err != nil {
+		return "", CharsetError
+	}
 	pre := "(?s)<pre>(.*?)</pre>"
 	re := regexp.MustCompile(pre)
-	match := re.FindStringSubmatch(string(b))
+	match := re.FindStringSubmatch(string(nb))
+	// log.Println(match[1])
 	return match[1], nil
 }
 
 func (h *HDUJudger) Run(u judger.JudgerInterface) error {
 	for _, apply := range []func(judger.JudgerInterface) error{h.Init, h.Login, h.Submit, h.GetStatus} {
 		if err := apply(u); err != nil {
-			// log.Println(err)
+			log.Println(err)
 			return err
 		}
 	}
