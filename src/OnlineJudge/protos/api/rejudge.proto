@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package api;
+
+import "api/common.proto";
+
+message ReJudgeRequest {
+    int64 run_id = 1;
+}
+
+message ReJudgeResponse {
+    bool success = 1; 
+    Error error = 2;
+}

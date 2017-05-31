@@ -178,4 +178,10 @@ var api_routes = Routes{
 		Pattern:     "/contest/ranklist",
 		HandlerFunc: ctler.ContestRanklist,
 	},
+	Route{
+		Name:        "ReJudge",
+		Method:      "POST",
+		Pattern:     "/rejudge",
+		HandlerFunc: ctler.ReJudge,
+	},
 }
