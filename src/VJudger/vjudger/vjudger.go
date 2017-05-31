@@ -18,7 +18,7 @@ func EntryPoint(jdi judger.JudgerInterface) {
 	RunVJ(jdi)
 }
 
-var VJs = []VJudger{&HDUJudger{}, &PKUJudger}
+var VJs = []VJudger{&HDUJudger{}, &PKUJudger{}}
 
 func RunVJ(jdi judger.JudgerInterface) {
 	for _, vj := range VJs {
