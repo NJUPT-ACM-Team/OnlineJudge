@@ -1,7 +1,9 @@
 package models
 
 import (
+	"OnlineJudge/base"
 	"OnlineJudge/db"
+
 	"testing"
 )
 
@@ -116,4 +118,28 @@ func TestXQuery_Contest_List_Submissions_With_Filter(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Log(ss)
+}
+
+func TestXQuery_ContestRanklist_Submissions(t *testing.T) {
+	db.InitTest()
+	DB := db.New()
+	tx := DB.MustBegin()
+	var contest_id int64
+	contest_id = 15
+	cst, err := Query_Contest_By_ContestId(tx, contest_id, nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(base.MarshalTime(cst.StartTime))
+	t.Log(base.MarshalTime(cst.EndTime))
+	subs, err := XQuery_ContestRanklist_Submissions(
+		tx,
+		contest_id,
+		cst.StartTime,
+		cst.EndTime,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(subs)
 }

@@ -30,7 +30,7 @@ type RegisterRequest struct {
 func (m *RegisterRequest) Reset()                    { *m = RegisterRequest{} }
 func (m *RegisterRequest) String() string            { return proto.CompactTextString(m) }
 func (*RegisterRequest) ProtoMessage()               {}
-func (*RegisterRequest) Descriptor() ([]byte, []int) { return fileDescriptor15, []int{0} }
+func (*RegisterRequest) Descriptor() ([]byte, []int) { return fileDescriptor16, []int{0} }
 
 func (m *RegisterRequest) GetUsername() string {
 	if m != nil {
@@ -90,7 +90,7 @@ type RegisterResponse struct {
 func (m *RegisterResponse) Reset()                    { *m = RegisterResponse{} }
 func (m *RegisterResponse) String() string            { return proto.CompactTextString(m) }
 func (*RegisterResponse) ProtoMessage()               {}
-func (*RegisterResponse) Descriptor() ([]byte, []int) { return fileDescriptor15, []int{1} }
+func (*RegisterResponse) Descriptor() ([]byte, []int) { return fileDescriptor16, []int{1} }
 
 func (m *RegisterResponse) GetUserId() int64 {
 	if m != nil {
@@ -160,9 +160,9 @@ func init() {
 	proto.RegisterType((*RegisterResponse)(nil), "api.RegisterResponse")
 }
 
-func init() { proto.RegisterFile("api/register.proto", fileDescriptor15) }
+func init() { proto.RegisterFile("api/register.proto", fileDescriptor16) }
 
-var fileDescriptor15 = []byte{
+var fileDescriptor16 = []byte{
 	// 300 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x64, 0x91, 0xcd, 0x4a, 0xc3, 0x40,
 	0x14, 0x85, 0x49, 0xd2, 0xa4, 0xed, 0xad, 0x3f, 0x65, 0x10, 0x1d, 0xba, 0x31, 0x16, 0x84, 0xae,

@@ -24,7 +24,7 @@ type Language struct {
 func (m *Language) Reset()                    { *m = Language{} }
 func (m *Language) String() string            { return proto.CompactTextString(m) }
 func (*Language) ProtoMessage()               {}
-func (*Language) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{0} }
+func (*Language) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{0} }
 
 func (m *Language) GetCompiler() string {
 	if m != nil {
@@ -58,9 +58,9 @@ func init() {
 	proto.RegisterType((*Language)(nil), "api.Language")
 }
 
-func init() { proto.RegisterFile("api/language.proto", fileDescriptor8) }
+func init() { proto.RegisterFile("api/language.proto", fileDescriptor9) }
 
-var fileDescriptor8 = []byte{
+var fileDescriptor9 = []byte{
 	// 134 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0x12, 0x4a, 0x2c, 0xc8, 0xd4,
 	0xcf, 0x49, 0xcc, 0x4b, 0x2f, 0x4d, 0x4c, 0x4f, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62,

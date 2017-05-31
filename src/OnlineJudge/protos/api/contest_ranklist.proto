@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package api;
+
+import "api/common.proto";
+
+message ContestRanklistRequest {
+    int64 contest_id = 1;
+    string rank_type = 2; // icpc, oi, cf
+}
+
+message RankICPC {
+    message PerLine{
+        int32 rank = 1;
+        string username = 2;
+        int32 ac_num = 3;
+        int64 total_mins = 4;
+        message Column {
+            string label = 1;
+            int64 minutes = 2;
+            int32 attempt = 3;
+            bool is_fb = 4;
+            bool is_ac = 5;
+        }
+        repeated Column cols = 5;
+    }
+
+    repeated string labels = 1;
+    repeated PerLine lines = 2;
+}
+
+message ContestRanklistResponse {
+    RankICPC rank_icpc = 1; 
+    Error error = 2;
+}

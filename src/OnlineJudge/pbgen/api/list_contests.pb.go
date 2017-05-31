@@ -38,7 +38,9 @@ var ListContestsRequest_CType_value = map[string]int32{
 func (x ListContestsRequest_CType) String() string {
 	return proto.EnumName(ListContestsRequest_CType_name, int32(x))
 }
-func (ListContestsRequest_CType) EnumDescriptor() ([]byte, []int) { return fileDescriptor9, []int{0, 0} }
+func (ListContestsRequest_CType) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor10, []int{0, 0}
+}
 
 type ListContestsRequest_Orderby_Element int32
 
@@ -69,7 +71,7 @@ func (x ListContestsRequest_Orderby_Element) String() string {
 	return proto.EnumName(ListContestsRequest_Orderby_Element_name, int32(x))
 }
 func (ListContestsRequest_Orderby_Element) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor9, []int{0, 1}
+	return fileDescriptor10, []int{0, 1}
 }
 
 type ListContestsRequest_Filter_Element int32
@@ -101,7 +103,7 @@ func (x ListContestsRequest_Filter_Element) String() string {
 	return proto.EnumName(ListContestsRequest_Filter_Element_name, int32(x))
 }
 func (ListContestsRequest_Filter_Element) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor9, []int{0, 2}
+	return fileDescriptor10, []int{0, 2}
 }
 
 type ListContestsRequest struct {
@@ -117,7 +119,7 @@ type ListContestsRequest struct {
 func (m *ListContestsRequest) Reset()                    { *m = ListContestsRequest{} }
 func (m *ListContestsRequest) String() string            { return proto.CompactTextString(m) }
 func (*ListContestsRequest) ProtoMessage()               {}
-func (*ListContestsRequest) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{0} }
+func (*ListContestsRequest) Descriptor() ([]byte, []int) { return fileDescriptor10, []int{0} }
 
 func (m *ListContestsRequest) GetPerPage() int32 {
 	if m != nil {
@@ -179,7 +181,7 @@ type ListContestsResponse struct {
 func (m *ListContestsResponse) Reset()                    { *m = ListContestsResponse{} }
 func (m *ListContestsResponse) String() string            { return proto.CompactTextString(m) }
 func (*ListContestsResponse) ProtoMessage()               {}
-func (*ListContestsResponse) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{1} }
+func (*ListContestsResponse) Descriptor() ([]byte, []int) { return fileDescriptor10, []int{1} }
 
 func (m *ListContestsResponse) GetLines() []*ListContestsResponse_PerLine {
 	if m != nil {
@@ -226,10 +228,12 @@ type ListContestsResponse_PerLine struct {
 	ContestType string `protobuf:"bytes,7,opt,name=contest_type,json=contestType" json:"contest_type,omitempty"`
 }
 
-func (m *ListContestsResponse_PerLine) Reset()                    { *m = ListContestsResponse_PerLine{} }
-func (m *ListContestsResponse_PerLine) String() string            { return proto.CompactTextString(m) }
-func (*ListContestsResponse_PerLine) ProtoMessage()               {}
-func (*ListContestsResponse_PerLine) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{1, 0} }
+func (m *ListContestsResponse_PerLine) Reset()         { *m = ListContestsResponse_PerLine{} }
+func (m *ListContestsResponse_PerLine) String() string { return proto.CompactTextString(m) }
+func (*ListContestsResponse_PerLine) ProtoMessage()    {}
+func (*ListContestsResponse_PerLine) Descriptor() ([]byte, []int) {
+	return fileDescriptor10, []int{1, 0}
+}
 
 func (m *ListContestsResponse_PerLine) GetContestId() int64 {
 	if m != nil {
@@ -289,9 +293,9 @@ func init() {
 	proto.RegisterEnum("api.ListContestsRequest_Filter_Element", ListContestsRequest_Filter_Element_name, ListContestsRequest_Filter_Element_value)
 }
 
-func init() { proto.RegisterFile("api/list_contests.proto", fileDescriptor9) }
+func init() { proto.RegisterFile("api/list_contests.proto", fileDescriptor10) }
 
-var fileDescriptor9 = []byte{
+var fileDescriptor10 = []byte{
 	// 571 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x6c, 0x93, 0xcf, 0x6a, 0xdb, 0x40,
 	0x10, 0x87, 0x23, 0xcb, 0xb2, 0xec, 0x51, 0x9b, 0xa8, 0xdb, 0xd0, 0x28, 0x81, 0x52, 0xc7, 0x27,

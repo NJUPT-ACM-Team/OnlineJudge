@@ -36,7 +36,7 @@ func (x ListProblemsRequest_Element) String() string {
 	return proto.EnumName(ListProblemsRequest_Element_name, int32(x))
 }
 func (ListProblemsRequest_Element) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor10, []int{0, 0}
+	return fileDescriptor11, []int{0, 0}
 }
 
 type ListProblemsRequest_ProblemStatus int32
@@ -65,7 +65,7 @@ func (x ListProblemsRequest_ProblemStatus) String() string {
 	return proto.EnumName(ListProblemsRequest_ProblemStatus_name, int32(x))
 }
 func (ListProblemsRequest_ProblemStatus) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor10, []int{0, 1}
+	return fileDescriptor11, []int{0, 1}
 }
 
 type ListProblemsRequest struct {
@@ -81,7 +81,7 @@ type ListProblemsRequest struct {
 func (m *ListProblemsRequest) Reset()                    { *m = ListProblemsRequest{} }
 func (m *ListProblemsRequest) String() string            { return proto.CompactTextString(m) }
 func (*ListProblemsRequest) ProtoMessage()               {}
-func (*ListProblemsRequest) Descriptor() ([]byte, []int) { return fileDescriptor10, []int{0} }
+func (*ListProblemsRequest) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{0} }
 
 func (m *ListProblemsRequest) GetOffset() int32 {
 	if m != nil {
@@ -143,7 +143,7 @@ type ListProblemsResponse struct {
 func (m *ListProblemsResponse) Reset()                    { *m = ListProblemsResponse{} }
 func (m *ListProblemsResponse) String() string            { return proto.CompactTextString(m) }
 func (*ListProblemsResponse) ProtoMessage()               {}
-func (*ListProblemsResponse) Descriptor() ([]byte, []int) { return fileDescriptor10, []int{1} }
+func (*ListProblemsResponse) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{1} }
 
 func (m *ListProblemsResponse) GetLines() []*ListProblemsResponse_PerLine {
 	if m != nil {
@@ -194,7 +194,7 @@ func (m *ListProblemsResponse_PerLine) Reset()         { *m = ListProblemsRespon
 func (m *ListProblemsResponse_PerLine) String() string { return proto.CompactTextString(m) }
 func (*ListProblemsResponse_PerLine) ProtoMessage()    {}
 func (*ListProblemsResponse_PerLine) Descriptor() ([]byte, []int) {
-	return fileDescriptor10, []int{1, 0}
+	return fileDescriptor11, []int{1, 0}
 }
 
 func (m *ListProblemsResponse_PerLine) GetSid() string {
@@ -254,9 +254,9 @@ func init() {
 	proto.RegisterEnum("api.ListProblemsRequest_ProblemStatus", ListProblemsRequest_ProblemStatus_name, ListProblemsRequest_ProblemStatus_value)
 }
 
-func init() { proto.RegisterFile("api/list_problems.proto", fileDescriptor10) }
+func init() { proto.RegisterFile("api/list_problems.proto", fileDescriptor11) }
 
-var fileDescriptor10 = []byte{
+var fileDescriptor11 = []byte{
 	// 523 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x74, 0x53, 0x4f, 0x6f, 0xd3, 0x30,
 	0x14, 0x5f, 0x9a, 0xa5, 0x69, 0x5e, 0xd7, 0x2d, 0x32, 0x13, 0x0b, 0xe3, 0x40, 0x56, 0x24, 0x54,

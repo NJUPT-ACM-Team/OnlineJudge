@@ -18,6 +18,7 @@ import "api/logout.proto";
 import "api/contest_list_problems.proto";
 import "api/contest_auth.proto";
 import "api/contest_list_submissions.proto";
+import "api/contest_ranklist.proto";
 
 
 // ListProblemsRequest
@@ -34,6 +35,7 @@ message WebGetRequest {
     ContestShowRequest contest_show_request = 6;
     ContestListProblemsRequest contest_list_problems_request = 7;
     ContestListSubmissionsRequest contest_list_submissions_request = 8;
+    ContestRanklistRequest contest_ranklist_request = 9;
 }
 
 
@@ -68,5 +70,6 @@ message WebResponse {
     ContestListProblemsResponse contest_list_problems_response = 15;
     ContestAuthResponse contest_auth_response = 16;
     ContestListSubmissionsResponse contest_list_submissions_response = 17;
-    Error error = 18;
+    ContestRanklistResponse contest_ranklist_response = 18;
+    Error error = 19;
 }

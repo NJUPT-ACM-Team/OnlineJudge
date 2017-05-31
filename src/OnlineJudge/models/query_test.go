@@ -65,3 +65,25 @@ func TestQuery_Contest_By_ContestId(t *testing.T) {
 	}
 	t.Log(cst)
 }
+
+func TestQuery_ContestProblemLabels_By_ContestId(t *testing.T) {
+	db.InitTest()
+	DB := db.New()
+	tx := DB.MustBegin()
+	labels, err := Query_ContestProblemLabels_By_ContestId(tx, 15)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(labels)
+}
+
+func TestQuery_ContestUsers_By_ContestId(t *testing.T) {
+	db.InitTest()
+	DB := db.New()
+	tx := DB.MustBegin()
+	users, err := Query_ContestUsers_By_ContestId(tx, 13)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(users)
+}

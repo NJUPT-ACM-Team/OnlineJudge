@@ -11,6 +11,7 @@ It is generated from these files:
 	api/contest_auth.proto
 	api/contest_list_problems.proto
 	api/contest_list_submissions.proto
+	api/contest_ranklist.proto
 	api/contest_save.proto
 	api/contest_show.proto
 	api/edit_problem.proto
@@ -37,6 +38,9 @@ It has these top-level messages:
 	ContestListProblemsResponse
 	ContestListSubmissionsRequest
 	ContestListSubmissionsResponse
+	ContestRanklistRequest
+	RankICPC
+	ContestRanklistResponse
 	ContestSaveRequest
 	ContestSaveResponse
 	ContestShowRequest

@@ -5,6 +5,7 @@ import (
 
 	"fmt"
 	"strings"
+	"time"
 )
 
 // Some more complex methods to query data
@@ -575,7 +576,6 @@ func XQuery_Contest_List_Submissions_With_Filter(
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(str_fields)
 
 	order_by := "ORDER BY run_id"
 	if is_desc == false {
@@ -591,7 +591,6 @@ func XQuery_Contest_List_Submissions_With_Filter(
 		(SELECT meta_pid, number_of_testcases , alias, label FROM MetaProblems mp
 		LEFT JOIN (SELECT alias, label, meta_pid_fk AS cp_meta_pid_fk FROM ContestProblems WHERE contest_id_fk=?) cp 
 			ON mp.meta_pid=cp.cp_meta_pid_fk) nmp ON nmp.meta_pid=sub.meta_pid_fk`,
-		// `LEFT JOIN (SELECT alias, label, meta_pid_fk AS cp_meta_pid_fk FROM ContestProblems) cp ON sub.meta_pid_fk=cp.cp_meta_pid_fk`,
 		where_sql, order_by,
 		fmt.Sprintf(`LIMIT %d, %d`, offset, per_page))
 
@@ -612,4 +611,47 @@ func XQuery_Contest_List_Submissions_With_Filter(
 	// fmt.Println(subs)
 	ret.Submissions = subs
 	return ret, nil
+}
+
+func XQuery_ContestRanklist_Submissions(
+	tx *sqlx.Tx,
+	contest_id int64,
+	start_time time.Time,
+	end_time time.Time,
+) ([]ContestSubmissionExt, error) {
+
+	where_sql := JoinSQL(`WHERE is_contest=true AND cu_id_fk IN 
+	(SELECT cu_id FROM ContestUsers WHERE contest_id_fk=?)`,
+		`AND submit_time BETWEEN ? AND ?`)
+
+	count_sql := JoinSQL("SELECT COUNT(*) FROM Submissions", where_sql)
+	var count int
+	if err := tx.Get(&count, count_sql, contest_id, start_time, end_time); err != nil {
+		return nil, err
+	}
+	if count == 0 {
+		return nil, nil
+	}
+
+	sub := &ContestSubmissionExt{}
+	subs := []ContestSubmissionExt{}
+	str_fields, err := GenerateSelectSQL(sub, nil, []string{"submission"})
+	if err != nil {
+		return nil, err
+	}
+	order_by := "ORDER BY submit_time"
+	sql := JoinSQL(
+		`SELECT`, str_fields, `FROM Submissions sub`,
+		`LEFT JOIN (SELECT cu_id, username FROM ContestUsers LEFT JOIN Users ON user_id=user_id_fk WHERE contest_id_fk=?) nu ON sub.cu_id_fk=nu.cu_id`,
+		`LEFT JOIN Languages ON lang_id_fk=lang_id`,
+		`LEFT JOIN 
+		(SELECT meta_pid, number_of_testcases , alias, label FROM MetaProblems mp
+		LEFT JOIN (SELECT alias, label, meta_pid_fk AS cp_meta_pid_fk FROM ContestProblems WHERE contest_id_fk=?) cp 
+			ON mp.meta_pid=cp.cp_meta_pid_fk) nmp ON nmp.meta_pid=sub.meta_pid_fk`,
+		where_sql, order_by)
+	if err := tx.Select(&subs, sql, contest_id,
+		contest_id, contest_id, start_time, end_time); err != nil {
+		return nil, err
+	}
+	return subs, nil
 }

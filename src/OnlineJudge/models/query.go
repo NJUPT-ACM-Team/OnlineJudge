@@ -429,3 +429,50 @@ func Query_ContestProblem_By_ContestId_And_Label(
 	}
 	return cp, nil
 }
+
+func Query_ContestProblemLabels_By_ContestId(
+	tx *sqlx.Tx,
+	contest_id int64,
+) ([]string, error) {
+	from_where_sql := JoinSQL("FROM ContestProblems",
+		"WHERE contest_id_fk=?",
+		"ORDER BY label")
+	count_sql := JoinSQL("SELECT COUNT(*)", from_where_sql)
+	select_sql := JoinSQL("SELECT label", from_where_sql)
+
+	var cnt int
+	if err := tx.Get(&cnt, count_sql, contest_id); err != nil {
+		return nil, err
+	}
+	if cnt == 0 {
+		return nil, nil
+	}
+	var labels []string
+	if err := tx.Select(&labels, select_sql, contest_id); err != nil {
+		return nil, err
+	}
+	return labels, nil
+}
+
+func Query_ContestUsers_By_ContestId(
+	tx *sqlx.Tx,
+	contest_id int64,
+) ([]string, error) {
+	from_where_sql := JoinSQL(`FROM ContestUsers`,
+		`LEFT JOIN Users ON user_id_fk=user_id`,
+		`WHERE contest_id_fk=?`)
+	count_sql := JoinSQL(`SELECT COUNT(*)`, from_where_sql)
+	select_sql := JoinSQL(`SELECT username`, from_where_sql)
+	var cnt int
+	if err := tx.Get(&cnt, count_sql, contest_id); err != nil {
+		return nil, err
+	}
+	if cnt == 0 {
+		return nil, nil
+	}
+	var users []string
+	if err := tx.Select(&users, select_sql, contest_id); err != nil {
+		return nil, err
+	}
+	return users, nil
+}

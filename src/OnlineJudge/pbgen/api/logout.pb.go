@@ -20,7 +20,7 @@ type LogoutRequest struct {
 func (m *LogoutRequest) Reset()                    { *m = LogoutRequest{} }
 func (m *LogoutRequest) String() string            { return proto.CompactTextString(m) }
 func (*LogoutRequest) ProtoMessage()               {}
-func (*LogoutRequest) Descriptor() ([]byte, []int) { return fileDescriptor13, []int{0} }
+func (*LogoutRequest) Descriptor() ([]byte, []int) { return fileDescriptor14, []int{0} }
 
 func (m *LogoutRequest) GetGoodbye() string {
 	if m != nil {
@@ -36,7 +36,7 @@ type LogoutResponse struct {
 func (m *LogoutResponse) Reset()                    { *m = LogoutResponse{} }
 func (m *LogoutResponse) String() string            { return proto.CompactTextString(m) }
 func (*LogoutResponse) ProtoMessage()               {}
-func (*LogoutResponse) Descriptor() ([]byte, []int) { return fileDescriptor13, []int{1} }
+func (*LogoutResponse) Descriptor() ([]byte, []int) { return fileDescriptor14, []int{1} }
 
 func (m *LogoutResponse) GetError() *Error {
 	if m != nil {
@@ -50,9 +50,9 @@ func init() {
 	proto.RegisterType((*LogoutResponse)(nil), "api.LogoutResponse")
 }
 
-func init() { proto.RegisterFile("api/logout.proto", fileDescriptor13) }
+func init() { proto.RegisterFile("api/logout.proto", fileDescriptor14) }
 
-var fileDescriptor13 = []byte{
+var fileDescriptor14 = []byte{
 	// 133 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0x12, 0x48, 0x2c, 0xc8, 0xd4,
 	0xcf, 0xc9, 0x4f, 0xcf, 0x2f, 0x2d, 0xd1, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x4e, 0x2c,
