@@ -184,4 +184,10 @@ var api_routes = Routes{
 		Pattern:     "/rejudge",
 		HandlerFunc: ctler.ReJudge,
 	},
+	Route{
+		Name:        "SaveProblem",
+		Method:      "POST",
+		Pattern:     "/save_problem",
+		HandlerFunc: ctler.SaveProblem,
+	},
 }

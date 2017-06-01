@@ -29,7 +29,7 @@ type UploadProblemRequest struct {
 func (m *UploadProblemRequest) Reset()                    { *m = UploadProblemRequest{} }
 func (m *UploadProblemRequest) String() string            { return proto.CompactTextString(m) }
 func (*UploadProblemRequest) ProtoMessage()               {}
-func (*UploadProblemRequest) Descriptor() ([]byte, []int) { return fileDescriptor20, []int{0} }
+func (*UploadProblemRequest) Descriptor() ([]byte, []int) { return fileDescriptor21, []int{0} }
 
 func (m *UploadProblemRequest) GetTitle() string {
 	if m != nil {
@@ -119,7 +119,7 @@ type UploadProblemResponse struct {
 func (m *UploadProblemResponse) Reset()                    { *m = UploadProblemResponse{} }
 func (m *UploadProblemResponse) String() string            { return proto.CompactTextString(m) }
 func (*UploadProblemResponse) ProtoMessage()               {}
-func (*UploadProblemResponse) Descriptor() ([]byte, []int) { return fileDescriptor20, []int{1} }
+func (*UploadProblemResponse) Descriptor() ([]byte, []int) { return fileDescriptor21, []int{1} }
 
 func (m *UploadProblemResponse) GetLocalPid() int64 {
 	if m != nil {
@@ -210,9 +210,9 @@ func init() {
 	proto.RegisterType((*UploadProblemResponse)(nil), "api.UploadProblemResponse")
 }
 
-func init() { proto.RegisterFile("api/upload_problem.proto", fileDescriptor20) }
+func init() { proto.RegisterFile("api/upload_problem.proto", fileDescriptor21) }
 
-var fileDescriptor20 = []byte{
+var fileDescriptor21 = []byte{
 	// 431 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x5c, 0x93, 0x6f, 0x6f, 0x94, 0x40,
 	0x10, 0xc6, 0xc3, 0x51, 0x10, 0x86, 0xab, 0xb6, 0x6b, 0xdb, 0x6c, 0x6c, 0x8c, 0xb4, 0x26, 0x86,

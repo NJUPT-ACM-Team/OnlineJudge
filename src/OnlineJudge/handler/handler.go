@@ -50,6 +50,7 @@ type Handler interface {
 	ContestListSubmissions(*api.ContestListSubmissionsResponse, *api.ContestListSubmissionsRequest)
 	ContestRanklist(*api.ContestRanklistResponse, *api.ContestRanklistRequest)
 	ReJudge(*api.ReJudgeResponse, *api.ReJudgeRequest)
+	SaveProblem(*api.SaveProblemResponse, *api.SaveProblemRequest)
 }
 
 type BasicHandler struct {

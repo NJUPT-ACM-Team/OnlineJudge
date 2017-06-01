@@ -55,6 +55,35 @@ func Query_All_OJs(
 	return ojs, nil
 }
 
+func Query_OJ_By_OJName(
+	tx *sqlx.Tx,
+	oj_name string,
+	required []string,
+	excepts []string,
+) (*OJInfo, error) {
+
+	from_where_sql := "FROM OJInfo WHERE oj_name=?"
+	count_sql := JoinSQL("SELECT COUNT(*)", from_where_sql)
+	oj := &OJInfo{}
+	str_fields, err := GenerateSelectSQL(oj, required, excepts)
+	if err != nil {
+		return nil, err
+	}
+	select_sql := JoinSQL("SELECT", str_fields, from_where_sql)
+
+	var cnt int
+	if err := tx.Get(&cnt, count_sql, oj_name); err != nil {
+		return nil, err
+	}
+	if cnt == 0 {
+		return nil, nil
+	}
+	if err := tx.Get(oj, select_sql, oj_name); err != nil {
+		return nil, err
+	}
+	return oj, nil
+}
+
 func Query_ProblemNum_By_OJIdFK(
 	tx *sqlx.Tx, id int64) (int32, error) {
 

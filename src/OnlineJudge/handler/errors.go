@@ -34,4 +34,5 @@ var (
 	PBLoginRequired      = NewPBError(http.StatusUnauthorized, "login required")
 	PBUnauthorized       = NewPBError(http.StatusUnauthorized, "unauthorized")
 	PBSubmissionNotFound = NewPBError(http.StatusNotFound, "submission does not exist or not visible")
+	PBOJNotFound         = NewPBError(http.StatusNotFound, "oj does not exist, insert first please")
 )

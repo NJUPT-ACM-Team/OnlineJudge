@@ -24,6 +24,7 @@ It is generated from these files:
 	api/ojinfo.proto
 	api/register.proto
 	api/rejudge.proto
+	api/save_problem.proto
 	api/show_problem.proto
 	api/submit.proto
 	api/upload_problem.proto
@@ -67,6 +68,8 @@ It has these top-level messages:
 	RegisterResponse
 	ReJudgeRequest
 	ReJudgeResponse
+	SaveProblemRequest
+	SaveProblemResponse
 	ShowProblemRequest
 	Problem
 	ShowProblemResponse

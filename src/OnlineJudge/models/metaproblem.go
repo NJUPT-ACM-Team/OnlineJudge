@@ -44,6 +44,19 @@ func (this *MetaProblemModel) Insert(tx *sqlx.Tx, mp *MetaProblem) (int64, error
 	return last_insert_id, nil
 }
 
+func (this *MetaProblemModel) Update(
+	tx *sqlx.Tx, pk string, mp *MetaProblem,
+	required []string, excepts []string) error {
+
+	if pk == "" {
+		pk = "meta_pid"
+	}
+	if err := this.InlineUpdate(tx, mp, pk, required, excepts); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (this *MetaProblemModel) QueryById(tx *sqlx.Tx, id int64, required []string, excepts []string) (*MetaProblem, error) {
 	mp := MetaProblem{}
 	str_fields, err := GenerateSelectSQL(mp, required, excepts)

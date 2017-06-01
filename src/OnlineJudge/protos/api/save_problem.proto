@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package api;
+
+import "api/common.proto";
+import "api/show_problem.proto";
+
+message SaveProblemRequest {
+    string oj_name = 1;
+    string oj_pid = 2;
+    string title = 3;
+    string description = 4;
+    string input = 5;
+    string output = 6;
+    string sample_in = 7;
+    string sample_out = 8;
+    string source = 9;
+    string hint = 10;
+    bool hide = 11;
+    bool is_spj = 12;
+    string spj_code = 13;
+    repeated Problem.Limit limits = 14;
+}
+
+message SaveProblemResponse {
+    int64 meta_pid = 1;
+    string problem_sid = 2;
+    Error error = 3;
+}
+

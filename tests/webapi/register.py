@@ -14,8 +14,8 @@ def login(sess):
 
 data = {
         "register_request": {
-    "username" : "hong",
-    "password": "abc",
+    "username" : "test_root",
+    "password": "abc123",
     "email": "123@123.com",
     }
 }

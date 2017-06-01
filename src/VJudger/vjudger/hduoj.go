@@ -194,7 +194,11 @@ func (h *HDUJudger) GetStatus(u judger.JudgerInterface) error {
 
 				this_rid = rid
 				sc := HDURes[status[3]]
-				if err := u.UpdateResult(status[3], sc); err != nil {
+				s := status[3]
+				if sc == "re" {
+					s = strings.Join(strings.Split(s, "<br>"), " ")
+				}
+				if err := u.UpdateResult(s, sc); err != nil {
 					// LOG
 				}
 

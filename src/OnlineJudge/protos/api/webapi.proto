@@ -20,6 +20,7 @@ import "api/contest_auth.proto";
 import "api/contest_list_submissions.proto";
 import "api/contest_ranklist.proto";
 import "api/rejudge.proto";
+import "api/save_problem.proto";
 
 
 // ListProblemsRequest
@@ -52,6 +53,7 @@ message WebPostRequest {
     ContestSaveRequest contest_save_request = 8;
     ContestAuthRequest contest_auth_request = 9;
     ReJudgeRequest re_judge_request = 10;
+    SaveProblemRequest save_problem_request = 11;
 }
 
 message WebResponse {
@@ -74,5 +76,6 @@ message WebResponse {
     ContestListSubmissionsResponse contest_list_submissions_response = 17;
     ContestRanklistResponse contest_ranklist_response = 18;
     ReJudgeResponse re_judge_response = 19;
-    Error error = 20;
+    SaveProblemResponse save_problem_response = 20;
+    Error error = 21;
 }

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"strings"
 )
 
 type Pid struct {
@@ -36,5 +37,5 @@ func ParseSid(sid string) (*Pid, error) {
 }
 
 func GenSid(pid *Pid) string {
-	return fmt.Sprintf("%s-%s", pid.OJName, pid.OJPid)
+	return strings.ToUpper(fmt.Sprintf("%s-%s", pid.OJName, pid.OJPid))
 }
