@@ -36,7 +36,7 @@ func init() {
 	opts := MustParseArgs()
 	cfg := config.Load(opts.CfgDir)
 	mq.Init(cfg.GetMQConfig())
-	irpc.Init()
+	irpc.Init(cfg.GetIRPCConfig())
 	// judger.Init()
 }
 

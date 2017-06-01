@@ -7,10 +7,17 @@ import (
 	"net"
 )
 
-var BIND string
+type IRPCConfig struct {
+	ServerBindAddress    string
+	ClientConnectAddress string
+}
 
-func Init() {
+var BIND, CONNECT string
+
+func Init(cfg *IRPCConfig) {
 	BIND = "192.168.56.1:9999"
+	BIND = cfg.ServerBindAddress
+	CONNECT = cfg.ClientConnectAddress
 }
 
 func Run() {

@@ -37,7 +37,7 @@ func init() {
 	cfg := config.Load(opts.CfgDir)
 	db.Init(cfg.GetDBConfig())
 	mq.Init(cfg.GetMQConfig())
-	irpc.Init()
+	irpc.Init(cfg.GetIRPCConfig())
 }
 
 func main() {

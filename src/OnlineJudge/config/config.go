@@ -2,6 +2,7 @@ package config
 
 import (
 	"OnlineJudge/db"
+	"OnlineJudge/irpc"
 	"OnlineJudge/mq"
 
 	"encoding/json"
@@ -50,9 +51,17 @@ type Config struct {
 		Address  string
 	}
 	IRPC struct {
-		ServerBindAddress    string
-		ClientConnectAddress string
+		ServerBindAddress    string `json:"server_bind_address"`
+		ClientConnectAddress string `json:"client_connect_address"`
 	}
+}
+
+func (this *Config) GetIRPCConfig() *irpc.IRPCConfig {
+	c := &irpc.IRPCConfig{
+		ServerBindAddress:    this.IRPC.ServerBindAddress,
+		ClientConnectAddress: this.IRPC.ClientConnectAddress,
+	}
+	return c
 }
 
 func (this *Config) GetDBConfig() *db.MySQLConfig {

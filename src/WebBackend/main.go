@@ -41,7 +41,7 @@ func init() {
 	opts = MustParseArgs()
 	cfg := config.Load(opts.CfgDir)
 	db.Init(cfg.GetDBConfig())
-	irpc.Init()
+	irpc.Init(cfg.GetIRPCConfig())
 }
 
 func main() {

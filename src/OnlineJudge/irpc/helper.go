@@ -6,6 +6,8 @@ import (
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+
+	"log"
 )
 
 type helperServer struct {
@@ -51,20 +53,23 @@ func RegisterHelper(server *grpc.Server) {
 }
 
 type Helper struct {
-	conn   *grpc.ClientConn
-	bind   string
-	client rpc.HelperClient
+	conn    *grpc.ClientConn
+	bind    string
+	connect string
+	client  rpc.HelperClient
 }
 
 func NewHelper() *Helper {
 	return &Helper{
-		bind: BIND,
+		bind:    BIND,
+		connect: CONNECT,
 	}
 }
 
 func (this *Helper) Connect() error {
 	var err error
-	this.conn, err = grpc.Dial(this.bind, grpc.WithInsecure())
+	log.Println("connect:", this.connect)
+	this.conn, err = grpc.Dial(this.connect, grpc.WithInsecure())
 	return err
 }
 
