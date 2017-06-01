@@ -5,6 +5,8 @@ import (
 	"OnlineJudge/db"
 	"OnlineJudge/models"
 	"OnlineJudge/pbgen/api"
+
+	"github.com/jmoiron/sqlx"
 )
 
 func (this *AdminHandler) SaveProblem(response *api.SaveProblemResponse, req *api.SaveProblemRequest) {
@@ -52,8 +54,8 @@ func SaveProblem_BuildResponse(
 		OJIdFK:      oj.OJId,
 	}
 
-	// TODO: limits
 	mpm := models.NewMetaProblemModel()
+	tmlm := models.NewTimeMemoryLimitModel()
 	var meta_pid int64
 
 	mp, err := models.Query_MetaProblem_By_OJName_OJPid(
@@ -63,11 +65,20 @@ func SaveProblem_BuildResponse(
 		// insert
 		meta_pid, err = mpm.Insert(tx, nmp)
 		PanicOnError(err)
+		err = InsertLimits(tx, meta_pid, req.GetLimits(), tmlm)
+		PanicOnError(err)
 		dbu.MustCommit()
 		response.MetaPid = meta_pid
 		response.ProblemSid = base.GenSid(&base.Pid{OJName: oj_name, OJPid: oj_pid})
 	} else {
 		// update
+		// TODO: limits
+		// delete all limits
+		err = tmlm.DeleteLimitsByMetaPid(tx, mp.MetaPid)
+		PanicOnError(err)
+		err = InsertLimits(tx, mp.MetaPid, req.GetLimits(), tmlm)
+		PanicOnError(err)
+
 		nmp.MetaPid = mp.MetaPid
 		err = mpm.Update(tx, "", nmp, nil, nil)
 		PanicOnError(err)
@@ -75,4 +86,25 @@ func SaveProblem_BuildResponse(
 		response.MetaPid = nmp.MetaPid
 		response.ProblemSid = base.GenSid(&base.Pid{OJName: oj_name, OJPid: oj_pid})
 	}
+}
+
+func InsertLimits(
+	tx *sqlx.Tx,
+	meta_pid int64,
+	limits []*api.Problem_Limit,
+	tmlm *models.TimeMemoryLimitModel) error {
+
+	for _, limit := range limits {
+		tm := &models.TimeMemoryLimit{
+			TimeLimit:   int(limit.GetTimeLimit()),
+			MemoryLimit: int(limit.GetMemoryLimit()),
+			// CaseTimeLimit:int(limit.GetTimeLim)
+			Language:  limit.GetLanguage(),
+			MetaPidFK: meta_pid,
+		}
+		if _, err := tmlm.Insert(tx, tm); err != nil {
+			return err
+		}
+	}
+	return nil
 }

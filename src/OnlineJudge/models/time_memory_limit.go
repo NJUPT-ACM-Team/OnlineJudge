@@ -33,3 +33,11 @@ func (this *TimeMemoryLimitModel) Insert(tx *sqlx.Tx, tm *TimeMemoryLimit) (int6
 	}
 	return last_insert_id, nil
 }
+
+func (this *TimeMemoryLimitModel) DeleteLimitsByMetaPid(tx *sqlx.Tx, id int64) error {
+	sql_del := "DELETE FROM TimeMemoryLimits WHERE meta_pid_fk=?"
+	if _, err := tx.Exec(sql_del, id); err != nil {
+		return err
+	}
+	return nil
+}
