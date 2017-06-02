@@ -73,6 +73,7 @@ type ICPCRank struct {
 	ACNum        int32
 	TotalMins    int64
 	TotalSeconds int64
+	HasSub       int
 	Cols         []ICPCColumn
 }
 
@@ -92,6 +93,11 @@ func (this ICPCRanks) Less(i, j int) bool {
 		return false
 	}
 	if this[i].TotalSeconds < this[j].TotalSeconds {
+		return true
+	} else if this[i].TotalSeconds > this[j].TotalSeconds {
+		return false
+	}
+	if this[i].HasSub > this[i].HasSub {
 		return true
 	}
 	return false
@@ -154,6 +160,7 @@ func MakeICPCRank(
 		u := sub.Username
 		l := sub.Label
 		idx := base.LabelToInt(l)
+		userMap[u].HasSub += 1
 		switch sub.StatusCode {
 		case "ac":
 			if userMap[u].Cols[idx].IsAC {
