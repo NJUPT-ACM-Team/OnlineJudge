@@ -203,8 +203,10 @@ func MakeICPCRank(
 				Label: c.Label,
 				// IsAc:    true,
 				IsFb:    c.IsFB,
-				Minutes: c.Minutes,
 				Attempt: int32(c.Attempt),
+			}
+			if c.IsAC {
+				col.Minutes = c.Minutes
 			}
 			cols = append(cols, col)
 		}
