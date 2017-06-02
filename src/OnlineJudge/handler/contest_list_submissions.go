@@ -37,7 +37,7 @@ func (this *BasicHandler) ContestListSubmissions(response *api.ContestListSubmis
 		MakeResponseError(response, this.debug, PBUnauthorized, errors.New("contest not started"))
 		return
 	}
-	ContestListSubmissions_BuildResponse(tx, response, req, this.session.GetUsername(), this.debug)
+	ContestListSubmissions_BuildResponse(tx, response, req, this.session.GetUsername(), false, this.debug)
 }
 
 func (this *UserHandler) ContestListSubmissions(response *api.ContestListSubmissionsResponse, req *api.ContestListSubmissionsRequest) {
@@ -59,7 +59,8 @@ func (this *UserHandler) ContestListSubmissions(response *api.ContestListSubmiss
 		MakeResponseError(response, this.debug, PBUnauthorized, errors.New("contest not started"))
 		return
 	}
-	ContestListSubmissions_BuildResponse(tx, response, req, this.session.GetUsername(), this.debug)
+	ContestListSubmissions_BuildResponse(
+		tx, response, req, this.session.GetUsername(), access.Creator, this.debug)
 
 }
 
@@ -68,6 +69,7 @@ func ContestListSubmissions_BuildResponse(
 	response *api.ContestListSubmissionsResponse,
 	req *api.ContestListSubmissionsRequest,
 	username string,
+	is_creator bool,
 	debug bool,
 ) {
 	contest_id := req.GetContestId()
@@ -126,7 +128,7 @@ func ContestListSubmissions_BuildResponse(
 			SubmitTime:      base.MarshalTime(submission.SubmitTime),
 			IsSpj:           submission.IsSpj,
 		}
-		if submission.Username == username {
+		if submission.Username == username || is_creator {
 			line.Code = submission.Code
 		}
 		lines = append(lines, line)
