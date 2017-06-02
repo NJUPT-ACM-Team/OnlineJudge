@@ -432,7 +432,7 @@ func XQuery_List_Contests_With_Filter(
 	default:
 		orderby = "contest_id"
 	}
-	if is_desc {
+	if !is_desc {
 		orderby = JoinSQL(orderby, "DESC")
 	}
 	order_by := JoinSQL("ORDER BY", orderby)
