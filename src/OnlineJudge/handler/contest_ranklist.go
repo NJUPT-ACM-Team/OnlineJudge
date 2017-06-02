@@ -97,7 +97,7 @@ func (this ICPCRanks) Less(i, j int) bool {
 	} else if this[i].TotalSeconds > this[j].TotalSeconds {
 		return false
 	}
-	if this[i].HasSub > this[i].HasSub {
+	if this[i].HasSub > this[j].HasSub {
 		return true
 	}
 	return false
