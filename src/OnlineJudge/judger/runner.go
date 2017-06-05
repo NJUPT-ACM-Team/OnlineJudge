@@ -7,6 +7,7 @@ import (
 
 	"github.com/golang/protobuf/proto"
 
+	"log"
 	"time"
 )
 
@@ -61,6 +62,7 @@ func RunMJ(fn func(JudgerInterface)) {
 func Run(oj string, fn func([]byte)) {
 	jmq := mq.New()
 	if err := jmq.Connect(); err != nil {
+		log.Println(err)
 		panic(err)
 	}
 	switch oj {
