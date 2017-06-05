@@ -18,7 +18,7 @@
         "client_connect_address": "10.160.30.183:9999"
     },
     "ljudger": {
-        "core_path": "/tmp/OnlineJudge/judge",
+        "core_path": "/tmp/OnlineJudgeCore/judge",
         "judge_root": "/tmp/ojrun"
     }
 }
