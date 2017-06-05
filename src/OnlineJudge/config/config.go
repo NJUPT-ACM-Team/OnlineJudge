@@ -32,7 +32,6 @@ var test_config = `
 		"server_bind_address": "192.168.56.1:9999",
 		"client_connect_address": "192.168.56.1:9999"
 	}
-
 }
 `
 
@@ -53,6 +52,10 @@ type Config struct {
 	IRPC struct {
 		ServerBindAddress    string `json:"server_bind_address"`
 		ClientConnectAddress string `json:"client_connect_address"`
+	}
+	LJudger struct {
+		CorePath  string `json:"core_path"`
+		JudgeRoot string `json:"judge_root"`
 	}
 }
 

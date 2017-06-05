@@ -1,0 +1,24 @@
+{
+    "mysql": {
+        "username": "test",
+        "dbname": "ojtest2",
+        "password": "abc123",
+        "address": "localhost",
+        "protocol": "tcp",
+        "port": 3306,
+        "params": {"parseTime": "true", "charset": "utf8"}
+    },
+    "rabbitmq": {
+        "username": "oj",
+        "password": "ojtest",
+        "address": "192.168.56.1:5672"
+    },
+    "irpc": {
+        "server_bind_address": "192.168.56.1:9999",
+        "client_connect_address": "192.168.56.1:9999"
+    },
+    "ljudger": {
+        "core_path": "/tmp/OnlineJudge/judge",
+        "judge_root": "/tmp/ojrun"
+    }
+}

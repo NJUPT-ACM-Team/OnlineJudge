@@ -10,6 +10,11 @@ import (
 	"flag"
 )
 
+type LJudgerConfig struct {
+	CorePath  string
+	JudgeRoot string
+}
+
 type Options struct {
 	CfgDir string
 }
@@ -31,7 +36,7 @@ func init() {
 	cfg := config.Load(opts.CfgDir)
 	mq.Init(cfg.GetMQConfig())
 	irpc.Init(cfg.GetIRPCConfig())
-	// judger.Init()
+	ljudger.Init(cfg.LJudger.CorePath, cfg.LJudger.JudgeRoot)
 }
 
 func main() {

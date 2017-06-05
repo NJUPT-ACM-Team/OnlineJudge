@@ -11,7 +11,7 @@ import (
 	"path"
 )
 
-const (
+var (
 	COREPATH   = "/home/kevince/OnlineJudgeCore/judger"
 	JUDGEROOT  = "/tmp/testoj"
 	RESULTFILE = "result.json"
@@ -26,6 +26,11 @@ type LocalJudger struct {
 	OutDir   string
 	SrcPath  string
 	SpjPath  string
+}
+
+func Init(corePath, judgeRoot string) {
+	COREPATH = corePath
+	JUDGEROOT = judgeRoot
 }
 
 func NewLocalJudger(dir string, jdi judger.JudgerInterface) *LocalJudger {
