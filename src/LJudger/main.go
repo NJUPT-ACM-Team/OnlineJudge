@@ -8,6 +8,7 @@ import (
 	"OnlineJudge/mq"
 
 	"flag"
+	"log"
 )
 
 type LJudgerConfig struct {
@@ -34,6 +35,7 @@ func MustParseArgs() *Options {
 func init() {
 	opts := MustParseArgs()
 	cfg := config.Load(opts.CfgDir)
+	log.Println(cfg)
 	mq.Init(cfg.GetMQConfig())
 	irpc.Init(cfg.GetIRPCConfig())
 	ljudger.Init(cfg.LJudger.CorePath, cfg.LJudger.JudgeRoot)
