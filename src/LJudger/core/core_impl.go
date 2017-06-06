@@ -5,6 +5,7 @@ import (
 
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -100,6 +101,7 @@ func (this *CoreImpl) Run() error {
 }
 
 func exec_command(cmd string) (string, error) {
+	log.Println("cmd:", cmd)
 	out, err := exec.Command("/bin/sh", "-c", cmd).Output()
 	if err != nil {
 		return "", err

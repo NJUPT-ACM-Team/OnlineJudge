@@ -132,10 +132,10 @@ func EntryPoint(jdi judger.JudgerInterface) {
 	}
 	lj := NewLocalJudger(JUDGEROOT, jdi)
 	if err := lj.InitDir(); err != nil {
-		log.Fatal(err)
+		log.Fatal("init dir", err.Error())
 	}
 	if err := lj.PrepareData(); err != nil {
-		log.Fatal(err)
+		log.Fatal("prepare data", err.Error())
 	}
 
 	mode := NewCoreMode(lj)
@@ -143,11 +143,11 @@ func EntryPoint(jdi judger.JudgerInterface) {
 	core.SetMode(mode)
 	if err := core.Run(); err != nil {
 		// TODO: set SE
-		log.Fatal(err)
+		log.Fatal("run core", err.Error())
 	}
 	subs, err := core.GetSubmissionStatus()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("get status", err.Error())
 	}
 	log.Println(subs)
 	// TODO: set result
