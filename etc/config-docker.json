@@ -11,11 +11,11 @@
     "rabbitmq": {
         "username": "oj",
         "password": "ojtest",
-        "address": "10.160.30.183:5672"
+        "address": "10.160.25.3:5672"
     },
     "irpc": {
-        "server_bind_address": "192.168.56.1:9999",
-        "client_connect_address": "10.160.30.183:9999"
+        "server_bind_address": "0.0.0.0:9999",
+        "client_connect_address": "10.160.25.3:9999"
     },
     "ljudger": {
         "core_path": "/tmp/OnlineJudgeCore/judge",

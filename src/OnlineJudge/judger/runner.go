@@ -61,18 +61,25 @@ func RunMJ(fn func(JudgerInterface)) {
 
 func Run(oj string, fn func([]byte)) {
 	jmq := mq.New()
+	log.Println("ready to connect")
 	if err := jmq.Connect(); err != nil {
 		log.Println(err)
 		panic(err)
 	}
+	log.Println("connect successfully")
 	switch oj {
 	case "l":
+		log.Println("ready to declare ljudger")
 		if err := jmq.DeclareLJ(); err != nil {
+			log.Println(err)
 			panic(err)
 		}
+		log.Println("declare successfully")
 		if err := jmq.LJReceiver(fn); err != nil {
+			log.Println(err)
 			panic(err)
 		}
+		log.Println("receiver successfully")
 	case "v":
 		if err := jmq.DeclareVJ(); err != nil {
 			panic(err)
