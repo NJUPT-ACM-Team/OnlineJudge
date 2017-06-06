@@ -38,7 +38,7 @@ func init() {
 	log.Println(cfg)
 	mq.Init(cfg.GetMQConfig())
 	irpc.Init(cfg.GetIRPCConfig())
-	ljudger.Init(cfg.LJudger.CorePath, cfg.LJudger.JudgeRoot)
+	ljudger.Init(cfg.LJudger.CorePath, cfg.LJudger.JudgeRoot, cfg.LJudger.UseSudo)
 }
 
 func main() {

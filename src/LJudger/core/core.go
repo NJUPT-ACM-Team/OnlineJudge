@@ -20,6 +20,7 @@ const (
 )
 
 type Mode struct {
+	UseSudo     bool
 	RunDir      string
 	InDir       string
 	OutDir      string

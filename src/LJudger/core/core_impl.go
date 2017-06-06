@@ -85,7 +85,10 @@ func (this *CoreImpl) GetSubmissionStatus() (*irpc.SubmissionStatus, error) {
 func (this *CoreImpl) Run() error {
 	// wg := new(sync.WaitGroup)
 	cmds := []string{}
-	cmds = append(cmds, "sudo", this.CorePath)
+	if this.Mode.UseSudo {
+		cmds = append(cmds, "sudo")
+	}
+	cmds = append(cmds, this.CorePath)
 	cmds = append(cmds, "-c", this.Mode.SrcPath)
 	cmds = append(cmds, "-t", strconv.Itoa(this.Mode.TimeLimit))
 	cmds = append(cmds, "-m", strconv.Itoa(this.Mode.MemoryLimit))

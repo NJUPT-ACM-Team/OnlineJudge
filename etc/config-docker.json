@@ -19,6 +19,7 @@
     },
     "ljudger": {
         "core_path": "/tmp/OnlineJudgeCore/judge",
-        "judge_root": "/tmp/ojrun"
+        "judge_root": "/tmp/ojrun",
+        "use_sudo": false
     }
 }

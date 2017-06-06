@@ -56,6 +56,7 @@ type Config struct {
 	LJudger struct {
 		CorePath  string `json:"core_path"`
 		JudgeRoot string `json:"judge_root"`
+		UseSudo   bool   `json:"use_sudo"`
 	}
 }
 

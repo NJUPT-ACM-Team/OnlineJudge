@@ -15,6 +15,7 @@ var (
 	COREPATH   = "/home/kevince/OnlineJudgeCore/judger"
 	JUDGEROOT  = "/tmp/testoj"
 	RESULTFILE = "result.json"
+	USESUDO    = true
 )
 
 type LocalJudger struct {
@@ -28,9 +29,10 @@ type LocalJudger struct {
 	SpjPath  string
 }
 
-func Init(corePath, judgeRoot string) {
+func Init(corePath, judgeRoot string, useSudo bool) {
 	COREPATH = corePath
 	JUDGEROOT = judgeRoot
+	USESUDO = useSudo
 }
 
 func NewLocalJudger(dir string, jdi judger.JudgerInterface) *LocalJudger {
@@ -106,6 +108,7 @@ func (this *LocalJudger) PrepareData() error {
 
 func NewCoreMode(lj *LocalJudger) *core.Mode {
 	mode := &core.Mode{
+		UseSudo:     USESUDO,
 		InDir:       lj.InDir,
 		OutDir:      lj.OutDir,
 		SrcPath:     lj.SrcPath,
