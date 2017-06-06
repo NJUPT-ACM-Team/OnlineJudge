@@ -557,3 +557,30 @@ func Query_ContestUsers_By_ContestId(
 	}
 	return users, nil
 }
+
+func Query_Limit_By_Language_And_MetaPid(
+	tx *sqlx.Tx,
+	lang string,
+	meta_pid int64,
+) (*TimeMemoryLimit, error) {
+	tml := &TimeMemoryLimit{}
+	str_fields, err := GenerateSelectSQL(tml, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	from_where_sql := JoinSQL(`FROM TimeMemoryLimits`,
+		`WHERE meta_pid_fk=? AND language=?`)
+	count_sql := JoinSQL(`SELECT COUNT(*)`, from_where_sql)
+	select_sql := JoinSQL(`SELECT`, str_fields, from_where_sql)
+	var cnt int
+	if err := tx.Get(&cnt, count_sql, meta_pid, lang); err != nil {
+		return nil, err
+	}
+	if cnt == 0 {
+		return nil, nil
+	}
+	if err := tx.Get(tml, select_sql, meta_pid, lang); err != nil {
+		return nil, err
+	}
+	return tml, nil
+}

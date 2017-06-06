@@ -45,7 +45,7 @@ func SubmitToMQ(jmq *mq.MQ, req *rpc.StartJudgingRequest) {
 
 	// Get Info of meta problem
 	mp, err := models.Query_MetaProblem_By_MetaPid(
-		tx, sub.MetaPidFK, []string{"oj_name", "oj_pid", "is_spj"}, nil)
+		tx, sub.MetaPidFK, []string{"oj_name", "oj_pid", "is_spj", "meta_pid"}, nil)
 	if mp == nil || err != nil {
 		log.Println(err)
 		MustSetSystemError(tx, sub.RunId)
@@ -80,6 +80,20 @@ func SubmitToMQ(jmq *mq.MQ, req *rpc.StartJudgingRequest) {
 			OptionValue: lang.OptionValue,
 		},
 	}
+	tml, err := models.Query_Limit_By_Language_And_MetaPid(
+		tx, lang.Language, mp.MetaPid)
+	if err != nil {
+		log.Println(err)
+		MustSetSystemError(tx, sub.RunId)
+		return
+	}
+	if tml != nil {
+		request.TimeLimit = int32(tml.TimeLimit)
+		request.MemoryLimit = int32(tml.MemoryLimit)
+	}
+	log.Println("time limit:", request.TimeLimit,
+		"memory limit:", request.MemoryLimit)
+
 	log.Println("suffix:", lang.Suffix)
 
 	// Get testcases of meta problem
